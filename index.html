@@ -19,14 +19,15 @@
     --danger: #ef4444;
     --warn: #f59e0b;
     --bg-pattern: none;
+    --bg-size: auto;
 }
 
-/* HELLER MODUS BASISSYSTEM (WIRD PER JAVASCRIPT AKTIVIERT) */
+/* HELLER MODUS BASISSYSTEM */
 .light-mode-active {
     --bg: #f8fafc;
     --card: #ffffff;
     --card2: #f1f5f9;
-    --border: rgba(0,0,0,0.06);
+    --border: rgba(0,0,0,0.08);
     --text: #0f172a;
     --sub: #64748b;
 }
@@ -34,15 +35,16 @@
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin:0; padding:0; }
 body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; padding-bottom:90px; overflow-x:hidden; position:relative; }
 
-/* STRUKTUR-HINTERGRÜNDE */
+/* REALE STRUKTUR-HINTERGRÜNDE (SICHTBAR GEMACHT!) */
 body::before {
     content: '';
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
     pointer-events: none;
     z-index: 0;
-    opacity: 0.4;
+    opacity: 0.7; /* Höhere Sichtbarkeit für Linien */
     background: var(--bg-pattern);
+    background-size: var(--bg-size, auto);
 }
 
 /* BG GLOWS (SUBTIL IM HINTERGRUND) */
@@ -204,11 +206,25 @@ body::before {
 .theme-opt { width:44px; height:44px; border-radius:50%; cursor:pointer; border:3px solid transparent; transition:all 0.2s; }
 .theme-opt.selected { border-color:var(--text); transform:scale(1.1); }
 
-/* DESIGN INTERFACE */
+/* DESIGN INTERFACE GRID */
 .theme-bg-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-bottom:12px; }
 .theme-bg-opt { height:52px; border-radius:12px; cursor:pointer; border:2px solid transparent; transition:all 0.2s; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:0.75rem; font-weight:800; text-align:center; padding:4px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
 .theme-bg-opt span { font-size:0.55rem; opacity:0.6; font-weight:500; margin-top:2px; }
 .theme-bg-opt.selected { border-color:var(--accent); transform:scale(1.02); background: rgba(99,102,241,0.05); }
+
+/* REPARIERTER GROSSER DESIGN AKTIVIEREN BUTTON (FARBVERLAUF) */
+.save-btn { margin:18px 0 0; width:100%; background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; border: none; padding: 16px; border-radius: 15px; font-size: 1.05rem; font-weight: 900; cursor: pointer; font-family: inherit; box-shadow: 0 4px 15px rgba(99,102,241,0.25); letter-spacing: 0.5px; transition: transform 0.1s; text-transform: uppercase; }
+.save-btn:active { transform: scale(0.98); }
+
+/* DYNAMISCHE CHAMÄLEON ANIMATION */
+.bg-chameleon { animation: chameleon-shift 14s ease infinite !important; background-size: 400% 400% !important; }
+@keyframes chameleon-shift {
+    0% { background-color: #0c0a1a; }
+    25% { background-color: #1a0a12; }
+    50% { background-color: #0a1a14; }
+    75% { background-color: #0a121a; }
+    100% { background-color: #0c0a1a; }
+}
 
 /* LEHRER MANAGEMENT MASK */
 .admin-section { margin:0 16px; background:rgba(239,68,68,0.04); border:1.5px solid rgba(239,68,68,0.2); border-radius:16px; padding:16px; margin-bottom:14px; }
@@ -307,7 +323,7 @@ body::before {
     <div class="update-wrap">
         <button class="update-btn" id="update-btn" onclick="forceRefresh()">🔄 App aktualisieren (+10 XP)</button>
     </div>
-    <div class="version-tag" id="version-tag">SchulHub v2.7 Matrix Flip</div>
+    <div class="version-tag" id="version-tag">SchulHub v2.8 Chameleon</div>
 
     <div class="plan-btn" onclick="openOverlay('plan-overlay')">
         <div class="plan-btn-icon">📅</div>
@@ -401,19 +417,21 @@ body::before {
     </div>
     
     <div class="settings-section">
-        <div class="settings-section-title">Dein Name / Spitzname</div>
-        <input type="text" class="set-input" id="set-username" placeholder="Dein Name...">
+        <div class="settings-username-wrap">
+            <div class="settings-section-title">Dein Name / Spitzname</div>
+            <input type="text" class="set-input" id="set-username" placeholder="Dein Name...">
+        </div>
         
         <div class="settings-section-title">Wähle deinen Character Avatar (Gaming & Tech)</div>
         <div class="avatar-grid" id="avatar-grid"></div>
         
-        <div class="settings-section-title">App Akzent-Farbe</div>
+        <div class="settings-section-title">App Akzent-Farbe (Jetzt mit Gelb, Rot & Pink!)</div>
         <div class="theme-grid" id="theme-grid"></div>
 
-        <div class="settings-section-title">Hintergrund-Struktur & Helligkeit</div>
+        <div class="settings-section-title">Hintergrund-Modus & Spezialeffekte</div>
         <div class="theme-bg-grid" id="theme-bg-grid"></div>
 
-        <button class="save-btn" onclick="saveSettings()">DESIGN AKTIVIEREN</button>
+        <button class="save-btn" onclick="saveSettings()">Design aktivieren</button>
     </div>
 </div>
 
@@ -470,7 +488,6 @@ var APP_DATA = {
 
 var ADMIN_PW = "Lwlmn72Neo123";
 
-// ─── 🛠 REPARIERTE GITHUB REPO PFADE (EXAKT AN DEINE NEUE UMBENENNUNG ANGEPASST!) ───
 var GH_USER = "nagel-physik";
 var GH_REPO = "SchulApp-SuS-"; 
 var GH_FILE = "index.html";    
@@ -494,7 +511,7 @@ var clockStyle = localStorage.getItem('susClockStyle') || 'digital';
 var activeWeek = localStorage.getItem('susActiveWeek') || APP_DATA.currentWeek;
 var userAccent = localStorage.getItem('susAccent') || '#6366f1';
 var userBgTheme = localStorage.getItem('susBgTheme') || 'default';
-var userAvatar = localStorage.getItem('susAvatar') || '👨‍🚀'; // Neuer Default-Wert
+var userAvatar = localStorage.getItem('susAvatar') || '👨‍🚀'; 
 var userName = localStorage.getItem('susUsername') || '';
 var userXP = parseInt(localStorage.getItem('susXP')) || 0;
 var lastCheckInDate = localStorage.getItem('susLastCheckIn') || '';
@@ -617,11 +634,11 @@ function initApp() {
     renderLevelBar();
 }
 
-// 🌐 DEFINITION DER STRUKTURMUSTER (GRID / GEOMETRISCH)
+// 🌐 STRUKTURMUSTER-DEFINITIONSWERTE (HAUFENWEISE STRUKTUR FÜR DEN HELLEN MODUS)
 var PATTERNS = {
     none: "none",
-    grid: "linear-gradient(rgba(120,120,120,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(120,120,120,0.05) 1px, transparent 1px)",
-    lines: "repeating-linear-gradient(45deg, rgba(99,102,241,0.02) 0px, rgba(99,102,241,0.02) 2px, transparent 2px, transparent 10px)"
+    grid: "linear-gradient(rgba(100,116,139,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(100,116,139,0.12) 1px, transparent 1px)",
+    lines: "repeating-linear-gradient(45deg, rgba(99,102,241,0.04) 0px, rgba(99,102,241,0.04) 2px, transparent 2px, transparent 12px)"
 };
 
 function applyStyles() {
@@ -629,19 +646,26 @@ function applyStyles() {
     document.body.className = '';
     document.documentElement.className = '';
     
-    // Hintergrundsteuerung (Hell & Dunkel)
+    // Chamäleon-Deaktivierung standardmäßig
+    document.body.classList.remove('bg-chameleon');
+
     if (userBgTheme.startsWith('light-')) {
         document.documentElement.classList.add('light-mode-active');
         if (userBgTheme === 'light-grid') {
             document.documentElement.style.setProperty('--bg-pattern', PATTERNS.grid);
-            document.documentElement.style.setProperty('--bg-size', "20px 20px");
+            document.documentElement.style.setProperty('--bg-size', "24px 24px");
         } else if (userBgTheme === 'light-lines') {
             document.documentElement.style.setProperty('--bg-pattern', PATTERNS.lines);
+            document.documentElement.style.setProperty('--bg-size', "auto");
         } else {
             document.documentElement.style.setProperty('--bg-pattern', "none");
         }
     } else {
-        if (userBgTheme !== 'default') document.body.classList.add(userBgTheme);
+        if (userBgTheme === 'bg-chameleon') {
+            document.body.classList.add('bg-chameleon');
+        } else if (userBgTheme !== 'default') {
+            document.body.classList.add(userBgTheme);
+        }
         document.documentElement.style.setProperty('--bg-pattern', "none");
     }
 }
@@ -689,7 +713,6 @@ function updateClock() {
     document.getElementById('news-text').innerText = APP_DATA.news || 'Keine aktuellen Infos.';
     if (APP_DATA.newsTime) document.getElementById('news-time').innerText = APP_DATA.newsTime;
     
-    // VERTRETUNG LOGIK MASKING
     var vBox = document.getElementById('vertretung-box');
     if (APP_DATA.vertretung && APP_DATA.vertretung.trim() !== "") {
         vBox.style.display = 'block';
@@ -841,18 +864,19 @@ function renderMatrixWeek(w) {
     }
 }
 
-// 👾 COOLE MODERNE CHARAKTER-AVATARE (GAMER & TECH-STYLE)
-var AVATARS = ['👨‍🚀','🐱‍💻','👾','🚀','🤖','🎮','🦊','🐉','🎭','⚡','💎','🎯','🛡️','🦁','🐱','🦉'];
-var THEMES = ['#6366f1','#3b82f6','#10b981','#f59e0b','#ef4444','#ec4899','#06b6d4','#f97316','#8b5cf6'];
+var AVATARS = ['👨‍🚀','🐱‍💻','👾','🚀','🤖','🎮','🦊','🐉','🎭','⚡','💎','🎯','🛡️','🦁','🦉'];
 
-// 🎨 ERWEITERTE HINTERGRUND-MATRIX (INKLUSIVE HELLEN THEMES & STRUKTUREN!)
+// 🎨 FARBPALETTE ERWEITERT UM GELB, ROT UND PINK
+var THEMES = ['#6366f1','#3b82f6','#10b981','#f59e0b','#ef4444','#ec4899','#06b6d4','#f97316','#8b5cf6', '#facc15', '#dc2626', '#db2777'];
+
+// 🌈 HINTERGRÜNDE BEREINIGT (1X WEISS, STRUKTUREN PERFEKTIONIERT & REALE DYNAMIK!)
 var BG_THEMES = [
     {id:'default',label:'Space Dark (Standard)',sub:'Dunkles Universum',preview:'#0a0a0f'},
     {id:'bg-t1',label:'Cyber Purple',sub:'Dunkles Neon-Lila',preview:'linear-gradient(135deg,#0a0a0f,#1a0533)'},
-    {id:'bg-t5',label:'Deep Ocean',sub:'Dunkles Tiefsee-Blau',preview:'linear-gradient(135deg,#050510,#001033)'},
-    {id:'light-clean',label:'Light Minimal (Hell)',sub:'Klares, helles Design',preview:'#f8fafc'},
-    {id:'light-grid',label:'Light Matrix Grid',sub:'Helles technisches Raster',preview:'#f1f5f9'},
-    {id:'light-lines',label:'Light Geo Lines',sub:'Helle dynamische Linien',preview:'#e2e8f0'}
+    {id:'bg-chameleon',label:'🌈 Multiverse Chameleon',sub:'Dynamischer Farbwechsel',preview:'linear-gradient(45deg, #1a0a12, #0a121a)'},
+    {id:'light-clean',label:'Light Clean (Pure)',sub:'Klares weißes Interface',preview:'#f8fafc'},
+    {id:'light-grid',label:'Light Matrix Grid 🟦',sub:'Helles technisches Raster',preview:'#f1f5f9'},
+    {id:'light-lines',label:'Light Geo Lines 📈',sub:'Helle dynamische Linien',preview:'#e2e8f0'}
 ];
 
 function buildStyleUI() {
