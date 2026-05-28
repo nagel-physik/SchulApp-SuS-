@@ -18,13 +18,36 @@
     --success: #10b981;
     --danger: #ef4444;
     --warn: #f59e0b;
+    --bg-pattern: none;
 }
-* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin:0; padding:0; }
-body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; padding-bottom:90px; overflow-x:hidden; }
 
-/* BG GLOW */
-.bg-glow { position:fixed; top:-30%; left:-20%; width:70vw; height:70vw; background:radial-gradient(circle,rgba(99,102,241,0.15) 0%,transparent 70%); pointer-events:none; z-index:0; animation:float-glow 8s ease-in-out infinite; }
-.bg-glow2 { position:fixed; bottom:-20%; right:-20%; width:60vw; height:60vw; background:radial-gradient(circle,rgba(139,92,246,0.12) 0%,transparent 70%); pointer-events:none; z-index:0; animation:float-glow 10s ease-in-out infinite reverse; }
+/* HELLER MODUS BASISSYSTEM (WIRD PER JAVASCRIPT AKTIVIERT) */
+.light-mode-active {
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --card2: #f1f5f9;
+    --border: rgba(0,0,0,0.06);
+    --text: #0f172a;
+    --sub: #64748b;
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin:0; padding:0; }
+body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; padding-bottom:90px; overflow-x:hidden; position:relative; }
+
+/* STRUKTUR-HINTERGRÜNDE */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+    background: var(--bg-pattern);
+}
+
+/* BG GLOWS (SUBTIL IM HINTERGRUND) */
+.bg-glow { position:fixed; top:-30%; left:-20%; width:70vw; height:70vw; background:radial-gradient(circle,rgba(99,102,241,0.12) 0%,transparent 70%); pointer-events:none; z-index:0; animation:float-glow 8s ease-in-out infinite; }
+.bg-glow2 { position:fixed; bottom:-20%; right:-20%; width:60vw; height:60vw; background:radial-gradient(circle,rgba(139,92,246,0.08) 0%,transparent 70%); pointer-events:none; z-index:0; animation:float-glow 10s ease-in-out infinite reverse; }
 @keyframes float-glow { 0%,100%{transform:translate(0,0)} 50%{transform:translate(3%,5%)} }
 
 /* MAIN CONTAINER */
@@ -36,20 +59,20 @@ body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text);
 .top-left .class-name { font-size:1.4rem; font-weight:900; }
 .top-right { display:flex; gap:8px; align-items:center; }
 .help-btn { width:36px; height:36px; border-radius:50%; background:var(--accent); color:white; border:none; font-size:1rem; font-weight:900; cursor:pointer; font-family:inherit; }
-.lock-btn { width:36px; height:36px; border-radius:50%; background:var(--card); border:1px solid var(--border); color:var(--sub); font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+.lock-btn { width:36px; height:36px; border-radius:50%; background:var(--card); border:1px solid var(--border); color:var(--sub); font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
 
-/* GAMIFICATION LEVEL BAR */
-.level-container { margin:0 16px 14px; background:var(--card); border-radius:14px; padding:10px 14px; border:1px solid var(--border); }
+/* LEVEL CONTAINER */
+.level-container { margin:0 16px 14px; background:var(--card); border-radius:14px; padding:10px 14px; border:1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
 .level-header { display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; font-weight:800; margin-bottom:5px; }
 .level-title { color:var(--warn); text-transform:uppercase; letter-spacing:0.5px; }
 .level-xp-text { color:var(--sub); }
-.level-bar { height:6px; background:rgba(255,255,255,0.05); border-radius:3px; overflow:hidden; }
+.level-bar { height:6px; background:rgba(120,120,120,0.1); border-radius:3px; overflow:hidden; }
 .level-bar-fill { height:100%; background:linear-gradient(90deg,var(--warn),#f97316); width:0%; transition:width 0.5s ease; }
 
 /* UHR SECTION */
 .clock-section { text-align:center; padding:5px 16px 16px; cursor:pointer; }
-.clock-digital { font-size:3.8rem; font-weight:900; letter-spacing:-2px; line-height:1; color:var(--accent); }
-.clock-analog-wrap { display:none; width:120px; height:120px; border-radius:50%; border:3px solid var(--accent); position:relative; background:var(--card); box-shadow:0 0 20px rgba(99,102,241,0.3); margin:0 auto 8px; }
+.clock-digital { font-size:3.8rem; font-weight:900; letter-spacing:-2px; line-height:1; color:var(--accent); text-shadow: 0 4px 12px rgba(99,102,241,0.1); }
+.clock-analog-wrap { display:none; width:120px; height:120px; border-radius:50%; border:3px solid var(--accent); position:relative; background:var(--card); box-shadow:0 4px 20px rgba(99,102,241,0.15); margin:0 auto 8px; }
 .hand { position:absolute; bottom:50%; left:50%; transform-origin:bottom center; border-radius:4px; background:var(--text); }
 .hand-h { width:4px; height:30px; margin-left:-2px; }
 .hand-m { width:3px; height:40px; margin-left:-1.5px; }
@@ -59,54 +82,56 @@ body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text);
 .week-badge { display:inline-block; margin-top:8px; padding:5px 18px; border-radius:20px; font-size:0.8rem; font-weight:900; color:white; cursor:pointer; }
 .clock-hint { font-size:0.55rem; color:var(--sub); margin-top:4px; letter-spacing:0.5px; }
 
-/* STATUS TILES & LIVE COUNTDOWN */
+/* VERTRETUNGS-BOX */
+.vertretung-card { margin:0 16px 14px; background:linear-gradient(135deg,rgba(239,68,68,0.12),rgba(220,38,38,0.05)); border-radius:18px; padding:16px; border:1px solid rgba(239,68,68,0.3); position:relative; overflow:hidden; display:none; box-shadow: 0 4px 15px rgba(239,68,68,0.05); }
+.vertretung-card::after { content:'⚠️'; position:absolute; right:14px; top:14px; font-size:1.6rem; opacity:0.2; }
+.vertretung-title { font-size:0.65rem; font-weight:900; color:var(--danger); text-transform:uppercase; letter-spacing:1px; margin-bottom:5px; }
+.vertretung-text { font-size:0.92rem; font-weight:700; line-height:1.4; }
+
+/* STATUS TILES */
 .status-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:0 16px 14px; }
-.status-tile { background:var(--card); border-radius:18px; padding:14px; border:1px solid var(--border); position:relative; overflow:hidden; display:flex; flex-direction:column; justify-content:between; min-height:115px; }
+.status-tile { background:var(--card); border-radius:18px; padding:14px; border:1px solid var(--border); position:relative; overflow:hidden; display:flex; flex-direction:column; justify-content:between; min-height:115px; box-shadow: 0 4px 14px rgba(0,0,0,0.02); }
 .status-tile::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--accent),var(--accent2)); }
-.status-tile.next::before { background:linear-gradient(90deg,#374151,#4b5563); }
+.status-tile.next::before { background:linear-gradient(90deg,#64748b,#94a3b8); }
 .status-tile.morgen::before { background:linear-gradient(90deg,#f59e0b,#ef4444) !important; }
 .tile-label { font-size:0.6rem; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:var(--sub); margin-bottom:4px; }
 .tile-subject { font-size:1.05rem; font-weight:900; line-height:1.2; margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .tile-info { font-size:0.72rem; color:var(--accent); font-weight:700; }
 .tile-countdown { font-size:0.75rem; color:var(--warn); font-weight:800; margin-top:2px; }
 .tile-time { font-size:0.6rem; color:var(--sub); margin-top:auto; padding-top:4px; }
-.tile-prog { height:3px; background:rgba(255,255,255,0.08); border-radius:2px; margin-top:5px; overflow:hidden; }
+.tile-prog { height:3px; background:rgba(120,120,120,0.1); border-radius:2px; margin-top:5px; overflow:hidden; }
 .tile-prog-fill { height:100%; background:linear-gradient(90deg,var(--accent),var(--accent2)); border-radius:2px; transition:width 1s linear; }
 
 /* NEWS BOX */
 .section-label { font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:2px; color:var(--sub); padding:4px 20px 6px; max-width:600px; margin:0 auto; }
-.news-card { margin:0 16px 14px; background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(139,92,246,0.08)); border-radius:18px; padding:16px; border:1px solid rgba(99,102,241,0.3); position:relative; overflow:hidden; }
-.news-card::after { content:'📢'; position:absolute; right:14px; top:14px; font-size:1.6rem; opacity:0.25; }
+.news-card { margin:0 16px 14px; background:linear-gradient(135deg,rgba(99,102,241,0.08),rgba(139,92,246,0.04)); border-radius:18px; padding:16px; border:1px solid rgba(99,102,241,0.2); position:relative; overflow:hidden; box-shadow: 0 4px 14px rgba(0,0,0,0.02); }
+.news-card::after { content:'📢'; position:absolute; right:14px; top:14px; font-size:1.6rem; opacity:0.15; }
 .news-title { font-size:0.62rem; font-weight:800; color:var(--accent); text-transform:uppercase; letter-spacing:1px; margin-bottom:5px; }
-.news-text { font-size:0.92rem; font-weight:700; line-height:1.4; padding-right:28px; color:#fff; }
+.news-text { font-size:0.92rem; font-weight:700; line-height:1.4; padding-right:28px; }
 .news-time { font-size:0.62rem; color:var(--sub); margin-top:6px; }
 
-/* MOTIVATION */
-.motivation { margin:0 16px 14px; background:var(--card); border-radius:14px; padding:12px 14px; border-left:3px solid var(--accent); font-size:0.82rem; font-style:italic; color:var(--sub); line-height:1.4; }
-
-/* REFRESH */
+/* REFRESH BUTTON */
 .update-wrap { text-align:center; margin:0 16px 10px; }
-.update-btn { background:linear-gradient(135deg,#f59e0b,#ef4444); color:white; border:none; padding:9px 22px; border-radius:20px; font-size:0.82rem; font-weight:800; cursor:pointer; font-family:inherit; display:inline-flex; align-items:center; gap:7px; box-shadow:0 3px 10px rgba(239,68,68,0.2); }
+.update-btn { background:linear-gradient(135deg,#f59e0b,#ef4444); color:white; border:none; padding:9px 22px; border-radius:20px; font-size:0.82rem; font-weight:800; cursor:pointer; font-family:inherit; display:inline-flex; align-items:center; gap:7px; box-shadow:0 4px 12px rgba(239,68,68,0.15); }
 .version-tag { font-size:0.58rem; color:var(--sub); text-align:center; margin-bottom:6px; font-weight:700; }
 
-/* BUTTON FÜR STUNDENPLAN */
-.plan-btn { margin:0 16px 12px; background:linear-gradient(135deg, #1e1b4b, #311042); border:1.5px solid rgba(139,92,246,0.4); border-radius:18px; padding:16px 18px; display:flex; align-items:center; gap:12px; cursor:pointer; width:calc(100% - 32px); box-shadow:0 4px 15px rgba(139,92,246,0.15); animation:pulse-glow-btn 3s infinite; }
-@keyframes pulse-glow-btn { 0%,100% { border-color:rgba(139,92,246,0.4); } 50% { border-color:var(--accent2); box-shadow:0 4px 20px rgba(139,92,246,0.3); } }
-.plan-btn-icon { font-size:1.8rem; background:rgba(255,255,255,0.07); width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; }
+/* Stundenplan Button */
+.plan-btn { margin:0 16px 12px; background:linear-gradient(135deg, #1e1b4b, #311042); border:1.5px solid rgba(139,92,246,0.4); border-radius:18px; padding:16px 18px; display:flex; align-items:center; gap:12px; cursor:pointer; width:calc(100% - 32px); box-shadow:0 4px 15px rgba(139,92,246,0.12); animation:pulse-glow-btn 3s infinite; }
+.light-mode-active .plan-btn { background: linear-gradient(135deg, #e0e7ff, #f3e8ff); border-color: rgba(139,92,246,0.2); }
+@keyframes pulse-glow-btn { 0%,100% { border-color:rgba(139,92,246,0.3); } 50% { border-color:var(--accent2); } }
+.plan-btn-icon { font-size:1.8rem; background:rgba(120,120,120,0.08); width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; }
 .plan-btn-text { flex:1; text-align:left; }
-.plan-btn-title { font-size:1.05rem; font-weight:900; color:#fff; letter-spacing:0.3px; }
-.plan-btn-sub { font-size:0.72rem; color:#a78bfa; margin-top:2px; font-weight:600; }
+.plan-btn-title { font-size:1.05rem; font-weight:900; color:var(--text); letter-spacing:0.3px; }
+.plan-btn-sub { font-size:0.72rem; color:var(--accent2); margin-top:2px; font-weight:600; }
 .plan-btn-arrow { color:var(--accent2); font-size:1.3rem; font-weight:900; }
 
 .action-row { display:flex; gap:10px; padding:0 16px 14px; }
-.action-btn { flex:1; background:var(--card); border:1.5px solid var(--border); border-radius:16px; padding:14px 10px; display:flex; flex-direction:column; align-items:center; gap:6px; cursor:pointer; transition:all 0.2s; }
-.action-btn:active { transform:scale(0.97); }
-.action-btn .icon { font-size:1.5rem; }
+.action-btn { flex:1; background:var(--card); border:1.5px solid var(--border); border-radius:16px; padding:14px 10px; display:flex; flex-direction:column; align-items:center; gap:6px; cursor:pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
 .action-btn .label { font-size:0.68rem; font-weight:800; color:var(--sub); text-align:center; }
 
-/* BOTTOM NAV BAR */
-.bottom-nav { position:fixed; bottom:0; left:0; right:0; background:rgba(10,10,15,0.95); backdrop-filter:blur(20px); border-top:1px solid var(--border); display:flex; justify-content:space-around; padding:10px 0 16px; z-index:100; max-width:600px; margin:0 auto; }
-.nav-btn { display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; opacity:0.45; padding:4px 14px; transition:opacity 0.2s; color:var(--text); }
+/* NAVIGATION SYSTEM */
+.bottom-nav { position:fixed; bottom:0; left:0; right:0; background:var(--card); border-top:1px solid var(--border); display:flex; justify-content:space-around; padding:10px 0 16px; z-index:100; max-width:600px; margin:0 auto; box-shadow: 0 -4px 20px rgba(0,0,0,0.03); }
+.nav-btn { display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; opacity:0.4; padding:4px 14px; transition:opacity 0.2s; color:var(--text); }
 .nav-btn.active { opacity:1; }
 .nav-btn.active .nav-icon { color:var(--accent); }
 .nav-icon { font-size:1.3rem; }
@@ -114,106 +139,95 @@ body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text);
 
 /* OVERLAYS SYSTEM */
 .overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:var(--bg); z-index:200; overflow-y:auto; padding-bottom:40px; }
-.overlay-header { position:sticky; top:0; background:rgba(10,10,15,0.95); backdrop-filter:blur(20px); padding:16px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); z-index:10; }
+.overlay-header { position:sticky; top:0; background:var(--card); padding:16px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); z-index:10; }
 .overlay-title { font-size:1.05rem; font-weight:900; }
 .close-btn { background:none; border:none; color:var(--danger); font-size:1.4rem; cursor:pointer; font-weight:900; width:30px; }
-
-/* WEEK TABS */
 .week-tabs { display:flex; gap:8px; padding:14px 16px 8px; }
-.week-tab { flex:1; padding:12px; border-radius:12px; border:none; font-weight:800; cursor:pointer; font-family:inherit; font-size:0.9rem; transition:all 0.2s; text-transform:uppercase; letter-spacing:0.5px; }
+.week-tab { flex:1; padding:12px; border-radius:12px; border:none; font-weight:800; cursor:pointer; font-family:inherit; font-size:0.9rem; text-transform:uppercase; letter-spacing:0.5px; }
 
-/* 🧪 MATRIX-SYSTEM 🧪 */
+/* 🧪 MATRIX-SYSTEM MIT 3D-FLIP EFFECT 🧪 */
 .matrix-container { padding:8px 10px 80px; width:100%; display:flex; flex-direction:column; gap:6px; overflow-x:auto; }
 .matrix-row { display:flex; gap:5px; width:100%; min-width:440px; }
-.matrix-cell { flex:1; min-height:64px; border-radius:8px; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:4px; text-align:center; font-size:0.75rem; font-weight:800; border:1px solid rgba(255,255,255,0.03); position:relative; }
+.matrix-cell { flex:1; min-height:64px; position:relative; perspective:1000px; border:none; background:transparent; }
 
-/* ZEIT- & TAGE-ZEILEN (KRÄFTIGES WEISS) */
-.matrix-cell.header-day { background:#1e293b; color:#ffffff !important; font-size:0.75rem; font-weight:900; min-height:32px; text-transform:uppercase; letter-spacing:0.5px; }
-.matrix-cell.header-block { background:#111827; color:#ffffff !important; font-size:0.78rem; font-weight:900; flex:none; width:52px; min-height:64px; border-left:2px solid var(--accent); }
-.matrix-cell.header-block div { font-size:0.58rem; font-weight:800; color:#cbd5e1 !important; margin-top:2px; }
+/* 3D Card Flipping Setup */
+.flip-card-inner { position:absolute; width:100%; height:100%; text-align:center; transition:transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); transform-style:preserve-3d; border-radius:8px; cursor:pointer; }
+.matrix-cell.flipped .flip-card-inner { transform:rotateY(180deg); }
+.flip-front, .flip-back { position:absolute; width:100%; height:100%; backface-visibility:hidden; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:4px; border-radius:8px; border:1px solid rgba(120,120,120,0.1); }
+.flip-back { transform:rotateY(180deg); background:#1e1e2f !important; border:1.5px solid var(--warn) !important; color:#fdba74 !important; font-size:0.62rem !important; font-weight:800; line-height:1.2; padding:6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+
+/* ZEIT- & TAGE-ZEILEN */
+.matrix-cell.static-header { min-height:32px; }
+.matrix-cell.static-header .flip-card-inner { transform:none !important; cursor:default; }
+.header-day-inner { background:#1e293b; color:#ffffff !important; font-size:0.75rem; font-weight:900; text-transform:uppercase; letter-spacing:0.5px; }
+.light-mode-active .header-day-inner { background: #cbd5e1; color: #0f172a !important; }
+.header-block-inner { background:#111827; color:#ffffff !important; font-size:0.78rem; font-weight:900; border-left:2px solid var(--accent); }
+.light-mode-active .header-block-inner { background: #e2e8f0; color: #0f172a !important; }
+.header-block-inner div { font-size:0.58rem; font-weight:800; color:#cbd5e1 !important; margin-top:2px; }
+.light-mode-active .header-block-inner div { color: #64748b !important; }
 
 /* PAUSEN-REIHEN */
-.matrix-cell.row-pause { background:rgba(30, 41, 59, 0.4); color:rgba(255,255,255,0.4); font-size:0.6rem; font-weight:700; min-height:22px !important; text-transform:uppercase; letter-spacing:0.5px; border:none; }
-.matrix-cell.header-pause-title { background:#0f172a; color:#ffffff !important; font-size:0.52rem; font-weight:800; flex:none; width:52px; min-height:22px !important; }
+.matrix-cell.static-pause { min-height:22px !important; }
+.matrix-cell.static-pause .flip-card-inner { transform:none !important; cursor:default; }
+.row-pause-inner { background:rgba(120, 120, 120, 0.1); color:var(--sub); font-size:0.6rem; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; border:none; }
+.header-pause-inner { background:#0f172a; color:#ffffff !important; font-size:0.52rem; font-weight:800; }
+.light-mode-active .header-pause-inner { background: #f1f5f9; color: #64748b !important; }
 
-/* Fächer-Kacheln */
-.m-empty { background:rgba(255,255,255,0.02); color:rgba(255,255,255,0.15); font-weight:400; font-style:italic; }
-.m-mathe { background:rgba(239,68,68,0.22); color:#fee2e2; border-color:rgba(239,68,68,0.5); }
-.m-deutsch { background:rgba(59,130,246,0.22); color:#dbeafe; border-color:rgba(59,130,246,0.5); }
-.m-englisch { background:rgba(16,185,129,0.22); color:#d1fae5; border-color:rgba(16,185,129,0.5); }
-.m-physik { background:rgba(139,92,246,0.22); color:#ede9fe; border-color:rgba(139,92,246,0.5); }
-.m-sport { background:rgba(245,158,11,0.22); color:#fef9c3; border-color:rgba(245,158,11,0.5); }
-.m-bio { background:rgba(34,197,94,0.22); color:#dcfce7; border-color:rgba(34,197,94,0.5); }
-.m-geo { background:rgba(6,182,212,0.22); color:#ecfeff; border-color:rgba(6,182,212,0.5); }
-.m-geschichte { background:rgba(217,70,239,0.22); color:#fdf4ff; border-color:rgba(217,70,239,0.5); }
-.m-musik { background:rgba(244,63,94,0.22); color:#ffe4e6; border-color:rgba(244,63,94,0.5); }
-.m-kunst { background:rgba(20,184,166,0.22); color:#ccfbf1; border-color:rgba(20,184,166,0.5); }
-.m-other { background:rgba(255,255,255,0.08); color:#f8fafc; border-color:rgba(255,255,255,0.2); }
-.matrix-cell.today-col { box-shadow:inset 0 0 0 2px var(--accent) !important; }
+/* Kacheln PSE-Farben */
+.m-empty { background:rgba(120,120,120,0.03); color:var(--sub); opacity: 0.4; font-weight:400; font-style:italic; }
+.m-mathe { background:rgba(239,68,68,0.16); color:var(--text); border-color:rgba(239,68,68,0.4); }
+.m-deutsch { background:rgba(59,130,246,0.16); color:var(--text); border-color:rgba(59,130,246,0.4); }
+.m-englisch { background:rgba(16,185,129,0.16); color:var(--text); border-color:rgba(16,185,129,0.4); }
+.m-physik { background:rgba(139,92,246,0.16); color:var(--text); border-color:rgba(139,92,246,0.4); }
+.m-sport { background:rgba(245,158,11,0.16); color:var(--text); border-color:rgba(245,158,11,0.4); }
+.m-bio { background:rgba(34,197,94,0.16); color:var(--text); border-color:rgba(34,197,94,0.4); }
+.m-geo { background:rgba(6,182,212,0.16); color:var(--text); border-color:rgba(6,182,212,0.4); }
+.m-geschichte { background:rgba(217,70,239,0.16); color:var(--text); border-color:rgba(217,70,239,0.4); }
+.m-musik { background:rgba(244,63,94,0.16); color:var(--text); border-color:rgba(244,63,94,0.4); }
+.m-kunst { background:rgba(20,184,166,0.16); color:var(--text); border-color:rgba(20,184,166,0.4); }
+.m-other { background:rgba(120,120,120,0.08); color:var(--text); border-color:rgba(120,120,120,0.2); }
+.today-col-border { box-shadow:inset 0 0 0 2px var(--accent) !important; }
 
 .cell-emoji { font-size:1.1rem; margin-bottom:1px; display:block; }
 .cell-name { font-size:0.75rem; font-weight:900; line-height:1.1; }
-.cell-room { font-size:0.58rem; font-weight:700; color:rgba(255,255,255,0.7); background:rgba(0,0,0,0.3); padding:1px 4px; border-radius:4px; margin-top:3px; border:1px solid rgba(255,255,255,0.05); text-transform:uppercase; }
+.cell-room { font-size:0.58rem; font-weight:700; opacity:0.8; background:rgba(120,120,120,0.12); padding:1px 4px; border-radius:4px; margin-top:3px; text-transform:uppercase; }
 
-/* SCHÜLER DESIGN AUSWAHLEN */
+/* STYLE CONFIG MASKS */
 .settings-section { padding:18px 16px 0; max-width:600px; margin:0 auto; }
 .settings-section-title { font-size:0.68rem; font-weight:800; color:var(--sub); text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; }
-.set-input { width:100%; background:var(--card); border:1.5px solid var(--border); color:var(--text); padding:13px 14px; border-radius:13px; font-size:0.95rem; font-family:inherit; margin-bottom:11px; }
+.set-input { width:100%; background:var(--card2); border:1.5px solid var(--border); color:var(--text); padding:13px 14px; border-radius:13px; font-size:0.95rem; font-family:inherit; margin-bottom:11px; }
 .set-input:focus { outline:none; border-color:var(--accent); }
-.avatar-grid { display:flex; flex-wrap:wrap; gap:9px; margin-bottom:6px; }
-.avatar-opt { width:48px; height:48px; border-radius:50%; background:var(--card2); display:flex; align-items:center; justify-content:center; font-size:1.4rem; cursor:pointer; border:2px solid transparent; transition:all 0.2s; }
-.avatar-opt.selected { border-color:var(--accent); background:rgba(99,102,241,0.2); transform:scale(1.1); }
-.theme-grid { display:flex; flex-wrap:wrap; gap:9px; margin-bottom:11px; }
-.theme-opt { width:48px; height:48px; border-radius:50%; cursor:pointer; border:3px solid transparent; transition:all 0.2s; }
-.theme-opt.selected { border-color:white; transform:scale(1.15); }
-.toggle-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
-.toggle-label { font-size:0.92rem; font-weight:700; }
-.toggle-sub { font-size:0.72rem; color:var(--sub); }
-.toggle { width:50px; height:27px; background:var(--card2); border-radius:14px; position:relative; cursor:pointer; transition:background 0.3s; border:none; }
-.toggle.on { background:var(--accent); }
-.toggle::after { content:''; position:absolute; top:3px; left:3px; width:21px; height:21px; background:white; border-radius:50%; transition:transform 0.3s; box-shadow:0 2px 5px rgba(0,0,0,0.3); }
-.toggle.on::after { transform:translateX(23px); }
-.save-btn { margin:18px 0 0; width:100%; background:linear-gradient(135deg,var(--accent),var(--accent2)); color:white; border:none; padding:15px; border-radius:15px; font-size:0.95rem; font-weight:900; cursor:pointer; font-family:inherit; }
+.avatar-grid { display:flex; flex-wrap:wrap; gap:9px; margin-bottom:12px; }
+.avatar-opt { width:48px; height:48px; border-radius:12px; background:var(--card2); display:flex; align-items:center; justify-content:center; font-size:1.4rem; cursor:pointer; border:2px solid transparent; transition:all 0.2s; box-shadow: 0 2px 6px rgba(0,0,0,0.02); }
+.avatar-opt.selected { border-color:var(--accent); background:rgba(99,102,241,0.15); transform:scale(1.08); }
+.theme-grid { display:flex; flex-wrap:wrap; gap:9px; margin-bottom:12px; }
+.theme-opt { width:44px; height:44px; border-radius:50%; cursor:pointer; border:3px solid transparent; transition:all 0.2s; }
+.theme-opt.selected { border-color:var(--text); transform:scale(1.1); }
+
+/* DESIGN INTERFACE */
+.theme-bg-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-bottom:12px; }
+.theme-bg-opt { height:52px; border-radius:12px; cursor:pointer; border:2px solid transparent; transition:all 0.2s; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:0.75rem; font-weight:800; text-align:center; padding:4px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
+.theme-bg-opt span { font-size:0.55rem; opacity:0.6; font-weight:500; margin-top:2px; }
+.theme-bg-opt.selected { border-color:var(--accent); transform:scale(1.02); background: rgba(99,102,241,0.05); }
 
 /* LEHRER MANAGEMENT MASK */
-.admin-section { margin:0 16px; background:rgba(239,68,68,0.06); border:1.5px solid rgba(239,68,68,0.25); border-radius:16px; padding:16px; margin-bottom:14px; }
+.admin-section { margin:0 16px; background:rgba(239,68,68,0.04); border:1.5px solid rgba(239,68,68,0.2); border-radius:16px; padding:16px; margin-bottom:14px; }
 .admin-title { font-size:0.75rem; font-weight:900; color:var(--danger); text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; }
-.admin-input { width:100%; background:var(--bg); border:1.5px solid rgba(239,68,68,0.2); color:var(--text); padding:12px 14px; border-radius:11px; font-size:0.9rem; font-family:inherit; margin-bottom:10px; }
-.admin-textarea { width:100%; background:var(--bg); border:1.5px solid rgba(239,68,68,0.2); color:var(--text); padding:12px 14px; border-radius:11px; font-size:0.9rem; font-family:inherit; margin-bottom:10px; resize:none; min-height:80px; }
+.admin-input { width:100%; background:var(--card); border:1.5px solid var(--border); color:var(--text); padding:12px 14px; border-radius:11px; font-size:0.9rem; font-family:inherit; margin-bottom:10px; }
+.admin-textarea { width:100%; background:var(--card); border:1.5px solid var(--border); color:var(--text); padding:12px 14px; border-radius:11px; font-size:0.9rem; font-family:inherit; margin-bottom:10px; resize:none; min-height:80px; }
 .publish-btn { width:100%; background:linear-gradient(135deg,#dc2626,#ef4444); color:white; border:none; padding:15px; border-radius:13px; font-size:1rem; font-weight:900; cursor:pointer; font-family:inherit; display:flex; align-items:center; justify-content:center; gap:8px; }
 .admin-plan-day { margin-bottom:14px; }
 .admin-day-label { font-size:0.7rem; font-weight:900; color:var(--accent); margin-bottom:6px; text-transform:uppercase; letter-spacing:1px; }
 .admin-block-row { display:flex; align-items:center; gap:8px; margin-bottom:5px; }
 .admin-block-time { font-size:0.58rem; color:var(--sub); font-weight:700; min-width:80px; }
-.admin-block-input { flex:1; background:var(--bg); border:1px solid var(--border); color:var(--text); padding:7px 10px; border-radius:8px; font-size:0.8rem; font-family:inherit; }
+.admin-block-input { flex:1; background:var(--card); border:1px solid var(--border); color:var(--text); padding:7px 10px; border-radius:8px; font-size:0.8rem; font-family:inherit; }
 
-/* LOCK MODAL SCREEN */
-.pw-modal { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:var(--card); border-radius:20px; padding:22px; z-index:500; width:88%; max-width:360px; box-shadow:0 20px 60px rgba(0,0,0,0.8); border:1px solid var(--border); }
-.pw-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:499; }
+/* LOCK SCREEN POPUP */
+.pw-modal { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:var(--card); border-radius:20px; padding:22px; z-index:500; width:88%; max-width:360px; box-shadow:0 20px 60px rgba(0,0,0,0.3); border:1px solid var(--border); }
+.pw-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); z-index:499; backdrop-filter: blur(4px); }
 .pw-title { font-size:1rem; font-weight:900; margin-bottom:14px; text-align:center; }
-.pw-input { width:100%; background:var(--bg); border:1.5px solid var(--border); color:var(--text); padding:13px; border-radius:11px; font-size:1rem; font-family:inherit; margin-bottom:10px; text-align:center; letter-spacing:3px; }
+.pw-input { width:100%; background:var(--card2); border:1.5px solid var(--border); color:var(--text); padding:13px; border-radius:11px; font-size:1rem; font-family:inherit; margin-bottom:10px; text-align:center; letter-spacing:3px; }
 .pw-btn { width:100%; background:var(--danger); color:white; border:none; padding:13px; border-radius:11px; font-weight:900; cursor:pointer; font-family:inherit; font-size:0.95rem; }
-
-/* HELP SCREEN CARDS */
-.help-section { padding:18px 16px 0; max-width:600px; margin:0 auto; }
-.help-card { background:var(--card); border-radius:14px; padding:14px; margin-bottom:8px; border-left:3px solid var(--accent); }
-.help-card-title { font-size:0.88rem; font-weight:800; margin-bottom:4px; }
-.help-card-text { font-size:0.78rem; color:var(--sub); line-height:1.5; }
-
-/* EXTRA BACKGROUND GLOWS */
-.bg-t1 { background:linear-gradient(135deg,#0a0a0f,#1a0533) !important; }
-.bg-t2 { background:linear-gradient(135deg,#0a0f0a,#003320) !important; }
-.bg-t3 { background:linear-gradient(135deg,#0a0a0f,#330015) !important; }
-.bg-t4 { background:linear-gradient(135deg,#0f0a00,#332200) !important; }
-.bg-t5 { background:linear-gradient(135deg,#050510,#001033) !important; }
-.bg-t6 { background:linear-gradient(45deg,#0a0a0f,#1a0533,#000d33) !important; background-size:400% 400% !important; animation:grad-shift 8s ease infinite !important; }
-.bg-t7 { background:linear-gradient(45deg,#0a0f0a,#003320,#001a33) !important; background-size:400% 400% !important; animation:grad-shift 6s ease infinite !important; }
-.bg-t8 { background:linear-gradient(45deg,#0f0000,#330015,#1a0000) !important; background-size:400% 400% !important; animation:grad-shift 7s ease infinite !important; }
-@keyframes grad-shift { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
-
-.theme-bg-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:12px; }
-.theme-bg-opt { height:44px; border-radius:11px; cursor:pointer; border:2px solid transparent; transition:all 0.2s; display:flex; align-items:center; justify-content:center; font-size:0.7rem; font-weight:800; color:rgba(255,255,255,0.8); text-align:center; padding:2px; }
-.theme-bg-opt.selected { border-color:white; transform:scale(1.05); }
 </style>
 </head>
 <body>
@@ -261,6 +275,11 @@ body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text);
         <div class="clock-hint">⏰ Uhr tippen · Woche tippen zum Wechseln</div>
     </div>
 
+    <div class="vertretung-card" id="vertretung-box">
+        <div class="vertretung-title">⚠️ Eilmeldung: Vertretung / Ausfall</div>
+        <div class="vertretung-text" id="vertretung-text">Keine Vertretungen gemeldet.</div>
+    </div>
+
     <div class="status-grid">
         <div class="status-tile" id="tile-current">
             <div class="tile-label" id="tile-current-label">🟢 Aktuell</div>
@@ -285,17 +304,15 @@ body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text);
         <div class="news-time" id="news-time"></div>
     </div>
 
-    <div class="motivation" id="motivation-card"></div>
-
     <div class="update-wrap">
         <button class="update-btn" id="update-btn" onclick="forceRefresh()">🔄 App aktualisieren (+10 XP)</button>
     </div>
-    <div class="version-tag" id="version-tag">SchulHub v2.6 Pro</div>
+    <div class="version-tag" id="version-tag">SchulHub v2.7 Matrix Flip</div>
 
     <div class="plan-btn" onclick="openOverlay('plan-overlay')">
         <div class="plan-btn-icon">📅</div>
         <div class="plan-btn-text">
-            <div class="plan-btn-title">Stundenplan ansehen</div>
+            <div class="plan-btn-title">Stundenplan-Matrix öffnen</div>
             <div class="plan-btn-sub" id="plan-btn-sub">Kompakte Kacheln (Woche A)</div>
         </div>
         <div class="plan-btn-arrow">›</div>
@@ -316,7 +333,7 @@ body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text);
 <div class="overlay" id="plan-overlay">
     <div class="overlay-header">
         <button class="close-btn" onclick="closeOverlay('plan-overlay')">✕</button>
-        <div class="overlay-title">📅 Stundenplan-Matrix</div>
+        <div class="overlay-title">📅 3D Stundenplan-Matrix</div>
         <div style="width:30px;"></div>
     </div>
     <div class="week-tabs">
@@ -327,7 +344,7 @@ body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text);
     <div class="matrix-container" id="matrix-grid"></div>
     
     <div style="text-align:center; padding:15px; font-size:0.7rem; color:var(--sub); font-weight:600;">
-        💡 Heutiger Wochentag ist farbig hervorgehoben! 4. Block läuft nur Mo & Di.
+        💡 Tippe auf ein Fach, um zu sehen, was du nicht vergessen darfst!
     </div>
 </div>
 
@@ -344,6 +361,12 @@ body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text);
             <input type="password" class="admin-input" id="admin-token" placeholder="GitHub Personal Access Token (ghp_...)">
             <button class="publish-btn" onclick="saveToken()" style="background:linear-gradient(135deg,#059669,#10b981); padding:10px; font-size:0.85rem; margin-bottom:6px;">Token lokal auf Gerät sichern</button>
             <div id="token-status" style="font-size:0.72rem; font-weight:bold; text-align:center;"></div>
+        </div>
+
+        <div class="admin-section" style="background:rgba(245,158,11,0.05); border-color:rgba(245,158,11,0.3);">
+            <div class="admin-title" style="color:var(--warn);">⚠️ Aktueller Vertretungsplan</div>
+            <div style="font-size:0.75rem; color:var(--sub); margin-bottom:4px; font-weight:bold;">Eintrag für heute/morgen (Leeres Feld blendet die Warnung aus):</div>
+            <textarea class="admin-textarea" id="admin-vertretung" placeholder="z.B. 3. Block Physik fällt aus! Raumänderung: Mathe im Raum R102..." style="border-color:rgba(245,158,11,0.2);"></textarea>
         </div>
 
         <div class="admin-section">
@@ -381,24 +404,14 @@ body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text);
         <div class="settings-section-title">Dein Name / Spitzname</div>
         <input type="text" class="set-input" id="set-username" placeholder="Dein Name...">
         
-        <div class="settings-section-title">Wähle deinen Character Avatar</div>
+        <div class="settings-section-title">Wähle deinen Character Avatar (Gaming & Tech)</div>
         <div class="avatar-grid" id="avatar-grid"></div>
         
         <div class="settings-section-title">App Akzent-Farbe</div>
         <div class="theme-grid" id="theme-grid"></div>
 
-        <div class="settings-section-title">Hintergrund-Dimension (Gaming-Glows)</div>
+        <div class="settings-section-title">Hintergrund-Struktur & Helligkeit</div>
         <div class="theme-bg-grid" id="theme-bg-grid"></div>
-
-        <div style="margin-top:10px; border-top:1px solid var(--border); padding-top:16px;">
-            <div class="toggle-row">
-                <div>
-                    <div class="toggle-label">Motivationen anzeigen</div>
-                    <div class="toggle-sub">Tägliche Sprüche auf dem Dashboard</div>
-                </div>
-                <button class="toggle" id="toggle-motivation" onclick="toggleFeature('motivation')"></button>
-            </div>
-        </div>
 
         <button class="save-btn" onclick="saveSettings()">DESIGN AKTIVIEREN</button>
     </div>
@@ -412,8 +425,8 @@ body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text);
     </div>
     <div class="help-section">
         <div class="help-card"><div class="help-card-title">✨ Was ist SchulHub?</div><div class="help-card-text">Deine Schul-Zentrale. Zeigt dir live, was du jetzt gerade hast, wie viele Minuten der Block noch läuft und welche News der Lehrer geschickt hat.</div></div>
-        <div class="help-card"><div class="help-card-title">🏆 XP & Level-System</div><div class="help-card-text">Für jeden Tag, an dem du reinschaust oder aktualisierst, bekommst du <b>XP</b>. Steige im Level auf, um neue Titel zu verdienen!</div></div>
-        <div class="help-card"><div class="help-card-title">🧪 Die Stundenplan-Matrix</div><div class="help-card-text">Aufgebaut wie das Periodensystem! Kompakt, farbig sortiert inklusive aller Pausen und Räume auf einen Blick lesbar.</div></div>
+        <div class="help-card"><div class="help-card-title">🏆 Kacheln umdrehen (3D-Flip)</div><div class="help-card-text">Öffne den Stundenplan und tippe auf ein Fach. Die Kachel dreht sich um und verrät dir sofort, welches Material du auf keinen Fall vergessen darfst!</div></div>
+        <div class="help-card"><div class="help-card-title">⚠️ Vertretungs-Warner</div><div class="help-card-text">Sobald sich dein Stundenplan ändert oder etwas ausfällt, erscheint ganz oben auf deinem Dashboard ein roter Kasten mit allen Infos.</div></div>
     </div>
 </div>
 
@@ -434,109 +447,30 @@ body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text);
 
 <script>
 var APP_DATA = {
-    "className": "7c",
-    "news": "Morgen im 1. Block Vertretung. Deutsch statt Mathe. Raum 201",
-    "newsTime": "Aktualisiert: 28.05., 19:39",
-    "currentWeek": "A",
-    "wocheA": {
-        "Mo": [
-            "Mathe Raum 204",
-            "",
-            "Deutsch 404",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Di": [
-            "Englisch Raum 301",
-            "",
-            "Biologie R115",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Mi": [
-            "Deutsch R110",
-            "",
-            "Kunst R301",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Do": [
-            "Geographie R210",
-            "",
-            "Deutsch R110",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Fr": [
-            "Englisch R201",
-            "",
-            "Physik R101",
-            "",
-            "",
-            "",
-            ""
-        ]
+    className: "8b",
+    news: "Willkommen bei SchulHub Pro! Tipp: Gib Fächer im Admin-Bereich mit Raum ein (z.B. Mathe R204), damit es perfekt auf den Kacheln getrennt wird.",
+    newsTime: "Aktualisiert: Heute",
+    vertretung: "Morgen im 2. Block fällt Geschichte aus! Dafür verschiebt sich Biologie nach vorn.",
+    currentWeek: "A",
+    wocheA: {
+        Mo: ["Mathe R204","Deutsch R110","Englisch R201","Physik R101","","",""],
+        Di: ["Sport Halle","Mathe R204","Biologie R115","Geschichte R202","","",""],
+        Mi: ["Deutsch R110","Englisch R201","Kunst R301","","","",""],
+        Do: ["Geographie R210","Mathe R204","Deutsch R110","","","",""],
+        Fr: ["Englisch R201","Biologie R115","Physik R101","","","",""]
     },
-    "wocheB": {
-        "Mo": [
-            "Deutsch R110",
-            "",
-            "Physik R101",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Di": [
-            "Biologie R115",
-            "",
-            "Geschichte R202",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Mi": [
-            "Kunst R301",
-            "",
-            "Musik R305",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Do": [
-            "Mathe R204",
-            "",
-            "Sport Halle",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Fr": [
-            "Physik R101",
-            "",
-            "Geschichte R202",
-            "",
-            "",
-            "",
-            ""
-        ]
+    wocheB: {
+        Mo: ["Deutsch R110","Mathe R204","Physik R101","Englisch R201","","",""],
+        Di: ["Biologie R115","Sport Halle","Geschichte R202","Mathe R204","","",""],
+        Mi: ["Kunst R301","Deutsch R110","Musik R305","","","",""],
+        Do: ["Mathe R204","Geographie R210","Sport Halle","","","",""],
+        Fr: ["Physik R101","Englisch R201","Geschichte R202","","","",""]
     }
 };
 
 var ADMIN_PW = "Lwlmn72Neo123";
 
-// ─── 🛠 EXAKTE REPO-SYSTEMPFADE (BOMBENFEST INTEGRIERT!) ───
+// ─── 🛠 REPARIERTE GITHUB REPO PFADE (EXAKT AN DEINE NEUE UMBENENNUNG ANGEPASST!) ───
 var GH_USER = "nagel-physik";
 var GH_REPO = "SchulApp-SuS-"; 
 var GH_FILE = "index.html";    
@@ -555,23 +489,13 @@ var BLOCKS = [
 ];
 var DAYS_SHORT = ["So","Mo","Di","Mi","Do","Fr","Sa"];
 var DAYS_KEYS = ["Mo","Di","Mi","Do","Fr"];
-var MOTIVATIONS = [
-    "💪 Dranhängen – jede Minute bringt dich dem Feierabend näher!",
-    "🎮 Nach der Schule gehört die Zeit dir!",
-    "🔥 Du bist klüger als du denkst. Tschakka!",
-    "😴 Genug schlafen ist das beste Geheimnis für gute Noten.",
-    "🚀 Level up! Mach den heutigen Tag zu deinem Tag!",
-    "🍕 Gleich geschafft, zu Hause wartet die Couch!",
-    "✨ Fehler sind Helfer! Aus ihnen lernt man."
-];
 
 var clockStyle = localStorage.getItem('susClockStyle') || 'digital';
 var activeWeek = localStorage.getItem('susActiveWeek') || APP_DATA.currentWeek;
 var userAccent = localStorage.getItem('susAccent') || '#6366f1';
 var userBgTheme = localStorage.getItem('susBgTheme') || 'default';
-var userAvatar = localStorage.getItem('susAvatar') || '😎';
+var userAvatar = localStorage.getItem('susAvatar') || '👨‍🚀'; // Neuer Default-Wert
 var userName = localStorage.getItem('susUsername') || '';
-var features = JSON.parse(localStorage.getItem('susFeatures')) || { motivation: true };
 var userXP = parseInt(localStorage.getItem('susXP')) || 0;
 var lastCheckInDate = localStorage.getItem('susLastCheckIn') || '';
 
@@ -592,6 +516,23 @@ function splitSubjectAndRoom(rawSubject) {
         }
     }
     return { name: rawSubject.trim(), room: '' };
+}
+
+function getSubjectReminder(subject) {
+    if (!subject) return '';
+    var data = splitSubjectAndRoom(subject);
+    var s = data.name.toLowerCase();
+    if (s.includes('math')) return "📐 Taschenrechner, Geodreieck & Formelsammlung nicht vergessen!";
+    if (s.includes('deut')) return "📚 Arbeitsheft, Textbuch & aktuelle Lektüre einpacken!";
+    if (s.includes('eng')) return "🇬🇧 Workbook, Vokabelheft & Lesebuch prüfen!";
+    if (s.includes('phys')) return "🧪 Physik-Hefter & Taschenrechner bereitlegen!";
+    if (s.includes('spor')) return "🏃 Sportsachen (Hallenschuhe, Shirt, Hose) einpacken!";
+    if (s.includes('bio')) return "🌱 Biologie-Hefter, Lupe & Buntstifte bereit halten!";
+    if (s.includes('geo') || s.includes('erd')) return "🌍 Atlas, Arbeitsheft & Geodreieck mitbringen!";
+    if (s.includes('gesch')) return "⏳ Geschichtshefter & Lehrbuch einstecken!";
+    if (s.includes('musi')) return "🎵 Musikmappe & Notenblatt einpacken!";
+    if (s.includes('kunst') || s.includes('zeich')) return "🎨 Malschürze, Pinsel, Tuschkasten & Zeichenblock!";
+    return "📝 Federtasche prüfen, Hausaufgaben bereithalten & Mappe einpacken!";
 }
 
 function getSubjectClass(subject) {
@@ -676,10 +617,33 @@ function initApp() {
     renderLevelBar();
 }
 
+// 🌐 DEFINITION DER STRUKTURMUSTER (GRID / GEOMETRISCH)
+var PATTERNS = {
+    none: "none",
+    grid: "linear-gradient(rgba(120,120,120,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(120,120,120,0.05) 1px, transparent 1px)",
+    lines: "repeating-linear-gradient(45deg, rgba(99,102,241,0.02) 0px, rgba(99,102,241,0.02) 2px, transparent 2px, transparent 10px)"
+};
+
 function applyStyles() {
     document.documentElement.style.setProperty('--accent', userAccent);
     document.body.className = '';
-    if (userBgTheme !== 'default') document.body.classList.add(userBgTheme);
+    document.documentElement.className = '';
+    
+    // Hintergrundsteuerung (Hell & Dunkel)
+    if (userBgTheme.startsWith('light-')) {
+        document.documentElement.classList.add('light-mode-active');
+        if (userBgTheme === 'light-grid') {
+            document.documentElement.style.setProperty('--bg-pattern', PATTERNS.grid);
+            document.documentElement.style.setProperty('--bg-size', "20px 20px");
+        } else if (userBgTheme === 'light-lines') {
+            document.documentElement.style.setProperty('--bg-pattern', PATTERNS.lines);
+        } else {
+            document.documentElement.style.setProperty('--bg-pattern', "none");
+        }
+    } else {
+        if (userBgTheme !== 'default') document.body.classList.add(userBgTheme);
+        document.documentElement.style.setProperty('--bg-pattern', "none");
+    }
 }
 
 function switchTab(tab) {
@@ -724,9 +688,17 @@ function updateClock() {
     document.getElementById('week-badge').style.background = activeWeek==='A' ? 'linear-gradient(135deg,#2563eb,#3b82f6)' : 'linear-gradient(135deg,#7c3aed,#8b5cf6)';
     document.getElementById('news-text').innerText = APP_DATA.news || 'Keine aktuellen Infos.';
     if (APP_DATA.newsTime) document.getElementById('news-time').innerText = APP_DATA.newsTime;
-    document.getElementById('motivation-card').style.display = features.motivation ? 'block' : 'none';
-    if (features.motivation) document.getElementById('motivation-card').innerText = MOTIVATIONS[now.getDay() % MOTIVATIONS.length];
-    document.getElementById('plan-btn-sub').innerText = 'Kompakte Kacheln (Woche ' + activeWeek + ')';
+    
+    // VERTRETUNG LOGIK MASKING
+    var vBox = document.getElementById('vertretung-box');
+    if (APP_DATA.vertretung && APP_DATA.vertretung.trim() !== "") {
+        vBox.style.display = 'block';
+        document.getElementById('vertretung-text').innerText = APP_DATA.vertretung;
+    } else {
+        vBox.style.display = 'none';
+    }
+
+    document.getElementById('plan-btn-sub').innerText = 'Stundenplan ansehen (Woche ' + activeWeek + ')';
     updateStatus(now);
 }
 
@@ -808,37 +780,51 @@ function flipWeek() {
     renderMatrixWeek(activeWeek); updateClock();
 }
 
+function toggleCardFlip(element) {
+    if (element.classList.contains('static-header') || element.classList.contains('static-pause')) return;
+    element.classList.toggle('flipped');
+}
+
 function renderMatrixWeek(w) {
     var plan = APP_DATA['woche'+w] || {}, now = new Date(), currentDayIdx = now.getDay(); 
     var matrixContainer = document.getElementById('matrix-grid'); if (!matrixContainer) return;
     var days = ['Mo', 'Di', 'Mi', 'Do', 'Fr'], dayNames = ['Mo', 'Di', 'Mi', 'Do', 'Fr'], html = '';
     
-    html += '<div class="matrix-row"><div class="matrix-cell header-day" style="min-height:32px; height:32px; background:#0f172a; flex:none; width:52px;">Zeit</div>';
-    days.forEach(function(d, idx) { html += '<div class="matrix-cell header-day '+((idx+1)===currentDayIdx?'today-col':'')+'">' + dayNames[idx] + '</div>'; });
+    html += '<div class="matrix-row"><div class="matrix-cell static-header" style="min-height:32px; height:32px; flex:none; width:52px;"><div class="flip-card-inner"><div class="flip-front header-day-inner">Zeit</div></div></div>';
+    days.forEach(function(d, idx) { html += '<div class="matrix-cell static-header '+((idx+1)===currentDayIdx?'today-col-border':'')+'"><div class="flip-card-inner"><div class="flip-front header-day-inner">' + dayNames[idx] + '</div></div></div>'; });
     html += '</div>';
     
     BLOCKS.forEach(function(b, blockIdx) {
         var isFourthBlockOrItsPause = blockIdx >= 5; html += '<div class="matrix-row">';
         if (b.pause) {
-            html += '<div class="matrix-cell header-pause-title">' + b.start + '</div>';
+            html += '<div class="matrix-cell static-pause" style="flex:none; width:52px; min-height:22px !important;"><div class="flip-card-inner"><div class="flip-front header-pause-inner" style="font-size:0.52rem; font-weight:800;">' + b.start + '</div></div></div>';
             days.forEach(function(d, dayIdx) {
-                if (isFourthBlockOrItsPause && (d === 'Mi' || d === 'Do' || d === 'Fr')) html += '<div class="matrix-cell row-pause" style="opacity:0; border:none;"></div>';
-                else html += '<div class="matrix-cell row-pause '+((dayIdx+1)===currentDayIdx?'today-col':'')+'">⏸ ' + b.label.split(' ')[0] + '</div>';
+                if (isFourthBlockOrItsPause && (d === 'Mi' || d === 'Do' || d === 'Fr')) html += '<div class="matrix-cell static-pause" style="opacity:0; border:none; min-height:22px !important;"></div>';
+                else html += '<div class="matrix-cell static-pause '+((dayIdx+1)===currentDayIdx?'today-col-border':'')+'" style="min-height:22px !important;"><div class="flip-card-inner"><div class="flip-front row-pause-inner">⏸ ' + b.label.split(' ')[0] + '</div></div></div>';
             });
         } else {
-            html += '<div class="matrix-cell header-block">' + b.label.split('.')[0] + '.B<div>' + b.start + '</div></div>';
+            html += '<div class="matrix-cell static-header" style="flex:none; width:52px;"><div class="flip-card-inner"><div class="flip-front header-block-inner">' + b.label.split('.')[0] + '.B<div>' + b.start + '</div></div></div></div>';
             days.forEach(function(d, dayIdx) {
                 if (isFourthBlockOrItsPause && (d === 'Mi' || d === 'Do' || d === 'Fr')) {
-                    html += '<div class="matrix-cell m-empty" style="opacity:0; border:none;"></div>';
+                    html += '<div class="matrix-cell static-header" style="opacity:0; border:none;"></div>';
                 } else {
                     var rawContent = (plan[d] && plan[d][blockIdx]) ? plan[d][blockIdx] : '';
                     var splitData = splitSubjectAndRoom(rawContent);
-                    html += '<div class="matrix-cell ' + getSubjectClass(rawContent) + ' '+((dayIdx+1)===currentDayIdx?'today-col':'')+'">';
+                    var cellClass = getSubjectClass(rawContent);
+                    
                     if (rawContent) {
+                        html += '<div class="matrix-cell '+((dayIdx+1)===currentDayIdx?'today-col-border':'')+'" onclick="toggleCardFlip(this)">';
+                        html += '<div class="flip-card-inner">';
+                        html += '<div class="flip-front ' + cellClass + '">';
                         html += '<span class="cell-emoji">' + getSubjectEmoji(rawContent) + '</span><span class="cell-name">' + splitData.name + '</span>';
                         if (splitData.room) html += '<span class="cell-room">' + splitData.room + '</span>';
-                    } else html += '<span style="opacity:0.2; font-size:0.65rem;">–</span>';
-                    html += '</div>';
+                        html += '</div>';
+                        html += '<div class="flip-back">' + getSubjectReminder(rawContent) + '</div>';
+                        html += '</div></div>';
+                    } else {
+                        html += '<div class="matrix-cell static-header '+((dayIdx+1)===currentDayIdx?'today-col-border':'')+'">';
+                        html += '<div class="flip-card-inner"><div class="flip-front m-empty"><span style="opacity:0.2; font-size:0.65rem;">–</span></div></div></div>';
+                    }
                 }
             });
         }
@@ -848,21 +834,25 @@ function renderMatrixWeek(w) {
 
     var ta = document.getElementById('tab-a'), tb = document.getElementById('tab-b');
     if (ta && tb) {
-        ta.style.background = w==='A' ? '#2563eb' : 'rgba(255,255,255,0.05)';
+        ta.style.background = w==='A' ? '#2563eb' : 'rgba(120,120,120,0.05)';
         ta.style.color = w==='A' ? 'white' : 'var(--sub)';
-        tb.style.background = w==='B' ? '#7c3aed' : 'rgba(255,255,255,0.05)';
+        tb.style.background = w==='B' ? '#7c3aed' : 'rgba(120,120,120,0.05)';
         tb.style.color = w==='B' ? 'white' : 'var(--sub)';
     }
 }
 
-var AVATARS = ['😎','🦊','🐉','⚡','🎮','🌙','🔥','🎵','🚀','💎','🌊','🎯','🦁','🐺','🐱','👽','🤖'];
+// 👾 COOLE MODERNE CHARAKTER-AVATARE (GAMER & TECH-STYLE)
+var AVATARS = ['👨‍🚀','🐱‍💻','👾','🚀','🤖','🎮','🦊','🐉','🎭','⚡','💎','🎯','🛡️','🦁','🐱','🦉'];
 var THEMES = ['#6366f1','#3b82f6','#10b981','#f59e0b','#ef4444','#ec4899','#06b6d4','#f97316','#8b5cf6'];
+
+// 🎨 ERWEITERTE HINTERGRUND-MATRIX (INKLUSIVE HELLEN THEMES & STRUKTUREN!)
 var BG_THEMES = [
-    {id:'default',label:'Standard Space',preview:'var(--bg)'}, {id:'bg-t1',label:'Deep Cyber',preview:'linear-gradient(135deg,#0a0a0f,#1a0533)'},
-    {id:'bg-t2',label:'Bio Toxic',preview:'linear-gradient(135deg,#0a0f0a,#003320)'}, {id:'bg-t3',label:'Neon Crimson',preview:'linear-gradient(135deg,#0a0a0f,#330015)'},
-    {id:'bg-t4',label:'Amber Mine',preview:'linear-gradient(135deg,#0f0a00,#332200)'}, {id:'bg-t5',label:'Deep Ocean',preview:'linear-gradient(135deg,#050510,#001033)'},
-    {id:'bg-t6',label:'Multiverse',preview:'linear-gradient(45deg,#0a0a0f,#1a0533)'}, {id:'bg-t7',label:'Matrix Flu',preview:'linear-gradient(45deg,#0a0f0a,#003320)'},
-    {id:'bg-t8',label:'Supernova',preview:'linear-gradient(45deg,#0f0000,#330015)'}
+    {id:'default',label:'Space Dark (Standard)',sub:'Dunkles Universum',preview:'#0a0a0f'},
+    {id:'bg-t1',label:'Cyber Purple',sub:'Dunkles Neon-Lila',preview:'linear-gradient(135deg,#0a0a0f,#1a0533)'},
+    {id:'bg-t5',label:'Deep Ocean',sub:'Dunkles Tiefsee-Blau',preview:'linear-gradient(135deg,#050510,#001033)'},
+    {id:'light-clean',label:'Light Minimal (Hell)',sub:'Klares, helles Design',preview:'#f8fafc'},
+    {id:'light-grid',label:'Light Matrix Grid',sub:'Helles technisches Raster',preview:'#f1f5f9'},
+    {id:'light-lines',label:'Light Geo Lines',sub:'Helle dynamische Linien',preview:'#e2e8f0'}
 ];
 
 function buildStyleUI() {
@@ -880,18 +870,20 @@ function buildStyleUI() {
     });
     var bgGrid = document.getElementById('theme-bg-grid'); bgGrid.innerHTML = '';
     BG_THEMES.forEach(function(bgt) {
-        var div = document.createElement('div'); div.className = 'theme-bg-opt' + (userBgTheme===bgt.id?' selected':''); div.style.background = bgt.id==='default'?'#13131a':bgt.preview; div.innerText = bgt.label;
+        var div = document.createElement('div'); div.className = 'theme-bg-opt' + (userBgTheme===bgt.id?' selected':''); 
+        div.style.background = bgt.id.startsWith('light-') ? '#ffffff' : bgt.preview;
+        div.style.color = bgt.id.startsWith('light-') ? '#0f172a' : '#ffffff';
+        div.style.border = bgt.id.startsWith('light-') ? '1px solid #cbd5e1' : 'none';
+        div.innerHTML = bgt.label + '<span>' + bgt.sub + '</span>';
         div.onclick = function() { document.querySelectorAll('.theme-bg-opt').forEach(el=>el.classList.remove('selected')); div.classList.add('selected'); userBgTheme = bgt.id; };
         bgGrid.appendChild(div);
     });
-    document.getElementById('toggle-motivation').className = 'toggle' + (features.motivation ? ' on' : '');
 }
 
-function toggleFeature(key) { features[key] = !features[key]; document.getElementById('toggle-'+key).className = 'toggle' + (features[key] ? ' on' : ''); }
 function saveSettings() {
     userName = document.getElementById('set-username').value.trim(); localStorage.setItem('susUsername', userName);
     localStorage.setItem('susAvatar', userAvatar); localStorage.setItem('susAccent', userAccent); localStorage.setItem('susBgTheme', userBgTheme);
-    localStorage.setItem('susFeatures', JSON.stringify(features)); initApp(); switchTab('dash');
+    initApp(); switchTab('dash');
 }
 
 function openPwModal() { document.getElementById('pw-overlay').style.display = 'block'; document.getElementById('pw-modal').style.display = 'block'; document.getElementById('pw-input').value = ''; document.getElementById('pw-input').focus(); }
@@ -921,7 +913,9 @@ function buildAdminWeekInputs(container, week) {
 }
 
 function loadAdminFields() {
-    document.getElementById('admin-class').value = APP_DATA.className || ''; document.getElementById('admin-news').value = APP_DATA.news || '';
+    document.getElementById('admin-class').value = APP_DATA.className || ''; 
+    document.getElementById('admin-news').value = APP_DATA.news || '';
+    document.getElementById('admin-vertretung').value = APP_DATA.vertretung || '';
     fillAdminPlan('a', APP_DATA.wocheA); fillAdminPlan('b', APP_DATA.wocheB); switchAdminWeek(currentAdminWeek);
 }
 
@@ -952,10 +946,10 @@ function switchAdminWeek(w) {
     var btnA = document.getElementById('admin-tab-a'), btnB = document.getElementById('admin-tab-b');
     if (w === 'A') {
         if(wa) wa.style.display = 'block'; if(wb) wb.style.display = 'none';
-        btnA.style.background = '#2563eb'; btnA.style.color = 'white'; btnB.style.background = 'rgba(255,255,255,0.05)'; btnB.style.color = 'var(--sub)';
+        btnA.style.background = '#2563eb'; btnA.style.color = 'white'; btnB.style.background = 'rgba(120,120,120,0.05)'; btnB.style.color = 'var(--sub)';
     } else {
         if(wa) wa.style.display = 'none'; if(wb) wb.style.display = 'block';
-        btnA.style.background = 'rgba(255,255,255,0.05)'; btnA.style.color = 'var(--sub)'; btnB.style.background = '#7c3aed'; btnB.style.color = 'white';
+        btnA.style.background = 'rgba(120,120,120,0.05)'; btnA.style.color = 'var(--sub)'; btnB.style.background = '#7c3aed'; btnB.style.color = 'white';
     }
 }
 
@@ -976,6 +970,7 @@ async function publishApp() {
     var token = localStorage.getItem('susAdminToken') || ''; if (!token) { alert('Bitte zuerst GitHub Token eintragen und lokal sichern!'); return; }
     APP_DATA.className = document.getElementById('admin-class').value.trim() || APP_DATA.className;
     APP_DATA.news = document.getElementById('admin-news').value.trim();
+    APP_DATA.vertretung = document.getElementById('admin-vertretung').value.trim();
     APP_DATA.newsTime = 'Aktualisiert: ' + new Date().toLocaleDateString('de-DE', {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'});
     APP_DATA.currentWeek = activeWeek; APP_DATA.wocheA = readAdminPlan('a'); APP_DATA.wocheB = readAdminPlan('b');
     var btn = document.getElementById('publish-btn'), status = document.getElementById('publish-status');
@@ -1000,7 +995,7 @@ async function publishApp() {
             headers: { 'Authorization': 'token ' + token, 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
             body: JSON.stringify({ message: 'Matrix Live Sync (' + APP_DATA.newsTime + ')', content: updatedContentBase64, sha: sha })
         });
-        if (putRes.ok) { status.innerText = '🚀 Live-Update erfolgreich! GitHub aktualisiert.'; status.style.color = 'var(--success)'; initApp(); }
+        if (putRes.ok) { status.innerText = '🚀 Live-Update erfolgreich! GitHub & Vercel aktualisiert.'; status.style.color = 'var(--success)'; initApp(); }
         else { var errorData = await putRes.json(); throw new Error(errorData.message || 'Fehler beim Schreiben.'); }
     } catch (e) {
         console.error(e); status.innerText = '❌ Fehler: ' + e.message; status.style.color = 'var(--danger)';
