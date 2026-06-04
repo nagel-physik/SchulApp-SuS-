@@ -470,8 +470,10 @@ body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; heigh
 <div class="pw-overlay" id="pw-overlay" onclick="closePwModal()"></div>
 <div class="pw-modal" id="pw-modal">
     <div class="pw-title">🔒 Lehrer-Zentrale</div>
+    <div id="pw-lockout-msg" style="display:none; text-align:center; padding:10px 0 14px; font-size:0.85rem; font-weight:800; color:var(--danger); line-height:1.5;"></div>
     <input type="password" class="pw-input" id="pw-input" placeholder="••••••" onkeydown="if(event.key==='Enter')checkPw()">
-    <button class="pw-btn" onclick="checkPw()">ENTSPERREN</button>
+    <div id="pw-attempts-msg" style="text-align:center; font-size:0.72rem; color:var(--sub); font-weight:700; margin-bottom:8px; min-height:16px;"></div>
+    <button class="pw-btn" id="pw-btn" onclick="checkPw()">ENTSPERREN</button>
     <button onclick="closePwModal()" style="width:100%;margin-top:8px;background:none;border:none;color:var(--sub);cursor:pointer;padding:8px;font-family:inherit;font-size:0.8rem;">Abbrechen</button>
 </div>
 
@@ -799,109 +801,29 @@ body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; heigh
 
 <script>
 var APP_DATA = {
-    "className": "7c",
-    "news": "Hallo an alle🙃",
-    "newsTime": "Aktualisiert: 04.06., 17:27",
-    "newsUpdatedAt": "2026-06-04T15:27:09.021Z",
-    "currentWeek": "B",
-    "events": [],
-    "wocheA": {
-        "Mo": [
-            "Mathe R204",
-            "",
-            "Englisch R201",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Di": [
-            "Sport Halle",
-            "",
-            "Biologie R115",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Mi": [
-            "Deutsch R110",
-            "",
-            "Kunst R301",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Do": [
-            "Geographie R210",
-            "",
-            "Deutsch R110",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Fr": [
-            "Englisch R201",
-            "",
-            "Physik R101",
-            "",
-            "",
-            "",
-            ""
-        ]
+    className: "8b",
+    news: "Willkommen bei SchulHub Pro! Tipp: Gib Fächer im Admin-Bereich mit Raum ein (z.B. Mathe R204), damit es perfekt auf den Kacheln getrennt wird.",
+    newsTime: "Aktualisiert: Heute",
+    newsUpdatedAt: "",
+    currentWeek: "A",
+    events: [],
+    wocheA: {
+        Mo: ["Mathe R204","Deutsch R110","Englisch R201","Physik R101","","",""],
+        Di: ["Sport Halle","Mathe R204","Biologie R115","Geschichte R202","","",""],
+        Mi: ["Deutsch R110","Englisch R201","Kunst R301","","","",""],
+        Do: ["Geographie R210","Mathe R204","Deutsch R110","","","",""],
+        Fr: ["Englisch R201","Biologie R115","Physik R101","","","",""]
     },
-    "wocheB": {
-        "Mo": [
-            "Deutsch R110",
-            "",
-            "Physik R101",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Di": [
-            "Biologie R115",
-            "",
-            "Geschichte R202",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Mi": [
-            "Kunst R301",
-            "",
-            "Musik R305",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Do": [
-            "Mathe R204",
-            "",
-            "Sport Halle",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Fr": [
-            "Physik R101",
-            "",
-            "Geschichte R202",
-            "",
-            "",
-            "",
-            ""
-        ]
+    wocheB: {
+        Mo: ["Deutsch R110","Mathe R204","Physik R101","Englisch R201","","",""],
+        Di: ["Biologie R115","Sport Halle","Geschichte R202","Mathe R204","","",""],
+        Mi: ["Kunst R301","Deutsch R110","Musik R305","","","",""],
+        Do: ["Mathe R204","Geographie R210","Sport Halle","","","",""],
+        Fr: ["Physik R101","Englisch R201","Geschichte R202","","","",""]
     }
 };
 
-var ADMIN_PW = "Lwlmn72Neo123";
+var ADMIN_PW_HASH = "ed16f1a0567fcd73254c37e4759caa0544aa8a3b6eb0526504c9bcf158135c4d";
 var GH_USER = "nagel-physik";
 var GH_REPO = "SchulApp-SuS-";
 var GH_FILE = "index.html";
@@ -1856,9 +1778,127 @@ function saveSettings() {
     initApp(); switchTab('dash');
 }
 
-function openPwModal() { document.getElementById('pw-overlay').style.display = 'block'; document.getElementById('pw-modal').style.display = 'block'; document.getElementById('pw-input').value = ''; document.getElementById('pw-input').focus(); }
-function closePwModal() { document.getElementById('pw-overlay').style.display = 'none'; document.getElementById('pw-modal').style.display = 'none'; }
-function checkPw() { if (document.getElementById('pw-input').value === ADMIN_PW) { closePwModal(); openOverlay('admin-overlay'); loadAdminFields(); } else { alert('Code falsch.'); } }
+var PW_MAX_ATTEMPTS = 5;
+var PW_LOCKOUT_MS = 5 * 60 * 1000; // 5 Minuten
+var pwCountdownTimer = null;
+
+function getPwState() {
+    try {
+        return JSON.parse(localStorage.getItem('susAdminLock') || '{"attempts":0,"lockedUntil":0}');
+    } catch(e) { return {attempts:0, lockedUntil:0}; }
+}
+function savePwState(state) {
+    localStorage.setItem('susAdminLock', JSON.stringify(state));
+}
+
+function openPwModal() {
+    document.getElementById('pw-overlay').style.display = 'block';
+    document.getElementById('pw-modal').style.display = 'block';
+    document.getElementById('pw-input').value = '';
+    updatePwModalState();
+    document.getElementById('pw-input').focus();
+}
+
+function closePwModal() {
+    document.getElementById('pw-overlay').style.display = 'none';
+    document.getElementById('pw-modal').style.display = 'none';
+    if (pwCountdownTimer) { clearInterval(pwCountdownTimer); pwCountdownTimer = null; }
+}
+
+function updatePwModalState() {
+    var state = getPwState();
+    var now = Date.now();
+    var lockMsg = document.getElementById('pw-lockout-msg');
+    var attemptsMsg = document.getElementById('pw-attempts-msg');
+    var input = document.getElementById('pw-input');
+    var btn = document.getElementById('pw-btn');
+
+    if (state.lockedUntil > now) {
+        // Gesperrt: Countdown anzeigen
+        input.style.display = 'none';
+        btn.style.display = 'none';
+        attemptsMsg.style.display = 'none';
+        lockMsg.style.display = 'block';
+        if (pwCountdownTimer) clearInterval(pwCountdownTimer);
+        pwCountdownTimer = setInterval(function() {
+            var remaining = getPwState().lockedUntil - Date.now();
+            if (remaining <= 0) {
+                clearInterval(pwCountdownTimer);
+                pwCountdownTimer = null;
+                // Entsperren
+                lockMsg.style.display = 'none';
+                input.style.display = 'block';
+                btn.style.display = 'block';
+                attemptsMsg.style.display = 'block';
+                attemptsMsg.innerText = '';
+                input.value = '';
+                input.focus();
+            } else {
+                var mins = Math.floor(remaining / 60000);
+                var secs = Math.floor((remaining % 60000) / 1000);
+                lockMsg.innerHTML = '🚫 Zu viele Fehlversuche!<br>Gesperrt für noch ' +
+                    mins + ':' + String(secs).padStart(2,'0') + ' Minuten.';
+            }
+        }, 500);
+        // Sofort einmal aufrufen
+        var remaining = state.lockedUntil - now;
+        var mins = Math.floor(remaining / 60000);
+        var secs = Math.floor((remaining % 60000) / 1000);
+        lockMsg.innerHTML = '🚫 Zu viele Fehlversuche!<br>Gesperrt für noch ' +
+            mins + ':' + String(secs).padStart(2,'0') + ' Minuten.';
+    } else {
+        // Normal
+        lockMsg.style.display = 'none';
+        input.style.display = 'block';
+        btn.style.display = 'block';
+        var remaining = PW_MAX_ATTEMPTS - state.attempts;
+        if (state.attempts > 0) {
+            attemptsMsg.innerText = '⚠️ Noch ' + remaining + ' von ' + PW_MAX_ATTEMPTS + ' Versuchen übrig';
+            attemptsMsg.style.color = remaining <= 2 ? 'var(--danger)' : 'var(--sub)';
+        } else {
+            attemptsMsg.innerText = '';
+        }
+    }
+}
+
+async function checkPw() {
+    var state = getPwState();
+    var now = Date.now();
+
+    // Gesperrt?
+    if (state.lockedUntil > now) { updatePwModalState(); return; }
+
+    var input = document.getElementById('pw-input');
+    var entered = input.value;
+    if (!entered) return;
+
+    // Hash berechnen
+    var msgBuffer = new TextEncoder().encode(entered);
+    var hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+    var hashHex = Array.from(new Uint8Array(hashBuffer))
+        .map(function(b){ return b.toString(16).padStart(2,'0'); }).join('');
+
+    if (hashHex === ADMIN_PW_HASH) {
+        // Erfolg: Sperre zurücksetzen
+        savePwState({attempts:0, lockedUntil:0});
+        closePwModal();
+        openOverlay('admin-overlay');
+        loadAdminFields();
+    } else {
+        // Fehlversuch
+        state.attempts++;
+        if (state.attempts >= PW_MAX_ATTEMPTS) {
+            state.lockedUntil = now + PW_LOCKOUT_MS;
+            state.attempts = 0;
+        }
+        savePwState(state);
+        input.value = '';
+        // Kurz rot aufleuchten
+        input.style.borderColor = 'var(--danger)';
+        setTimeout(function(){ input.style.borderColor = ''; }, 600);
+        updatePwModalState();
+    }
+}
 
 function buildAdminStructure() {
     var container = document.getElementById('admin-plan-inputs'); if (!container) return;
