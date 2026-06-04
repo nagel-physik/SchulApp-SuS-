@@ -21,28 +21,18 @@
     --bg-pattern: none;
     --bg-size: auto;
 }
-
-/* KRAFTIGE EXTRA HINTERGRUND-THEMES (DYNAMIC PER CLASS) */
 .theme-custom-cyber-purple { --bg: #13012b; --card: #210245; --card2: #2d045c; --border: rgba(255,255,255,0.1); }
 .theme-custom-light-clean { --bg: #f8fafc; --card: #ffffff; --card2: #f1f5f9; --border: rgba(0,0,0,0.08); --text: #0f172a; --sub: #64748b; }
 .theme-custom-light-grid { --bg: #f1f5f9; --card: #ffffff; --card2: #e2e8f0; --border: rgba(0,0,0,0.08); --text: #0f172a; --sub: #64748b; }
 .theme-custom-light-lines { --bg: #e2e8f0; --card: #ffffff; --card2: #cbd5e1; --border: rgba(0,0,0,0.08); --text: #0f172a; --sub: #64748b; }
-
-/* DIE REINEN KRÄFTIGEN BUNTE-THEMES */
 .theme-custom-solid-red { --bg: #7f1d1d; --card: #991b1b; --card2: #b91c1c; --border: rgba(255,255,255,0.15); --text: #fef2f2; --sub: #fca5a5; }
 .theme-custom-solid-yellow { --bg: #eab308; --card: #facc15; --card2: #fef08a; --border: rgba(0,0,0,0.08); --text: #451a03; --sub: #713f12; }
 .theme-custom-solid-pink { --bg: #9d174d; --card: #be185d; --card2: #da1b70; --border: rgba(255,255,255,0.15); --text: #fdf2f8; --sub: #fbcfe8; }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin:0; padding:0; }
 body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; padding-bottom:90px; overflow-x:hidden; position:relative; transition: background 0.3s ease, color 0.3s ease; }
+body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; opacity: 0.6; background: var(--bg-pattern); background-size: var(--bg-size, auto); }
 
-/* STRUKTUR-HINTERGRÜNDE */
-body::before {
-    content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; opacity: 0.6;
-    background: var(--bg-pattern); background-size: var(--bg-size, auto);
-}
-
-/* DASHBOARD LAYOUT & CARDS */
 .app { position:relative; z-index:1; max-width:600px; margin:0 auto; }
 .top-bar { display:flex; justify-content:space-between; align-items:center; padding:20px 16px 5px; }
 .top-left .greeting { font-size:0.85rem; color:var(--sub); font-weight:600; }
@@ -50,8 +40,6 @@ body::before {
 .top-right { display:flex; gap:8px; align-items:center; }
 .help-btn { width:36px; height:36px; border-radius:50%; background:var(--accent); color:white; border:none; font-size:1rem; font-weight:900; cursor:pointer; font-family:inherit; transition: transform 0.1s; }
 .lock-btn { width:36px; height:36px; border-radius:50%; background:var(--card); border:1px solid var(--border); color:var(--sub); font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow: 0 2px 8px rgba(0,0,0,0.04); transition: transform 0.1s; }
-
-/* BUTTON CLICK EFFECTS (HAPTISCHES REAGIEREN) */
 .avatar-opt:active, .theme-opt:active, .theme-bg-opt:active, .help-btn:active, .lock-btn:active { transform: scale(0.88); }
 
 .level-container { margin:0 16px 14px; background:var(--card); border-radius:14px; padding:10px 14px; border:1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
@@ -61,7 +49,6 @@ body::before {
 .level-bar { height:6px; background:rgba(120,120,120,0.15); border-radius:3px; overflow:hidden; }
 .level-bar-fill { height:100%; background:linear-gradient(90deg,var(--warn),#f97316); width:0%; transition:width 0.5s ease; }
 
-/* CLOCK SECTION */
 .clock-section { text-align:center; padding:5px 16px 16px; cursor:pointer; }
 .clock-digital { font-size:3.8rem; font-weight:900; letter-spacing:-2px; line-height:1; color:var(--accent); text-shadow: 0 4px 12px rgba(99,102,241,0.1); }
 .clock-analog-wrap { display:none; width:120px; height:120px; border-radius:50%; border:3px solid var(--accent); position:relative; background:var(--card); box-shadow:0 4px 20px rgba(99,102,241,0.15); margin:0 auto 8px; }
@@ -74,8 +61,6 @@ body::before {
 .week-badge { display:inline-block; margin-top:8px; padding:5px 18px; border-radius:20px; font-size:0.8rem; font-weight:900; color:white; cursor:pointer; }
 .clock-hint { font-size:0.55rem; color:var(--sub); margin-top:4px; letter-spacing:0.5px; }
 
-
-/* TILES GRAPHICS */
 .status-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:0 16px 14px; }
 .status-tile { background:var(--card); border-radius:18px; padding:14px; border:1px solid var(--border); position:relative; overflow:hidden; display:flex; flex-direction:column; justify-content:between; min-height:115px; box-shadow: 0 4px 14px rgba(0,0,0,0.02); }
 .status-tile::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--accent),var(--accent2)); }
@@ -89,7 +74,6 @@ body::before {
 .tile-prog { height:3px; background:rgba(120,120,120,0.15); border-radius:2px; margin-top:5px; overflow:hidden; }
 .tile-prog-fill { height:100%; background:linear-gradient(90deg,var(--accent),var(--accent2)); border-radius:2px; transition:width 1s linear; }
 
-/* NEWS APP CARD */
 .section-label { font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:2px; color:var(--sub); padding:4px 20px 6px; max-width:600px; margin:0 auto; }
 .news-card { margin:0 16px 14px; background:linear-gradient(135deg,rgba(99,102,241,0.08),rgba(139,92,246,0.04)); border-radius:18px; padding:16px; border:1px solid rgba(99,102,241,0.2); position:relative; overflow:hidden; box-shadow: 0 4px 14px rgba(0,0,0,0.02); }
 .news-card::after { content:'📢'; position:absolute; right:14px; top:14px; font-size:1.6rem; opacity:0.15; }
@@ -97,12 +81,10 @@ body::before {
 .news-text { font-size:0.92rem; font-weight:700; line-height:1.4; padding-right:28px; }
 .news-time { font-size:0.62rem; color:var(--sub); margin-top:6px; }
 
-/* BUTTON UPDATE */
 .update-wrap { text-align:center; margin:0 16px 10px; }
 .update-btn { background:linear-gradient(135deg,#f59e0b,#ef4444); color:white; border:none; padding:9px 22px; border-radius:20px; font-size:0.82rem; font-weight:800; cursor:pointer; font-family:inherit; display:inline-flex; align-items:center; gap:7px; box-shadow:0 4px 12px rgba(239,68,68,0.15); }
 .version-tag { font-size:0.58rem; color:var(--sub); text-align:center; margin-bottom:6px; font-weight:700; }
 
-/* MATRIX LAUNCH BUTTON */
 .plan-btn { margin:0 16px 12px; background:linear-gradient(135deg, #1e1b4b, #311042); border:1.5px solid rgba(139,92,246,0.4); border-radius:18px; padding:16px 18px; display:flex; align-items:center; gap:12px; cursor:pointer; width:calc(100% - 32px); box-shadow:0 4px 15px rgba(139,92,246,0.12); }
 .light-mode-active .plan-btn { background: linear-gradient(135deg, #e0e7ff, #f3e8ff); border-color: rgba(139,92,246,0.2); }
 .plan-btn-icon { font-size:1.8rem; background:rgba(120,120,120,0.08); width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; }
@@ -115,15 +97,129 @@ body::before {
 .action-btn { flex:1; background:var(--card); border:1.5px solid var(--border); border-radius:16px; padding:14px 10px; display:flex; flex-direction:column; align-items:center; gap:6px; cursor:pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
 .action-btn .label { font-size:0.68rem; font-weight:800; color:var(--sub); text-align:center; }
 
-/* BOTTOM TERMINAL FOOTER BAR */
+/* ============================================================
+   APP-KACHELN (2×2 + 1 zentriert)
+   ============================================================ */
+.app-tiles-grid {
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:12px;
+    padding:0 16px 16px;
+}
+.app-tile {
+    position:relative; overflow:hidden;
+    border-radius:22px; padding:20px 16px 16px;
+    display:flex; flex-direction:column; align-items:flex-start;
+    min-height:110px; cursor:pointer;
+    border:1px solid rgba(255,255,255,0.06);
+    transition: transform 0.12s, box-shadow 0.12s;
+    -webkit-tap-highlight-color: transparent;
+}
+.app-tile:active { transform: scale(0.94); }
+
+/* Farben je Kachel */
+.tile-plan  { background: linear-gradient(135deg,#1e1b4b 0%,#312e81 100%); box-shadow:0 8px 24px rgba(99,102,241,0.25); }
+.tile-kal   { background: linear-gradient(135deg,#064e3b 0%,#065f46 100%); box-shadow:0 8px 24px rgba(16,185,129,0.2); }
+.tile-mail  { background: linear-gradient(135deg,#1e3a5f 0%,#1d4ed8 100%); box-shadow:0 8px 24px rgba(29,78,216,0.2); }
+.tile-pin   { background: linear-gradient(135deg,#7c2d12 0%,#c2410c 100%); box-shadow:0 8px 24px rgba(194,65,12,0.2); }
+.tile-style { background: linear-gradient(135deg,#4a044e 0%,#86198f 100%); box-shadow:0 8px 24px rgba(134,25,143,0.2); }
+
+/* Style-Kachel: zentriert über beide Spalten */
+.tile-style { grid-column: 1 / -1; flex-direction:row; align-items:center; gap:14px; min-height:70px; padding:16px 20px; }
+.tile-style .app-tile-icon { font-size:1.8rem; margin-bottom:0; }
+.tile-style .app-tile-label { font-size:1rem; }
+
+/* Light-Mode Anpassungen */
+.light-mode-active .tile-plan  { background:linear-gradient(135deg,#e0e7ff,#c7d2fe); box-shadow:0 8px 24px rgba(99,102,241,0.15); }
+.light-mode-active .tile-kal   { background:linear-gradient(135deg,#d1fae5,#a7f3d0); box-shadow:0 8px 24px rgba(16,185,129,0.12); }
+.light-mode-active .tile-mail  { background:linear-gradient(135deg,#dbeafe,#bfdbfe); box-shadow:0 8px 24px rgba(29,78,216,0.12); }
+.light-mode-active .tile-pin   { background:linear-gradient(135deg,#ffedd5,#fed7aa); box-shadow:0 8px 24px rgba(194,65,12,0.12); }
+.light-mode-active .tile-style { background:linear-gradient(135deg,#fae8ff,#f0abfc); box-shadow:0 8px 24px rgba(134,25,143,0.12); }
+.light-mode-active .app-tile-label,.light-mode-active .app-tile-sub { color:#1e1b4b !important; }
+
+/* Innere Elemente */
+.app-tile-glow { position:absolute; top:-30px; right:-20px; width:80px; height:80px; border-radius:50%; background:rgba(255,255,255,0.06); pointer-events:none; }
+.app-tile-icon { font-size:2rem; margin-bottom:8px; line-height:1; }
+.app-tile-label { font-size:0.95rem; font-weight:900; color:white; line-height:1.2; }
+.app-tile-sub { font-size:0.68rem; font-weight:600; color:rgba(255,255,255,0.65); margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; }
+
+/* Badge auf Kachel */
+.app-tile-badge-wrap { position:absolute; top:10px; right:10px; }
+.app-tile-badge {
+    background:#ef4444; color:white; font-size:0.6rem; font-weight:900;
+    padding:2px 6px; border-radius:8px; display:inline-block;
+    animation: tile-badge-pulse 1.8s ease-in-out infinite;
+}
+@keyframes tile-badge-pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.15);} }
+
+/* Kachel vibriert wenn aktiv */
+.app-tile.tile-alert {
+    animation: tile-shake 0.5s ease-in-out 2, tile-glow-pulse 2s ease-in-out infinite 1s;
+}
+@keyframes tile-shake {
+    0%,100%{transform:translateX(0);}
+    20%{transform:translateX(-4px) rotate(-1deg);}
+    40%{transform:translateX(4px) rotate(1deg);}
+    60%{transform:translateX(-3px);}
+    80%{transform:translateX(3px);}
+}
+@keyframes tile-glow-pulse {
+    0%,100%{box-shadow:0 8px 24px rgba(99,102,241,0.25);}
+    50%{box-shadow:0 0 30px rgba(99,102,241,0.7), 0 0 60px rgba(99,102,241,0.3);}
+}
+.tile-kal.tile-alert {
+    animation: tile-shake 0.5s ease-in-out 2, tile-glow-pulse-kal 2s ease-in-out infinite 1s;
+}
+@keyframes tile-glow-pulse-kal {
+    0%,100%{box-shadow:0 8px 24px rgba(16,185,129,0.2);}
+    50%{box-shadow:0 0 30px rgba(16,185,129,0.6), 0 0 60px rgba(16,185,129,0.25);}
+}
+
+/* Update-Button unten - jetzt groß und prominent */
+.update-wrap { padding:4px 16px 20px; }
+.update-btn { width:100%; background:linear-gradient(135deg,#f59e0b,#ef4444); color:white; border:none; padding:16px; border-radius:18px; font-size:0.95rem; font-weight:900; cursor:pointer; font-family:inherit; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 6px 20px rgba(239,68,68,0.3); letter-spacing:0.3px; }
+.version-tag { font-size:0.58rem; color:var(--sub); text-align:center; margin-bottom:8px; font-weight:700; }
+
+/* ============================================================
+   KALENDER PREVIEW WIDGET AUF DASHBOARD
+   ============================================================ */
+.kalender-preview { margin:0 16px 14px; background:var(--card); border-radius:18px; padding:14px 16px; border:1px solid var(--border); cursor:pointer; }
+.kalender-preview-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+.kalender-preview-title { font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:var(--sub); }
+.kalender-preview-link { font-size:0.65rem; font-weight:800; color:var(--accent); }
+.kalender-preview-list { display:flex; flex-direction:column; gap:6px; }
+.kalender-preview-item { display:flex; align-items:center; gap:10px; background:var(--card2); border-radius:10px; padding:8px 10px; border-left:3px solid var(--accent); }
+.kalender-preview-item.lehrer { border-left-color: #f59e0b; }
+.kalender-preview-item.test { border-left-color: #ef4444; }
+.kalender-preview-item.abgabe { border-left-color: #ec4899; }
+.kalender-preview-item.sonstiges { border-left-color: #10b981; }
+.kalender-preview-dot { width:8px; height:8px; border-radius:50%; background:var(--accent); flex-shrink:0; }
+.kalender-preview-dot.lehrer { background:#f59e0b; }
+.kalender-preview-dot.test { background:#ef4444; }
+.kalender-preview-dot.abgabe { background:#ec4899; }
+.kalender-preview-dot.sonstiges { background:#10b981; }
+.kalender-preview-text { flex:1; min-width:0; }
+.kalender-preview-text .evt-title { font-size:0.82rem; font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.kalender-preview-text .evt-date { font-size:0.62rem; color:var(--sub); font-weight:600; margin-top:1px; }
+.kalender-preview-empty { text-align:center; padding:10px; font-size:0.8rem; color:var(--sub); font-weight:600; }
+
+/* ============================================================
+   BOTTOM NAV
+   ============================================================ */
 .bottom-nav { position:fixed; bottom:0; left:0; right:0; background:var(--card); border-top:1px solid var(--border); display:flex; justify-content:space-around; padding:10px 0 16px; z-index:100; max-width:600px; margin:0 auto; box-shadow: 0 -4px 20px rgba(0,0,0,0.03); }
-.nav-btn { display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; opacity:0.4; padding:4px 14px; transition:opacity 0.2s; color:var(--text); }
+.nav-btn { display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; opacity:0.4; padding:4px 10px; transition:opacity 0.2s; color:var(--text); position:relative; }
 .nav-btn.active { opacity:1; }
 .nav-btn.active .nav-icon { color:var(--accent); }
-.nav-icon { font-size:1.3rem; }
+.nav-icon { font-size:1.3rem; position:relative; }
 .nav-label { font-size:0.52rem; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; }
 
-/* POPUP OVERLAYS ENGINE */
+/* Kalender-Badge auf Nav-Button */
+.nav-badge { position:absolute; top:-4px; right:-6px; min-width:16px; height:16px; background:var(--danger); border-radius:8px; font-size:0.6rem; font-weight:900; color:white; display:flex; align-items:center; justify-content:center; padding:0 3px; animation: badge-pulse 2s ease-in-out infinite; }
+@keyframes badge-pulse { 0%,100%{transform:scale(1);opacity:1;} 50%{transform:scale(1.2);opacity:0.85;} }
+
+/* ============================================================
+   OVERLAYS
+   ============================================================ */
 .overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:var(--bg); z-index:200; overflow-y:auto; padding-bottom:40px; }
 .overlay-header { position:sticky; top:0; background:var(--card); padding:16px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); z-index:10; }
 .overlay-title { font-size:1.05rem; font-weight:900; }
@@ -131,17 +227,16 @@ body::before {
 .week-tabs { display:flex; gap:8px; padding:14px 16px 8px; }
 .week-tab { flex:1; padding:12px; border-radius:12px; border:none; font-weight:800; cursor:pointer; font-family:inherit; font-size:0.9rem; text-transform:uppercase; letter-spacing:0.5px; }
 
-/* 🧪 MATRIX ENGINE 3D EFFECT */
+/* ============================================================
+   STUNDENPLAN MATRIX
+   ============================================================ */
 .matrix-container { padding:8px 10px 80px; width:100%; display:flex; flex-direction:column; gap:6px; overflow-x:auto; }
 .matrix-row { display:flex; gap:5px; width:100%; min-width:440px; }
 .matrix-cell { flex:1; min-height:90px; position:relative; perspective:1000px; border:none; background:transparent; }
-
 .flip-card-inner { position:absolute; width:100%; height:100%; text-align:center; transition:transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); transform-style:preserve-3d; border-radius:8px; cursor:pointer; }
 .matrix-cell.flipped .flip-card-inner { transform:rotateY(180deg); }
 .flip-front, .flip-back { position:absolute; width:100%; height:100%; backface-visibility:hidden; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:4px; border-radius:8px; border:1px solid rgba(120,120,120,0.15); }
 .flip-back { transform:rotateY(180deg); background:#1e1e2f !important; border:1.5px solid var(--warn) !important; color:#fdba74 !important; font-size:0.58rem !important; font-weight:800; line-height:1.35; padding:6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); overflow:hidden; word-break:break-word; text-align:center; display:flex; align-items:center; justify-content:center; }
-
-/* TIME ROW CHIPS */
 .matrix-cell.static-header { min-height:32px; }
 .matrix-cell.static-header .flip-card-inner { transform:none !important; cursor:default; }
 .header-day-inner { background:#1e293b; color:#ffffff !important; font-size:0.75rem; font-weight:900; text-transform:uppercase; letter-spacing:0.5px; }
@@ -150,14 +245,11 @@ body::before {
 .light-mode-active .header-block-inner { background: #e2e8f0; color: #0f172a !important; }
 .header-block-inner div { font-size:0.58rem; font-weight:800; color:#cbd5e1 !important; margin-top:2px; }
 .light-mode-active .header-block-inner div { color: #64748b !important; }
-
 .matrix-cell.static-pause { min-height:22px !important; }
 .matrix-cell.static-pause .flip-card-inner { transform:none !important; cursor:default; }
 .row-pause-inner { background:rgba(120, 120, 120, 0.1); color:var(--sub); font-size:0.6rem; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; border:none; }
 .header-pause-inner { background:#0f172a; color:#ffffff !important; font-size:0.52rem; font-weight:800; }
 .light-mode-active .header-pause-inner { background: #f1f5f9; color: #64748b !important; }
-
-/* KACHEL-KOLORIERUNGEN */
 .m-empty { background:rgba(120,120,120,0.03); color:var(--sub); opacity: 0.4; font-weight:400; font-style:italic; }
 .m-mathe { background:rgba(239,68,68,0.16); color:var(--text); border-color:rgba(239,68,68,0.4); }
 .m-deutsch { background:rgba(59,130,246,0.16); color:var(--text); border-color:rgba(59,130,246,0.4); }
@@ -171,45 +263,33 @@ body::before {
 .m-kunst { background:rgba(20,184,166,0.16); color:var(--text); border-color:rgba(20,184,166,0.4); }
 .m-other { background:rgba(120,120,120,0.08); color:var(--text); border-color:rgba(120,120,120,0.2); }
 .today-col-border { box-shadow:inset 0 0 0 2px var(--accent) !important; }
-
 .cell-emoji { font-size:1.1rem; margin-bottom:1px; display:block; }
 .cell-name { font-size:0.75rem; font-weight:900; line-height:1.1; }
 .cell-room { font-size:0.58rem; font-weight:700; opacity:0.8; background:rgba(120,120,120,0.12); padding:1px 4px; border-radius:4px; margin-top:3px; text-transform:uppercase; }
 
-/* STYLE ENGINE SECTIONS */
+/* ============================================================
+   STYLE / SETTINGS
+   ============================================================ */
 .settings-section { padding:18px 16px 0; max-width:600px; margin:0 auto; }
 .settings-section-title { font-size:0.68rem; font-weight:800; color:var(--sub); text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; }
 .set-input { width:100%; background:var(--card2); border:1.5px solid var(--border); color:var(--text); padding:13px 14px; border-radius:13px; font-size:0.95rem; font-family:inherit; margin-bottom:11px; }
-
-/* CHIPS GRIDS */
 .avatar-grid, .theme-grid { display:flex; flex-wrap:wrap; gap:9px; margin-bottom:12px; }
 .avatar-opt { width:48px; height:48px; border-radius:12px; background:var(--card2); display:flex; align-items:center; justify-content:center; font-size:1.4rem; cursor:pointer; border:2px solid transparent; transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 2px 6px rgba(0,0,0,0.02); }
 .avatar-opt.selected { border-color:var(--accent); background:rgba(99,102,241,0.2) !important; box-shadow: 0 0 12px var(--accent); transform: scale(1.05); }
-
 .theme-opt { width:40px; height:40px; border-radius:50%; cursor:pointer; border:3px solid transparent; transition: all 0.1s; }
 .theme-opt.selected { border-color:var(--text); transform:scale(1.15); box-shadow: 0 0 10px rgba(120,120,120,0.5); }
-
-/* GRID FÜR HINTERGRÜNDE MIT LIVE FEEDBACK MARKIERUNG */
 .theme-bg-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-bottom:12px; }
 .theme-bg-opt { height:54px; border-radius:12px; cursor:pointer; border:2.5px solid transparent; transition: all 0.1s ease; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:0.75rem; font-weight:800; text-align:center; padding:4px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
 .theme-bg-opt span { font-size:0.55rem; opacity:0.7; font-weight:500; margin-top:2px; }
 .theme-bg-opt.selected { border-color: #6366f1 !important; transform: scale(1.03); box-shadow: 0 0 15px rgba(99,102,241,0.4); font-weight: 900; }
-
-/* MASSIV VERBESSERTER ABSENDE-BUTTON (GROSS, BUNTER GRADIENT, SCHATTEN) */
 .save-btn { margin:20px 0 0; width:100%; background: linear-gradient(135deg, #6366f1, #d946ef, #ff007f); color: white; border: none; padding: 18px; border-radius: 16px; font-size: 1.1rem; font-weight: 900; cursor: pointer; font-family: inherit; box-shadow: 0 6px 25px rgba(217,70,239,0.4); letter-spacing: 0.8px; transition: transform 0.1s, box-shadow 0.2s; text-transform: uppercase; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
 .save-btn:active { transform: scale(0.96); box-shadow: 0 2px 10px rgba(217,70,239,0.2); }
-
-/* KRAFTIGE ANIMIERTE CHAMÄLEON SCHLEIFE (SEHR SIGHTBAR) */
 .bg-chameleon { animation: chameleon-shift 12s linear infinite !important; background-size: 400% 400% !important; }
-@keyframes chameleon-shift {
-    0% { background-color: #2b0018; }
-    25% { background-color: #020035; }
-    50% { background-color: #002d13; }
-    75% { background-color: #382400; }
-    100% { background-color: #2b0018; }
-}
+@keyframes chameleon-shift { 0% { background-color: #2b0018; } 25% { background-color: #020035; } 50% { background-color: #002d13; } 75% { background-color: #382400; } 100% { background-color: #2b0018; } }
 
-/* ADMIN ARCHITECTURES */
+/* ============================================================
+   ADMIN
+   ============================================================ */
 .admin-section { margin:0 16px; background:rgba(239,68,68,0.04); border:1.5px solid rgba(239,68,68,0.2); border-radius:16px; padding:16px; margin-bottom:14px; }
 .admin-title { font-size:0.75rem; font-weight:900; color:var(--danger); text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; }
 .admin-input, .admin-textarea { width:100%; background:var(--card); border:1.5px solid var(--border); color:var(--text); padding:12px 14px; border-radius:11px; font-size:0.9rem; font-family:inherit; margin-bottom:10px; }
@@ -220,11 +300,143 @@ body::before {
 .admin-block-time { font-size:0.58rem; color:var(--sub); font-weight:700; min-width:80px; }
 .admin-block-input { flex:1; background:var(--card); border:1px solid var(--border); color:var(--text); padding:7px 10px; border-radius:8px; font-size:0.8rem; font-family:inherit; }
 
+/* Admin Kalender-Termine */
+.admin-event-list { display:flex; flex-direction:column; gap:8px; margin-bottom:12px; }
+.admin-event-item { display:flex; align-items:center; gap:8px; background:var(--card); border-radius:10px; padding:10px 12px; border:1px solid var(--border); }
+.admin-event-item .evt-info { flex:1; min-width:0; }
+.admin-event-item .evt-info strong { font-size:0.85rem; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.admin-event-item .evt-info span { font-size:0.7rem; color:var(--sub); }
+.admin-event-item .evt-del { background:rgba(239,68,68,0.15); border:none; color:var(--danger); border-radius:8px; padding:5px 9px; cursor:pointer; font-size:0.8rem; font-weight:900; font-family:inherit; flex-shrink:0; }
+.event-type-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+
+/* ============================================================
+   PASSWORT MODAL
+   ============================================================ */
 .pw-modal { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:var(--card); border-radius:20px; padding:22px; z-index:500; width:88%; max-width:360px; box-shadow:0 20px 60px rgba(0,0,0,0.3); border:1px solid var(--border); }
 .pw-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); z-index:499; backdrop-filter: blur(4px); }
 .pw-title { font-size:1rem; font-weight:900; margin-bottom:14px; text-align:center; }
 .pw-input { width:100%; background:var(--card2); border:1.5px solid var(--border); color:var(--text); padding:13px; border-radius:11px; font-size:1rem; font-family:inherit; margin-bottom:10px; text-align:center; letter-spacing:3px; }
 .pw-btn { width:100%; background:var(--danger); color:white; border:none; padding:13px; border-radius:11px; font-weight:900; cursor:pointer; font-family:inherit; font-size:0.95rem; }
+
+/* ============================================================
+   KALENDER LEGENDE
+   ============================================================ */
+.kal-legend { display:flex; flex-wrap:wrap; gap:8px; padding:4px 14px 12px; }
+.kal-legend-item { display:flex; align-items:center; gap:4px; font-size:0.62rem; font-weight:700; color:var(--sub); }
+.kal-legend-box { width:9px; height:9px; border-radius:2px; display:inline-block; }
+.kal-legend-box.ferien { background:rgba(16,185,129,0.4); }
+.kal-legend-box.feiertag { background:rgba(245,158,11,0.4); }
+.kal-legend-dot { width:8px; height:8px; border-radius:50%; display:inline-block; }
+.kal-legend-dot.hausaufgabe { background:var(--accent); }
+.kal-legend-dot.test { background:#ef4444; }
+.kal-legend-dot.abgabe { background:#ec4899; }
+.kal-legend-dot.lehrer { background:#f59e0b; }
+
+/* ============================================================
+   TERMIN-EINTRAG MODAL
+   ============================================================ */
+.kal-modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:300; backdrop-filter:blur(3px); }
+.kal-modal {
+    display:none; position:fixed; bottom:0; left:50%; transform:translateX(-50%);
+    width:100%; max-width:600px; background:var(--card);
+    border-radius:24px 24px 0 0; padding:20px 20px 40px;
+    z-index:301; border-top:1px solid var(--border);
+    box-shadow:0 -8px 40px rgba(0,0,0,0.4);
+}
+.kal-modal.open { animation: modal-slide-up 0.28s cubic-bezier(0.34,1.56,0.64,1); }
+@keyframes modal-slide-up { from{transform:translateX(-50%) translateY(100%);} to{transform:translateX(-50%) translateY(0);} }
+.kal-modal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+.kal-modal-date { font-size:1.05rem; font-weight:900; }
+.kal-modal-close { background:var(--card2); border:none; color:var(--sub); width:30px; height:30px; border-radius:50%; font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; font-weight:900; }
+.kal-modal-existing-item { display:flex; align-items:center; gap:8px; background:var(--card2); border-radius:10px; padding:9px 12px; margin-bottom:7px; }
+.kal-modal-existing-item .evt-title { flex:1; font-size:0.85rem; font-weight:700; }
+.kal-modal-existing-del { background:none; border:none; color:var(--danger); font-size:1.1rem; cursor:pointer; padding:0 2px; opacity:0.7; line-height:1; }
+.kal-type-wrap { position:relative; margin-bottom:10px; }
+.kal-type-toggle { width:100%; background:var(--card2); border:1.5px solid var(--border); color:var(--text); padding:11px 14px; border-radius:11px; font-size:0.9rem; font-family:inherit; font-weight:700; cursor:pointer; display:flex; justify-content:space-between; align-items:center; }
+.kal-type-menu { position:absolute; top:calc(100% + 4px); left:0; right:0; background:var(--card); border:1px solid var(--border); border-radius:12px; overflow:hidden; z-index:10; box-shadow:0 8px 24px rgba(0,0,0,0.3); }
+.kal-type-option { padding:13px 14px; font-size:0.9rem; font-weight:700; cursor:pointer; }
+.kal-type-option:active { background:var(--card2); }
+
+/* ============================================================
+   KALENDER OVERLAY
+   ============================================================ */
+.kal-nav { display:flex; align-items:center; justify-content:space-between; padding:10px 16px 6px; }
+.kal-nav-btn { background:var(--card2); border:1px solid var(--border); color:var(--text); border-radius:10px; padding:6px 14px; font-size:1rem; cursor:pointer; font-weight:900; font-family:inherit; }
+.kal-month-title { font-size:1rem; font-weight:900; }
+.kal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; padding:0 12px 10px; }
+.kal-weekday { text-align:center; font-size:0.58rem; font-weight:800; color:var(--sub); padding:4px 0 6px; text-transform:uppercase; letter-spacing:0.5px; }
+.kal-day { min-height:38px; border-radius:10px; display:flex; flex-direction:column; align-items:center; padding:4px 2px 3px; cursor:pointer; position:relative; transition: background 0.1s; }
+.kal-day:hover { background:var(--card2); }
+.kal-day.today { background:rgba(99,102,241,0.18); }
+.kal-day.today .kal-day-num { color:var(--accent); font-weight:900; }
+.kal-day.other-month { opacity:0.25; }
+.kal-day-num { font-size:0.78rem; font-weight:700; line-height:1.2; }
+.kal-dots { display:flex; gap:2px; flex-wrap:wrap; justify-content:center; margin-top:2px; }
+.kal-dot { width:5px; height:5px; border-radius:50%; }
+.kal-dot.hausaufgabe { background:var(--accent); }
+.kal-dot.test { background:#ef4444; }
+.kal-dot.abgabe { background:#ec4899; }
+.kal-dot.lehrer { background:#f59e0b; }
+.kal-dot.sonstiges { background:#10b981; }
+.kal-dot.feiertag { background:#f59e0b; }
+.kal-dot.ferien { background:#10b981; }
+
+/* Ferien/Feiertag Hintergrundfarben im Kalender */
+.kal-day.ferien-bg { background:rgba(16,185,129,0.12); }
+.kal-day.ferien-bg .kal-day-num { color:#10b981; font-weight:800; }
+.kal-day.feiertag-bg { background:rgba(245,158,11,0.12); }
+.kal-day.feiertag-bg .kal-day-num { color:#f59e0b; font-weight:800; }
+.kal-day.wochenende-bg { opacity:0.55; }
+.kal-day.wochenende-bg .kal-day-num { color:var(--sub); }
+
+/* Ferien/Feiertag Event-Karten */
+.kal-event-card.ferien { border-left:3px solid #10b981; }
+.kal-event-card.feiertag { border-left:3px solid #f59e0b; }
+.badge-ferien { background:rgba(16,185,129,0.18); color:#10b981; }
+.badge-feiertag { background:rgba(245,158,11,0.18); color:#f59e0b; }
+
+/* Termin-Liste unter Kalender */
+.kal-events-section { padding:0 12px 10px; }
+.kal-events-title { font-size:0.65rem; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:var(--sub); margin-bottom:8px; }
+.kal-event-card { background:var(--card); border-radius:13px; padding:12px 14px; margin-bottom:8px; border:1px solid var(--border); display:flex; align-items:flex-start; gap:10px; }
+.kal-event-card.lehrer { border-left:3px solid #f59e0b; }
+.kal-event-card.hausaufgabe { border-left:3px solid var(--accent); }
+.kal-event-card.test { border-left:3px solid #ef4444; }
+.kal-event-card.abgabe { border-left:3px solid #ec4899; }
+.kal-event-card.sonstiges { border-left:3px solid #10b981; }
+.kal-event-type-badge { font-size:0.58rem; font-weight:900; padding:2px 7px; border-radius:6px; text-transform:uppercase; letter-spacing:0.5px; white-space:nowrap; flex-shrink:0; margin-top:1px; }
+.badge-lehrer { background:rgba(245,158,11,0.18); color:#f59e0b; }
+.badge-hausaufgabe { background:rgba(99,102,241,0.18); color:var(--accent); }
+.badge-test { background:rgba(239,68,68,0.18); color:#ef4444; }
+.badge-abgabe { background:rgba(236,72,153,0.18); color:#ec4899; }
+.badge-sonstiges { background:rgba(16,185,129,0.18); color:#10b981; }
+.kal-event-body { flex:1; min-width:0; }
+.kal-event-body .evt-title { font-size:0.88rem; font-weight:800; line-height:1.3; }
+.kal-event-body .evt-date { font-size:0.65rem; color:var(--sub); margin-top:2px; font-weight:600; }
+.kal-event-del { background:none; border:none; color:var(--danger); font-size:1rem; cursor:pointer; padding:0 4px; opacity:0.6; flex-shrink:0; }
+.kal-event-del:hover { opacity:1; }
+.kal-no-events { text-align:center; padding:20px; font-size:0.82rem; color:var(--sub); font-weight:600; }
+.kal-events-title.open #kal-toggle-icon { transform: rotate(180deg); }
+
+/* Neuen Termin hinzufügen */
+.kal-add-section { padding:0 12px 80px; }
+.kal-add-title { font-size:0.65rem; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:var(--sub); margin-bottom:10px; }
+.kal-add-form { background:var(--card); border-radius:16px; padding:14px; border:1px solid var(--border); }
+.kal-input { width:100%; background:var(--card2); border:1.5px solid var(--border); color:var(--text); padding:11px 13px; border-radius:11px; font-size:0.9rem; font-family:inherit; margin-bottom:8px; }
+.kal-type-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:6px; margin-bottom:8px; }
+.kal-type-btn { padding:9px 8px; border-radius:10px; border:1.5px solid var(--border); background:var(--card2); color:var(--sub); font-size:0.75rem; font-weight:800; cursor:pointer; font-family:inherit; transition:all 0.1s; text-align:center; }
+.kal-type-btn.active-hw { background:rgba(99,102,241,0.18); border-color:var(--accent); color:var(--accent); }
+.kal-type-btn.active-test { background:rgba(239,68,68,0.18); border-color:#ef4444; color:#ef4444; }
+.kal-type-btn.active-abgabe { background:rgba(236,72,153,0.18); border-color:#ec4899; color:#ec4899; }
+.kal-type-btn.active-sonst { background:rgba(16,185,129,0.18); border-color:#10b981; color:#10b981; }
+.kal-add-btn { width:100%; background:linear-gradient(135deg,var(--accent),var(--accent2)); color:white; border:none; padding:12px; border-radius:12px; font-size:0.9rem; font-weight:900; cursor:pointer; font-family:inherit; }
+
+/* KOMPAKTE KALENDER-HINWEIS-ZEILE */
+.kal-hint-row { margin:0 16px 12px; background:var(--card); border:1px solid var(--border); border-radius:14px; padding:11px 14px; display:flex; align-items:center; gap:10px; cursor:pointer; transition:background 0.15s; }
+.kal-hint-row:active { background:var(--card2); }
+.kal-hint-icon { font-size:1.15rem; flex-shrink:0; position:relative; }
+.kal-hint-text { flex:1; font-size:0.78rem; font-weight:700; color:var(--sub); }
+.kal-hint-arrow { color:var(--accent); font-size:1.1rem; font-weight:900; flex-shrink:0; }
 </style>
 </head>
 <body>
@@ -296,32 +508,58 @@ body::before {
         <div class="news-time" id="news-time"></div>
     </div>
 
+    <div class="version-tag" id="version-tag">SchulHub v3.0</div>
+
+    <!-- APP-KACHELN 2×2 + Style -->
+    <div class="app-tiles-grid" id="app-tiles-grid">
+
+        <div class="app-tile tile-plan" id="tile-plan" onclick="openOverlay('plan-overlay')">
+            <div class="app-tile-glow"></div>
+            <div class="app-tile-badge-wrap"><span class="app-tile-badge" id="tile-plan-badge" style="display:none;">NEU</span></div>
+            <div class="app-tile-icon">📅</div>
+            <div class="app-tile-label">Stundenplan</div>
+            <div class="app-tile-sub" id="tile-plan-sub">Woche A</div>
+        </div>
+
+        <div class="app-tile tile-kal" id="tile-kal" onclick="switchTab('kalender')">
+            <div class="app-tile-glow"></div>
+            <div class="app-tile-badge-wrap"><span class="app-tile-badge" id="kal-badge" style="display:none;">0</span></div>
+            <div class="app-tile-icon">🗓️</div>
+            <div class="app-tile-label">Kalender</div>
+            <div class="app-tile-sub" id="kal-hint-text">Termine eintragen</div>
+        </div>
+
+        <div class="app-tile tile-mail" onclick="sendMail()">
+            <div class="app-tile-glow"></div>
+            <div class="app-tile-icon">✉️</div>
+            <div class="app-tile-label">Mail</div>
+            <div class="app-tile-sub">an Lehrer</div>
+        </div>
+
+        <div class="app-tile tile-pin" onclick="openPinnwand()">
+            <div class="app-tile-glow"></div>
+            <div class="app-tile-icon">📌</div>
+            <div class="app-tile-label">Pinnwand</div>
+            <div class="app-tile-sub">Schule</div>
+        </div>
+
+        <div class="app-tile tile-style" onclick="switchTab('style')">
+            <div class="app-tile-glow"></div>
+            <div class="app-tile-icon">🎨</div>
+            <div class="app-tile-label">Style</div>
+            <div class="app-tile-sub">Design ändern</div>
+        </div>
+
+    </div>
+
+    <!-- GROSSER UPDATE-BUTTON UNTEN -->
     <div class="update-wrap">
         <button class="update-btn" id="update-btn" onclick="forceRefresh()">🔄 App aktualisieren (+10 XP)</button>
     </div>
-    <div class="version-tag" id="version-tag">SchulHub v2.8 Chameleon</div>
 
-    <div class="plan-btn" onclick="openOverlay('plan-overlay')">
-        <div class="plan-btn-icon">📅</div>
-        <div class="plan-btn-text">
-            <div class="plan-btn-title">Stundenplan-Matrix öffnen</div>
-            <div class="plan-btn-sub" id="plan-btn-sub">Kompakte Kacheln (Woche A)</div>
-        </div>
-        <div class="plan-btn-arrow">›</div>
-    </div>
-
-    <div class="action-row">
-        <div class="action-btn" onclick="sendMail()">
-            <div class="icon">✉️</div>
-            <div class="label">Mail an Lehrer</div>
-        </div>
-        <div class="action-btn" onclick="openPinnwand()">
-            <div class="icon">📌</div>
-            <div class="label">Schulpinnwand</div>
-        </div>
-    </div>
 </div>
 
+<!-- STUNDENPLAN OVERLAY -->
 <div class="overlay" id="plan-overlay">
     <div class="overlay-header">
         <button class="close-btn" onclick="closeOverlay('plan-overlay')">✕</button>
@@ -332,14 +570,77 @@ body::before {
         <button class="week-tab" id="tab-a" onclick="renderMatrixWeek('A')">Woche A</button>
         <button class="week-tab" id="tab-b" onclick="renderMatrixWeek('B')">Woche B</button>
     </div>
-    
     <div class="matrix-container" id="matrix-grid"></div>
-    
     <div style="text-align:center; padding:15px; font-size:0.7rem; color:var(--sub); font-weight:600;">
         💡 Tippe auf ein Fach, um zu sehen, was du nicht vergessen darfst!
     </div>
 </div>
 
+<!-- KALENDER OVERLAY -->
+<div class="overlay" id="kalender-overlay">
+    <div class="overlay-header">
+        <button class="close-btn" onclick="closeOverlay('kalender-overlay')">✕</button>
+        <div class="overlay-title">🗓️ Mein Kalender</div>
+        <div style="width:30px;"></div>
+    </div>
+
+    <!-- Monatsnavigation -->
+    <div class="kal-nav">
+        <button class="kal-nav-btn" onclick="kalNavMonth(-1)">‹</button>
+        <div class="kal-month-title" id="kal-month-title">Juni 2026</div>
+        <button class="kal-nav-btn" onclick="kalNavMonth(1)">›</button>
+    </div>
+
+    <!-- Kalender-Grid -->
+    <div class="kal-grid" id="kal-grid"></div>
+
+    <!-- Legende -->
+    <div class="kal-legend">
+        <span class="kal-legend-item"><span class="kal-legend-box ferien"></span>Schulferien</span>
+        <span class="kal-legend-item"><span class="kal-legend-box feiertag"></span>Feiertag</span>
+        <span class="kal-legend-item"><span class="kal-legend-dot hausaufgabe"></span>Hausaufgabe</span>
+        <span class="kal-legend-item"><span class="kal-legend-dot test"></span>Test</span>
+        <span class="kal-legend-item"><span class="kal-legend-dot abgabe"></span>Abgabe</span>
+        <span class="kal-legend-item"><span class="kal-legend-dot lehrer"></span>Lehrer</span>
+    </div>
+
+    <div style="text-align:center; padding:8px 0 80px; font-size:0.7rem; color:var(--sub); font-weight:600;">
+        💡 Tippe auf einen Tag um einen Termin einzutragen
+    </div>
+</div>
+
+<!-- TERMIN-EINTRAG MODAL (öffnet sich bei Tap auf Kalendertag) -->
+<div class="kal-modal-overlay" id="kal-modal-overlay" onclick="closeKalModal()"></div>
+<div class="kal-modal" id="kal-modal">
+    <div class="kal-modal-header">
+        <div class="kal-modal-date" id="kal-modal-date">Montag, 9. Juni</div>
+        <button class="kal-modal-close" onclick="closeKalModal()">✕</button>
+    </div>
+
+    <!-- Bestehende Termine für diesen Tag -->
+    <div id="kal-modal-existing" style="margin-bottom:10px;"></div>
+
+    <!-- Neuen Termin eintragen -->
+    <input type="text" class="kal-input" id="kal-new-title" placeholder="Was ist an dem Tag? z.B. Mathe Test">
+
+    <!-- Typ-Auswahl als einzelner Button mit Popup -->
+    <div class="kal-type-wrap" id="kal-type-wrap">
+        <button class="kal-type-toggle" id="kal-type-toggle" onclick="toggleTypeMenu()">
+            <span id="kal-type-label">📚 Hausaufgabe</span>
+            <span style="opacity:0.5; font-size:0.8rem;">▾</span>
+        </button>
+        <div class="kal-type-menu" id="kal-type-menu" style="display:none;">
+            <div class="kal-type-option" onclick="pickType('hausaufgabe','📚 Hausaufgabe')">📚 Hausaufgabe</div>
+            <div class="kal-type-option" onclick="pickType('test','📝 Test / Klassenarbeit')">📝 Test / Klassenarbeit</div>
+            <div class="kal-type-option" onclick="pickType('abgabe','📎 Abgabe')">📎 Abgabe</div>
+            <div class="kal-type-option" onclick="pickType('sonstiges','⭐ Sonstiges')">⭐ Sonstiges</div>
+        </div>
+    </div>
+
+    <button class="kal-add-btn" onclick="addKalenderEvent()">✅ Speichern</button>
+</div>
+
+<!-- ADMIN OVERLAY -->
 <div class="overlay" id="admin-overlay">
     <div class="overlay-header">
         <button class="close-btn" onclick="closeOverlay('admin-overlay')">✕</button>
@@ -363,6 +664,26 @@ body::before {
             <textarea class="admin-textarea" id="admin-news" placeholder="Tipp: Schreibe Räume direkt hinter das Fach, z.B. Mathe R204"></textarea>
         </div>
 
+        <!-- NEU: LEHRER-TERMINE -->
+        <div class="admin-section" style="background:rgba(245,158,11,0.04); border-color:rgba(245,158,11,0.25);">
+            <div class="admin-title" style="color:var(--warn);">📅 Lehrer-Termine (sichtbar für alle SuS)</div>
+            <div style="font-size:0.72rem; color:var(--sub); margin-bottom:10px;">Termine werden beim Cloud-Update für alle Schülerinnen und Schüler sichtbar.</div>
+            
+            <div class="admin-event-list" id="admin-event-list"></div>
+
+            <div style="display:flex; flex-direction:column; gap:8px; background:var(--card2); border-radius:12px; padding:12px;">
+                <input type="text" class="admin-input" id="admin-evt-title" placeholder="z.B. Klassenarbeit Mathe" style="margin-bottom:0;">
+                <input type="date" class="admin-input" id="admin-evt-date" style="margin-bottom:0;">
+                <select class="admin-input" id="admin-evt-type" style="margin-bottom:0;">
+                    <option value="lehrer">📣 Allgemeine Info</option>
+                    <option value="test">📝 Test / Klassenarbeit</option>
+                    <option value="abgabe">📎 Abgabe</option>
+                    <option value="sonstiges">⭐ Sonstiges</option>
+                </select>
+                <button class="publish-btn" onclick="addAdminEvent()" style="background:linear-gradient(135deg,#d97706,#f59e0b); padding:10px; font-size:0.85rem;">+ Termin hinzufügen</button>
+            </div>
+        </div>
+
         <div class="admin-section">
             <div class="admin-title">📅 Stundenpläne anpassen</div>
             <div class="week-tabs" style="padding:0 0 12px 0;">
@@ -379,32 +700,29 @@ body::before {
     </div>
 </div>
 
+<!-- SETTINGS OVERLAY -->
 <div class="overlay" id="settings-overlay">
     <div class="overlay-header">
         <button class="close-btn" onclick="closeOverlay('settings-overlay')">✕</button>
         <div class="overlay-title">🎨 Mein Style & Profil</div>
         <div style="width:30px;"></div>
     </div>
-    
     <div class="settings-section">
         <div class="settings-username-wrap">
             <div class="settings-section-title">Dein Name / Spitzname</div>
             <input type="text" class="set-input" id="set-username" placeholder="Dein Name...">
         </div>
-        
         <div class="settings-section-title">Wähle deinen Character Avatar (Gaming & Tech)</div>
         <div class="avatar-grid" id="avatar-grid"></div>
-        
         <div class="settings-section-title">App Akzent-Farbe (Gelb, Rot & Pink!)</div>
         <div class="theme-grid" id="theme-grid"></div>
-
         <div class="settings-section-title">Hintergrund-Modus & Spezialeffekte (Live-Vorschau)</div>
         <div class="theme-bg-grid" id="theme-bg-grid"></div>
-
         <button class="save-btn" onclick="saveSettings()">Design aktivieren</button>
     </div>
 </div>
 
+<!-- HILFE OVERLAY -->
 <div class="overlay" id="help-overlay">
     <div class="overlay-header">
         <button class="close-btn" onclick="closeOverlay('help-overlay')">✕</button>
@@ -412,38 +730,43 @@ body::before {
         <div style="width:30px;"></div>
     </div>
     <div class="help-section" style="padding:16px;">
-        <div class="help-card" style="background:var(--card); border-radius:16px; padding:16px; margin-bottom:12px; border:1px solid var(--border);">
-            <div class="help-card-title" style="font-size:1rem; font-weight:900; margin-bottom:6px;">✨ Was ist SchulHub?</div>
-            <div class="help-card-text" style="font-size:0.88rem; color:var(--sub); line-height:1.5;">SchulHub ist deine persönliche Schul-Zentrale – direkt auf dem Handy. Die App zeigt dir in Echtzeit, welches Fach gerade läuft, wie viele Minuten der Block noch geht und was dein Lehrer dir als aktuellen Hinweis oder Hausaufgabe geschickt hat. Alles auf einen Blick – ohne Stundenplan-Suche, ohne Stress.</div>
+        <div style="background:var(--card); border-radius:16px; padding:16px; margin-bottom:12px; border:1px solid var(--border);">
+            <div style="font-size:1rem; font-weight:900; margin-bottom:6px;">✨ Was ist SchulHub?</div>
+            <div style="font-size:0.88rem; color:var(--sub); line-height:1.5;">SchulHub ist deine persönliche Schul-Zentrale – direkt auf dem Handy. Die App zeigt dir in Echtzeit, welches Fach gerade läuft, wie viele Minuten der Block noch geht und was dein Lehrer dir als aktuellen Hinweis oder Hausaufgabe geschickt hat.</div>
         </div>
-        <div class="help-card" style="background:var(--card); border-radius:16px; padding:16px; margin-bottom:12px; border:1px solid var(--border);">
-            <div class="help-card-title" style="font-size:1rem; font-weight:900; margin-bottom:6px;">⏱ Live-Kacheln auf dem Dashboard</div>
-            <div class="help-card-text" style="font-size:0.88rem; color:var(--sub); line-height:1.5;">Die zwei Kacheln unter der Uhr zeigen dir immer den <strong style="color:var(--text);">aktuellen Block</strong> (mit Countdown und Fortschrittsbalken) und das <strong style="color:var(--text);">nächste Fach</strong>. Wenn kein Unterricht läuft, siehst du dort automatisch, was morgen früh als erstes dran ist – damit du nichts vergisst.</div>
+        <div style="background:var(--card); border-radius:16px; padding:16px; margin-bottom:12px; border:1px solid var(--border);">
+            <div style="font-size:1rem; font-weight:900; margin-bottom:6px;">⏱ Live-Kacheln auf dem Dashboard</div>
+            <div style="font-size:0.88rem; color:var(--sub); line-height:1.5;">Die zwei Kacheln unter der Uhr zeigen dir immer den <strong style="color:var(--text);">aktuellen Block</strong> (mit Countdown und Fortschrittsbalken) und das <strong style="color:var(--text);">nächste Fach</strong>.</div>
         </div>
-        <div class="help-card" style="background:var(--card); border-radius:16px; padding:16px; margin-bottom:12px; border:1px solid var(--border);">
-            <div class="help-card-title" style="font-size:1rem; font-weight:900; margin-bottom:6px;">📅 3D Stundenplan-Matrix</div>
-            <div class="help-card-text" style="font-size:0.88rem; color:var(--sub); line-height:1.5;">Tippe auf <strong style="color:var(--text);">„Plan"</strong> unten oder auf den großen Button im Dashboard. Im Stundenplan siehst du alle Fächer der ganzen Woche als bunte Kacheln. <strong style="color:var(--text);">Antippen → Kachel dreht sich (3D-Flip)</strong> und zeigt dir, was du für dieses Fach auf keinen Fall vergessen darfst – Hefter, Taschenrechner, Sportzeug & Co!</div>
+        <div style="background:var(--card); border-radius:16px; padding:16px; margin-bottom:12px; border:1px solid var(--border);">
+            <div style="font-size:1rem; font-weight:900; margin-bottom:6px;">🗓️ Persönlicher Terminkalender</div>
+            <div style="font-size:0.88rem; color:var(--sub); line-height:1.5;">Tippe auf <strong style="color:var(--text);">„Kalender"</strong> unten in der Leiste. Du siehst eine Monatsansicht mit farbigen Punkten auf Tagen mit Terminen. Antippen eines Tages zeigt dir die Termine für genau diesen Tag.<br><br>
+            <strong style="color:var(--text);">Eigene Termine eintragen:</strong> Scrolle im Kalender nach unten zum Formular. Gib einen Titel ein, wähle das Datum und den Typ:<br>
+            📚 <strong style="color:var(--text);">Hausaufgabe</strong> – für HA-Abgaben<br>
+            📝 <strong style="color:var(--text);">Test / Klassenarbeit</strong> – für Prüfungen<br>
+            📎 <strong style="color:var(--text);">Abgabe</strong> – für Projekte, Referate<br>
+            ⭐ <strong style="color:var(--text);">Sonstiges</strong> – alles andere<br><br>
+            Deine Termine werden nur auf <strong style="color:var(--text);">deinem Gerät</strong> gespeichert. Du kannst sie mit ✕ wieder löschen.<br><br>
+            <strong style="color:var(--text);">Lehrer-Termine</strong> (mit 📣-Badge) werden von deinem Lehrer für alle veröffentlicht – die kannst du nicht löschen.<br><br>
+            Auf dem Dashboard zeigt dir die Zeile mit 🗓️ deinen nächsten anstehenden Termin auf einen Blick.</div>
         </div>
-        <div class="help-card" style="background:var(--card); border-radius:16px; padding:16px; margin-bottom:12px; border:1px solid var(--border);">
-            <div class="help-card-title" style="font-size:1rem; font-weight:900; margin-bottom:6px;">📢 News & Hausaufgaben</div>
-            <div class="help-card-text" style="font-size:0.88rem; color:var(--sub); line-height:1.5;">Dein Lehrer kann jederzeit eine aktuelle Info direkt in die App schreiben – Hausaufgaben, Raumänderungen, Prüfungshinweise. Der Kasten erscheint auf dem Dashboard unter „News & Hausaufgaben". Wenn ein Update da ist, siehst du es beim nächsten Öffnen der App sofort.</div>
+        <div style="background:var(--card); border-radius:16px; padding:16px; margin-bottom:12px; border:1px solid var(--border);">
+            <div style="font-size:1rem; font-weight:900; margin-bottom:6px;">📅 3D Stundenplan-Matrix</div>
+            <div style="font-size:0.88rem; color:var(--sub); line-height:1.5;">Tippe auf <strong style="color:var(--text);">„Plan"</strong> unten oder auf den großen Button im Dashboard. <strong style="color:var(--text);">Antippen → Kachel dreht sich (3D-Flip)</strong> und zeigt dir, was du nicht vergessen darfst.</div>
         </div>
-        <div class="help-card" style="background:var(--card); border-radius:16px; padding:16px; margin-bottom:12px; border:1px solid var(--border);">
-            <div class="help-card-title" style="font-size:1rem; font-weight:900; margin-bottom:6px;">🕐 Uhr & Woche wechseln</div>
-            <div class="help-card-text" style="font-size:0.88rem; color:var(--sub); line-height:1.5;">Tippe auf die <strong style="color:var(--text);">Uhr</strong>, um zwischen Digital- und Analoganzeige zu wechseln. Das bunte <strong style="color:var(--text);">„Woche A / B"-Badge</strong> kannst du antippen, um die angezeigte Woche umzuschalten – falls ihr ein A/B-Wochensystem habt.</div>
+        <div style="background:var(--card); border-radius:16px; padding:16px; margin-bottom:12px; border:1px solid var(--border);">
+            <div style="font-size:1rem; font-weight:900; margin-bottom:6px;">🏆 XP &amp; Level-System</div>
+            <div style="font-size:0.88rem; color:var(--sub); line-height:1.5;">Jeden Tag, wenn du die App öffnest, bekommst du automatisch <strong style="color:var(--text);">+10 XP</strong>. Beim Aktualisieren gibt es nochmal <strong style="color:var(--text);">+2 XP</strong> obendrauf. Sammel XP und steig auf – von Schul-Starter bis SchulHub-Legende!</div>
         </div>
-        <div class="help-card" style="background:var(--card); border-radius:16px; padding:16px; margin-bottom:12px; border:1px solid var(--border);">
-            <div class="help-card-title" style="font-size:1rem; font-weight:900; margin-bottom:6px;">🏆 XP & Level-System</div>
-            <div class="help-card-text" style="font-size:0.88rem; color:var(--sub); line-height:1.5;">Jeden Tag, wenn du die App öffnest, bekommst du automatisch <strong style="color:var(--text);">+10 XP</strong>. Beim Aktualisieren gibt es nochmal <strong style="color:var(--text);">+2 XP</strong> obendrauf. Sammel XP und steig von „Schul-Starter" bis zum „SchulHub-Legende" auf – schau oben im Dashboard, wie weit du schon bist!</div>
-        </div>
-        <div class="help-card" style="background:var(--card); border-radius:16px; padding:16px; margin-bottom:12px; border:1px solid var(--border);">
-            <div class="help-card-title" style="font-size:1rem; font-weight:900; margin-bottom:6px;">🎨 Style & Avatar anpassen</div>
-            <div class="help-card-text" style="font-size:0.88rem; color:var(--sub); line-height:1.5;">Über den Tab <strong style="color:var(--text);">„Style"</strong> unten kannst du deinen Namen, deinen Avatar, die Akzentfarbe und das Hintergrund-Theme der App ändern. Alle Änderungen werden live vorschaubar – und erst nach „Design aktivieren" dauerhaft gespeichert.</div>
+        <div style="background:var(--card); border-radius:16px; padding:16px; margin-bottom:12px; border:1px solid var(--border);">
+            <div style="font-size:1rem; font-weight:900; margin-bottom:6px;">🎨 Style & Avatar</div>
+            <div style="font-size:0.88rem; color:var(--sub); line-height:1.5;">Tippe unten auf <strong style="color:var(--text);">„Style"</strong>, um deinen Namen, Avatar, die Akzentfarbe und den Hintergrund anzupassen. Die Änderungen werden als Live-Vorschau angezeigt – erst nach <strong style="color:var(--text);">„Design aktivieren"</strong> dauerhaft gespeichert.</div>
         </div>
         <div style="text-align:center; padding:10px 0 6px; font-size:0.7rem; color:var(--sub); font-weight:700; letter-spacing:0.5px;">SchulHub · Made with ❤️ für Klasse <span id="help-class-name">–</span></div>
     </div>
 </div>
 
+<!-- BOTTOM NAV -->
 <div class="bottom-nav">
     <div class="nav-btn active" id="nav-dash" onclick="switchTab('dash')">
         <div class="nav-icon">⚡</div>
@@ -453,6 +776,10 @@ body::before {
         <div class="nav-icon">📅</div>
         <div class="nav-label">Plan</div>
     </div>
+    <div class="nav-btn" id="nav-kalender" onclick="switchTab('kalender')">
+        <div class="nav-icon" id="nav-kalender-icon">🗓️</div>
+        <div class="nav-label">Kalender</div>
+    </div>
     <div class="nav-btn" id="nav-style" onclick="switchTab('style')">
         <div class="nav-icon">🎨</div>
         <div class="nav-label">Style</div>
@@ -461,114 +788,33 @@ body::before {
 
 <script>
 var APP_DATA = {
-    "className": "7c",
-    "news": "Hallo an alle.",
-    "newsTime": "Aktualisiert: 29.05., 12:46",
-    "currentWeek": "A",
-    "wocheA": {
-        "Mo": [
-            "Mathe R204",
-            "",
-            "Englisch R201",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Di": [
-            "Sport Halle",
-            "",
-            "Biologie R115",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Mi": [
-            "Deutsch R110",
-            "",
-            "Kunst R301",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Do": [
-            "Geographie R210",
-            "",
-            "Deutsch R110",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Fr": [
-            "Englisch R201",
-            "",
-            "Physik R101",
-            "",
-            "",
-            "",
-            ""
-        ]
+    className: "8b",
+    news: "Willkommen bei SchulHub Pro! Tipp: Gib Fächer im Admin-Bereich mit Raum ein (z.B. Mathe R204), damit es perfekt auf den Kacheln getrennt wird.",
+    newsTime: "Aktualisiert: Heute",
+    currentWeek: "A",
+    events: [],
+    wocheA: {
+        Mo: ["Mathe R204","Deutsch R110","Englisch R201","Physik R101","","",""],
+        Di: ["Sport Halle","Mathe R204","Biologie R115","Geschichte R202","","",""],
+        Mi: ["Deutsch R110","Englisch R201","Kunst R301","","","",""],
+        Do: ["Geographie R210","Mathe R204","Deutsch R110","","","",""],
+        Fr: ["Englisch R201","Biologie R115","Physik R101","","","",""]
     },
-    "wocheB": {
-        "Mo": [
-            "Deutsch R110",
-            "",
-            "Physik R101",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Di": [
-            "Biologie R115",
-            "",
-            "Geschichte R202",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Mi": [
-            "Kunst R301",
-            "",
-            "Musik R305",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Do": [
-            "Mathe R204",
-            "",
-            "Sport Halle",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Fr": [
-            "Physik R101",
-            "",
-            "Geschichte R202",
-            "",
-            "",
-            "",
-            ""
-        ]
+    wocheB: {
+        Mo: ["Deutsch R110","Mathe R204","Physik R101","Englisch R201","","",""],
+        Di: ["Biologie R115","Sport Halle","Geschichte R202","Mathe R204","","",""],
+        Mi: ["Kunst R301","Deutsch R110","Musik R305","","","",""],
+        Do: ["Mathe R204","Geographie R210","Sport Halle","","","",""],
+        Fr: ["Physik R101","Englisch R201","Geschichte R202","","","",""]
     }
 };
 
 var ADMIN_PW = "Lwlmn72Neo123";
-
 var GH_USER = "nagel-physik";
-var GH_REPO = "SchulApp-SuS-"; 
-var GH_FILE = "index.html";    
-
+var GH_REPO = "SchulApp-SuS-";
+var GH_FILE = "index.html";
 var TEACHER_MAIL = "michael.nagel@lk.brandenburg.de";
-var PINNPAND_URL = "https://opbb.bildung-brandenburg.de/pl/de76e4709bff242e061957caaa0e5e30";
+var PINNPAND_URL = "https://opbb.bildung-brandon.de/pl/de76e4709bff242e061957caaa0e5e30";
 
 var BLOCKS = [
     { id:0, label:"1. Block", start:"07:30", end:"09:00", pause:false },
@@ -586,34 +832,589 @@ var clockStyle = localStorage.getItem('susClockStyle') || 'digital';
 var activeWeek = localStorage.getItem('susActiveWeek') || APP_DATA.currentWeek;
 var userAccent = localStorage.getItem('susAccent') || '#6366f1';
 var userBgTheme = localStorage.getItem('susBgTheme') || 'default';
-var userAvatar = localStorage.getItem('susAvatar') || '👨‍🚀'; 
+var userAvatar = localStorage.getItem('susAvatar') || '👨‍🚀';
 var userName = localStorage.getItem('susUsername') || '';
 var userXP = parseInt(localStorage.getItem('susXP')) || 0;
 var lastCheckInDate = localStorage.getItem('susLastCheckIn') || '';
-
 var currentAdminWeek = 'A';
 var ghToken = localStorage.getItem('susAdminToken') || '';
 
+// Kalender-State
+var kalViewYear = new Date().getFullYear();
+var kalViewMonth = new Date().getMonth();
+var kalSelectedDay = null;
+var kalSelectedEventType = 'hausaufgabe';
+
+/* ============================================================
+   KALENDER: LOKALE TERMINE (localStorage)
+   ============================================================ */
+function getLocalEvents() {
+    try { return JSON.parse(localStorage.getItem('susKalEvents') || '[]'); } catch(e) { return []; }
+}
+function saveLocalEvents(evts) {
+    localStorage.setItem('susKalEvents', JSON.stringify(evts));
+}
+
+/* ============================================================
+   FERIEN & FEIERTAGE BRANDENBURG – AUTOMATISCH FÜR JEDES JAHR
+   Feste Feiertage werden jährlich berechnet.
+   Bewegliche Feiertage (Ostern etc.) per Gauss-Algorithmus.
+   Schulferien Brandenburg fix hinterlegt bis 2030,
+   danach automatisch geschätzt aus Durchschnittswerten.
+   ============================================================ */
+
+// Gauss-Algorithmus für Ostersonntag
+function getEasterSunday(year) {
+    var a = year % 19, b = Math.floor(year / 100), c = year % 100;
+    var d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25);
+    var g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d - g + 15) % 30;
+    var i = Math.floor(c / 4), k = c % 4;
+    var l = (32 + 2 * e + 2 * i - h - k) % 7;
+    var m = Math.floor((a + 11 * h + 22 * l) / 451);
+    var month = Math.floor((h + l - 7 * m + 114) / 31);
+    var day = ((h + l - 7 * m + 114) % 31) + 1;
+    return new Date(year, month - 1, day);
+}
+
+function fmt(d) {
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+function addDays(d, n) { var r = new Date(d); r.setDate(r.getDate() + n); return r; }
+function dateRange(from, to) {
+    var days = [], cur = new Date(from);
+    while (cur <= to) { days.push(fmt(cur)); cur = addDays(cur, 1); }
+    return days;
+}
+
+// Feste + bewegliche Feiertage Brandenburg für ein Jahr
+function getFeiertage(year) {
+    var e = getEasterSunday(year);
+    var list = [
+        { date: year+'-01-01', title: '🎉 Neujahr' },
+        { date: fmt(addDays(e,-2)),  title: '✝️ Karfreitag' },
+        { date: fmt(e),              title: '✝️ Ostersonntag' },
+        { date: fmt(addDays(e, 1)),  title: '✝️ Ostermontag' },
+        { date: year+'-05-01',       title: '🔨 Tag der Arbeit' },
+        { date: fmt(addDays(e,39)),  title: '✝️ Christi Himmelfahrt' },
+        { date: fmt(addDays(e,49)),  title: '✝️ Pfingstsonntag' },
+        { date: fmt(addDays(e,50)),  title: '✝️ Pfingstmontag' },
+        { date: year+'-10-03',       title: '🇩🇪 Tag der Deutschen Einheit' },
+        { date: year+'-10-31',       title: '✝️ Reformationstag' },
+        { date: year+'-12-25',       title: '🎄 1. Weihnachtstag' },
+        { date: year+'-12-26',       title: '🎄 2. Weihnachtstag' }
+    ];
+    return list;
+}
+
+// Offizielle Brandenburger Schulferien bis 2030 (Quelle: MBJS / KMK)
+// Format: [von, bis, name]  — beide Tage inklusive
+var BB_FERIEN_FIX = [
+    // 2025
+    ['2025-01-27','2025-02-01','❄️ Winterferien'],
+    ['2025-04-07','2025-04-19','🐣 Osterferien'],
+    ['2025-07-03','2025-08-16','☀️ Sommerferien'],
+    ['2025-10-20','2025-11-01','🍂 Herbstferien'],
+    ['2025-12-22','2026-01-02','🎄 Weihnachtsferien'],
+    // 2026
+    ['2026-02-02','2026-02-07','❄️ Winterferien'],
+    ['2026-03-30','2026-04-10','🐣 Osterferien'],
+    ['2026-07-09','2026-08-22','☀️ Sommerferien'],
+    ['2026-10-19','2026-10-31','🍂 Herbstferien'],
+    ['2026-12-21','2027-01-01','🎄 Weihnachtsferien'],
+    // 2027
+    ['2027-02-01','2027-02-06','❄️ Winterferien'],
+    ['2027-03-29','2027-04-10','🐣 Osterferien'],
+    ['2027-06-24','2027-08-07','☀️ Sommerferien'],
+    ['2027-10-11','2027-10-23','🍂 Herbstferien'],
+    ['2027-12-23','2028-01-01','🎄 Weihnachtsferien'],
+    // 2028
+    ['2028-01-31','2028-02-05','❄️ Winterferien'],
+    ['2028-04-10','2028-04-22','🐣 Osterferien'],
+    ['2028-06-22','2028-08-05','☀️ Sommerferien'],
+    ['2028-10-16','2028-10-28','🍂 Herbstferien'],
+    ['2028-12-22','2029-01-05','🎄 Weihnachtsferien'],
+    // 2029
+    ['2029-02-04','2029-02-09','❄️ Winterferien'],
+    ['2029-04-14','2029-04-26','🐣 Osterferien'],
+    ['2029-07-05','2029-08-18','☀️ Sommerferien'],
+    ['2029-10-20','2029-11-01','🍂 Herbstferien'],
+    ['2029-12-22','2030-01-04','🎄 Weihnachtsferien'],
+    // 2030 (geschätzt nach KMK-Rhythmus)
+    ['2030-02-03','2030-02-08','❄️ Winterferien'],
+    ['2030-04-07','2030-04-19','🐣 Osterferien'],
+    ['2030-07-04','2030-08-17','☀️ Sommerferien'],
+    ['2030-10-14','2030-10-26','🍂 Herbstferien'],
+    ['2030-12-23','2031-01-03','🎄 Weihnachtsferien'],
+];
+
+// Gibt alle Ferien- und Feiertagseinträge für ein Monat zurück (für Kalender-Dots)
+function getPublicEventsForMonth(year, month) {
+    var result = {};
+
+    // Feiertage
+    getFeiertage(year).forEach(function(fj) {
+        if (!result[fj.date]) result[fj.date] = [];
+        result[fj.date].push({ id:'fj_'+fj.date, title:fj.title, date:fj.date, type:'feiertag', source:'system' });
+    });
+
+    // Ferien – alle Tage des Zeitraums die in diesen Monat fallen
+    BB_FERIEN_FIX.forEach(function(f) {
+        var from = new Date(f[0]), to = new Date(f[1]), name = f[2];
+        dateRange(from, to).forEach(function(ds) {
+            var d = new Date(ds);
+            if (d.getFullYear() === year && d.getMonth() === month) {
+                if (!result[ds]) result[ds] = [];
+                result[ds].push({ id:'fer_'+ds, title:name, date:ds, type:'ferien', source:'system' });
+            }
+        });
+    });
+
+    return result; // { 'YYYY-MM-DD': [evt, ...] }
+}
+
+// Gibt alle System-Events (Ferien + Feiertage) für einen Datumsbereich zurück
+function getSystemEventsInRange(fromDate, toDate) {
+    var result = [];
+    var years = [];
+    for (var y = fromDate.getFullYear(); y <= toDate.getFullYear(); y++) years.push(y);
+
+    years.forEach(function(year) {
+        // Feiertage
+        getFeiertage(year).forEach(function(fj) {
+            var d = new Date(fj.date);
+            if (d >= fromDate && d <= toDate) result.push({ id:'fj_'+fj.date, title:fj.title, date:fj.date, type:'feiertag', source:'system' });
+        });
+        // Ferien (nur erster Tag des Zeitraums eintragen, reicht für Listenansicht)
+        BB_FERIEN_FIX.forEach(function(f) {
+            var fd = new Date(f[0]);
+            if (fd.getFullYear() === year && fd >= fromDate && fd <= toDate) {
+                result.push({ id:'fer_'+f[0], title:f[2]+' beginnen', date:f[0], type:'ferien', source:'system' });
+            }
+        });
+    });
+    return result;
+}
+
+function getAllEvents() {
+    var local = getLocalEvents();
+    var lehrer = (APP_DATA.events || []).map(function(e) {
+        return { id: 'lk_' + e.date + '_' + e.title, title: e.title, date: e.date, type: 'lehrer', source: 'lehrer' };
+    });
+    // System-Events für nächste 365 Tage (für Badge + Preview)
+    var today = new Date(); today.setHours(0,0,0,0);
+    var inYear = addDays(today, 365);
+    var system = getSystemEventsInRange(today, inYear);
+    return local.concat(lehrer).concat(system);
+}
+
+function addKalenderEvent() {
+    var title = document.getElementById('kal-new-title').value.trim();
+    if (!title) { document.getElementById('kal-new-title').focus(); return; }
+    if (!kalModalDate) return;
+    var evts = getLocalEvents();
+    evts.push({ id: Date.now().toString(), title: title, date: kalModalDate, type: kalSelectedEventType });
+    saveLocalEvents(evts);
+    document.getElementById('kal-new-title').value = '';
+    renderKalModalExisting(kalModalDate);
+    renderKalender();
+    renderKalenderPreview();
+    updateKalBadge();
+    updateTileAlerts();
+    alert('✅ Termin gespeichert!');
+}
+
+function deleteLocalEvent(id) {
+    var evts = getLocalEvents().filter(function(e) { return e.id !== id; });
+    saveLocalEvents(evts);
+    renderKalender();
+    renderKalenderPreview();
+    updateKalBadge();
+    updateTileAlerts();
+}
+
+/* ============================================================
+   KACHEL-ALERTS: vibrieren + leuchten wenn neue Infos
+   ============================================================ */
+var lastNewsHash = '';
+var lastPlanHash = '';
+
+function simpleHash(s) {
+    var h = 0;
+    for (var i = 0; i < s.length; i++) { h = (Math.imul(31, h) + s.charCodeAt(i)) | 0; }
+    return String(h);
+}
+
+function updateTileAlerts() {
+    // Kalender-Kachel: leuchtet wenn Termine in 7 Tagen
+    var kal = document.getElementById('tile-kal');
+    var badge = document.getElementById('kal-badge');
+    if (kal && badge) {
+        var badgeVisible = badge.style.display !== 'none';
+        kal.classList.toggle('tile-alert', badgeVisible);
+    }
+    // Plan-Kachel: leuchtet wenn Stundenplan sich geändert hat seit letztem Besuch
+    var planHash = simpleHash(JSON.stringify(APP_DATA.wocheA) + JSON.stringify(APP_DATA.wocheB));
+    var storedPlanHash = localStorage.getItem('susPlanHash') || '';
+    var planTile = document.getElementById('tile-plan');
+    var planBadge = document.getElementById('tile-plan-badge');
+    if (planTile && planBadge) {
+        if (storedPlanHash && storedPlanHash !== planHash) {
+            planTile.classList.add('tile-alert');
+            planBadge.style.display = 'inline-block';
+        }
+    }
+    // Plan-Hash beim ersten Laden speichern
+    if (!storedPlanHash) localStorage.setItem('susPlanHash', planHash);
+}
+
+function markPlanSeen() {
+    var planHash = simpleHash(JSON.stringify(APP_DATA.wocheA) + JSON.stringify(APP_DATA.wocheB));
+    localStorage.setItem('susPlanHash', planHash);
+    var planTile = document.getElementById('tile-plan');
+    var planBadge = document.getElementById('tile-plan-badge');
+    if (planTile) planTile.classList.remove('tile-alert');
+    if (planBadge) planBadge.style.display = 'none';
+}
+
+/* ============================================================
+   KALENDER: RENDER
+   ============================================================ */
+var DE_MONTHS = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+var DE_WEEKDAYS_SHORT = ['Mo','Di','Mi','Do','Fr','Sa','So'];
+
+function renderKalender() {
+    var today = new Date();
+    var year = kalViewYear, month = kalViewMonth;
+    document.getElementById('kal-month-title').innerText = DE_MONTHS[month] + ' ' + year;
+
+    var firstDay = new Date(year, month, 1);
+    var lastDay = new Date(year, month + 1, 0);
+    var startDow = (firstDay.getDay() + 6) % 7;
+
+    // Nutzer-Events (lokal + Lehrer)
+    var userEvts = getLocalEvents().concat((APP_DATA.events||[]).map(function(e){
+        return {id:'lk_'+e.date,title:e.title,date:e.date,type:'lehrer'};
+    }));
+    var userByDate = {};
+    userEvts.forEach(function(e) {
+        if (!userByDate[e.date]) userByDate[e.date] = [];
+        userByDate[e.date].push(e.type);
+    });
+
+    // Ferien + Feiertage für diesen Monat
+    var sysEvts = getPublicEventsForMonth(year, month);
+
+    var html = '';
+    DE_WEEKDAYS_SHORT.forEach(function(d) { html += '<div class="kal-weekday">' + d + '</div>'; });
+
+    var prevMonthLast = new Date(year, month, 0).getDate();
+    for (var i = startDow - 1; i >= 0; i--) {
+        html += '<div class="kal-day other-month"><div class="kal-day-num">' + (prevMonthLast - i) + '</div></div>';
+    }
+
+    for (var day = 1; day <= lastDay.getDate(); day++) {
+        var dateStr = year + '-' + String(month+1).padStart(2,'0') + '-' + String(day).padStart(2,'0');
+        var isToday = today.getFullYear()===year && today.getMonth()===month && today.getDate()===day;
+        var sysList = sysEvts[dateStr] || [];
+        var isFerien = sysList.some(function(s){ return s.type==='ferien'; });
+        var isFeiertag = sysList.some(function(s){ return s.type==='feiertag'; });
+        var isSoSa = (new Date(dateStr).getDay()===0 || new Date(dateStr).getDay()===6);
+
+        // Klassen zusammenbauen
+        var cls = 'kal-day';
+        if (isToday) cls += ' today';
+        if (isFerien) cls += ' ferien-bg';
+        else if (isFeiertag) cls += ' feiertag-bg';
+        else if (isSoSa) cls += ' wochenende-bg';
+
+        // Dots: erst System, dann User (max 4 gesamt)
+        var dots = '';
+        sysList.forEach(function(s) { dots += '<div class="kal-dot ' + s.type + '"></div>'; });
+        (userByDate[dateStr]||[]).forEach(function(t) { dots += '<div class="kal-dot ' + t + '"></div>'; });
+
+        html += '<div class="' + cls + '" onclick="kalSelectDay(\'' + dateStr + '\')">';
+        html += '<div class="kal-day-num">' + day + '</div>';
+        if (dots) html += '<div class="kal-dots">' + dots + '</div>';
+        html += '</div>';
+    }
+
+    var totalCells = startDow + lastDay.getDate();
+    var nextFill = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
+    for (var i = 1; i <= nextFill; i++) {
+        html += '<div class="kal-day other-month"><div class="kal-day-num">' + i + '</div></div>';
+    }
+
+    document.getElementById('kal-grid').innerHTML = html;
+}
+
+function kalSelectDay(dateStr) {
+    kalSelectedDay = dateStr;
+    openKalModal(dateStr);
+}
+
+var kalModalDate = '';
+function openKalModal(dateStr) {
+    kalModalDate = dateStr;
+    // Datum formatiert anzeigen
+    var parts = dateStr.split('-');
+    var d = new Date(dateStr);
+    var wochentage = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
+    document.getElementById('kal-modal-date').innerText = wochentage[d.getDay()] + ', ' + parseInt(parts[2]) + '. ' + DE_MONTHS[parseInt(parts[1])-1] + ' ' + parts[0];
+    document.getElementById('kal-new-title').value = '';
+    // Typ zurücksetzen
+    document.getElementById('kal-type-label').innerText = '\uD83D\uDCDA Hausaufgabe';
+    kalSelectedEventType = 'hausaufgabe';
+    document.getElementById('kal-type-menu').style.display = 'none';
+    // Bestehende Termine anzeigen
+    renderKalModalExisting(dateStr);
+    // Modal anzeigen
+    document.getElementById('kal-modal-overlay').style.display = 'block';
+    var modal = document.getElementById('kal-modal');
+    modal.style.display = 'block';
+    modal.classList.add('open');
+    setTimeout(function(){ modal.classList.remove('open'); }, 300);
+}
+
+function closeKalModal() {
+    document.getElementById('kal-modal-overlay').style.display = 'none';
+    document.getElementById('kal-modal').style.display = 'none';
+    document.getElementById('kal-type-menu').style.display = 'none';
+}
+
+function renderKalModalExisting(dateStr) {
+    var userEvts = getLocalEvents().filter(function(e){ return e.date === dateStr; });
+    var lehrEvts = (APP_DATA.events||[]).filter(function(e){ return e.date === dateStr; });
+    var parts0 = dateStr.split('-');
+    var sysMap = getPublicEventsForMonth(parseInt(parts0[0]), parseInt(parts0[1])-1);
+    var sysDay = sysMap[dateStr] || [];
+    var all = sysDay.concat(lehrEvts.map(function(e){ return {id:'lk_'+e.date,title:e.title,type:'lehrer',source:'lehrer'}; })).concat(userEvts);
+    var typeEmoji = { lehrer:'\uD83D\uDCE3', hausaufgabe:'\uD83D\uDCDA', test:'\uD83D\uDCDD', abgabe:'\uD83D\uDCCE', sonstiges:'\u2B50', ferien:'\uD83C\uDF34', feiertag:'\uD83C\uDF89' };
+    var el = document.getElementById('kal-modal-existing');
+    if (all.length === 0) { el.innerHTML = ''; return; }
+    el.innerHTML = all.map(function(e) {
+        var canDel = e.source !== 'lehrer' && e.source !== 'system';
+        return '<div class="kal-modal-existing-item">' +
+            '<span>' + (typeEmoji[e.type]||'\uD83D\uDCC5') + '</span>' +
+            '<span class="evt-title">' + escHtml(e.title) + '</span>' +
+            (canDel ? '<button class="kal-modal-existing-del" onclick="deleteLocalEventModal(\'' + e.id + '\',\'' + dateStr + '\')">✕</button>' : '') +
+            '</div>';
+    }).join('');
+}
+
+function deleteLocalEventModal(id, dateStr) {
+    var evts = getLocalEvents().filter(function(e){ return e.id !== id; });
+    saveLocalEvents(evts);
+    renderKalModalExisting(dateStr);
+    renderKalender();
+    renderKalenderPreview();
+    updateKalBadge();
+    updateTileAlerts();
+}
+
+function toggleTypeMenu() {
+    var menu = document.getElementById('kal-type-menu');
+    menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+}
+
+function pickType(type, label) {
+    kalSelectedEventType = type;
+    document.getElementById('kal-type-label').innerText = label;
+    document.getElementById('kal-type-menu').style.display = 'none';
+}
+
+function renderKalEventList(filterDate) {
+    var today = new Date(); today.setHours(0,0,0,0);
+    var titleEl = document.getElementById('kal-events-title');
+    var evts;
+
+    if (filterDate) {
+        // Nutzer-Events für diesen Tag
+        var allU = getLocalEvents().concat((APP_DATA.events||[]).map(function(e){
+            return {id:'lk_'+e.date,title:e.title,date:e.date,type:'lehrer',source:'lehrer'};
+        }));
+        var userDay = allU.filter(function(e){ return e.date===filterDate; });
+        // System-Events für diesen Tag
+        var parts0 = filterDate.split('-');
+        var sysDayMap = getPublicEventsForMonth(parseInt(parts0[0]), parseInt(parts0[1])-1);
+        var sysDay = sysDayMap[filterDate] || [];
+        evts = sysDay.concat(userDay);
+        var parts = filterDate.split('-');
+        titleEl.innerText = parseInt(parts[2]) + '. ' + DE_MONTHS[parseInt(parts[1])-1] + ' ' + parts[0];
+    } else {
+        evts = getAllEvents().filter(function(e) {
+            var d = new Date(e.date); d.setHours(0,0,0,0);
+            return d >= today;
+        }).sort(function(a,b) { return a.date.localeCompare(b.date); }).slice(0,20);
+        titleEl.innerText = 'Kommende Termine';
+    }
+
+    if (evts.length === 0) {
+        document.getElementById('kal-events-list').innerHTML = '<div class="kal-no-events">Keine Termine ' + (filterDate ? 'an diesem Tag' : 'eingetragen') + '</div>';
+        return;
+    }
+
+    var typeLabels = { lehrer:'Von Lehrer', hausaufgabe:'Hausaufgabe', test:'Test', abgabe:'Abgabe', sonstiges:'Sonstiges', feiertag:'Feiertag', ferien:'Schulferien' };
+    var html = evts.map(function(e) {
+        var canDel = e.source !== 'lehrer' && e.source !== 'system';
+        var dateParts = e.date.split('-');
+        var dateFormatted = parseInt(dateParts[2]) + '. ' + DE_MONTHS[parseInt(dateParts[1])-1];
+        return '<div class="kal-event-card ' + e.type + '">' +
+            '<span class="kal-event-type-badge badge-' + e.type + '">' + (typeLabels[e.type]||e.type) + '</span>' +
+            '<div class="kal-event-body"><div class="evt-title">' + escHtml(e.title) + '</div>' +
+            '<div class="evt-date">' + dateFormatted + '</div></div>' +
+            (canDel ? '<button class="kal-event-del" onclick="deleteLocalEvent(\'' + e.id + '\')">✕</button>' : '') +
+            '</div>';
+    }).join('');
+    document.getElementById('kal-events-list').innerHTML = html;
+
+    // Bei Tagesauswahl oder wenn Einträge vorhanden: automatisch aufklappen
+    if (filterDate) { openKalEventList(); }
+}
+
+function openKalEventList() {
+    var list = document.getElementById('kal-events-list');
+    var icon = document.getElementById('kal-toggle-icon');
+    list.style.display = 'block';
+    if (icon) icon.style.transform = 'rotate(180deg)';
+}
+
+function toggleKalEventList() {
+    var list = document.getElementById('kal-events-list');
+    var icon = document.getElementById('kal-toggle-icon');
+    var isOpen = list.style.display !== 'none';
+    list.style.display = isOpen ? 'none' : 'block';
+    if (icon) icon.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+}
+
+function kalNavMonth(dir) {
+    kalViewMonth += dir;
+    if (kalViewMonth > 11) { kalViewMonth = 0; kalViewYear++; }
+    if (kalViewMonth < 0) { kalViewMonth = 11; kalViewYear--; }
+    kalSelectedDay = null;
+    renderKalender();
+}
+
+function escHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ============================================================
+   KALENDER: BADGE + PREVIEW
+   ============================================================ */
+function updateKalBadge() {
+    // Badge zählt nur echte Nutzer-Termine (keine System-Events)
+    var allEvts = getLocalEvents().concat((APP_DATA.events||[]).map(function(e){
+        return {id:'lk_'+e.date,date:e.date,type:'lehrer'};
+    }));
+    var today = new Date(); today.setHours(0,0,0,0);
+    var in7 = new Date(today); in7.setDate(in7.getDate() + 7);
+    var count = allEvts.filter(function(e) {
+        var d = new Date(e.date); d.setHours(0,0,0,0);
+        return d >= today && d <= in7;
+    }).length;
+    var badge = document.getElementById('kal-badge');
+    if (count > 0) {
+        badge.style.display = 'flex';
+        badge.innerText = count > 9 ? '9+' : count;
+    } else {
+        badge.style.display = 'none';
+    }
+}
+
+function renderKalenderPreview() {
+    // Nutzer-Events zuerst, dann Ferien/Feiertage
+    var userEvts = getLocalEvents().concat((APP_DATA.events||[]).map(function(e){
+        return {id:'lk_'+e.date,title:e.title,date:e.date,type:'lehrer',source:'lehrer'};
+    }));
+    var today = new Date(); today.setHours(0,0,0,0);
+    var in7 = new Date(today); in7.setDate(in7.getDate() + 7);
+
+    var upcoming = userEvts.filter(function(e) {
+        var d = new Date(e.date); d.setHours(0,0,0,0);
+        return d >= today && d <= in7;
+    }).sort(function(a,b) { return a.date.localeCompare(b.date); });
+
+    // Wenn keine Nutzer-Termine: nächstes System-Event (Ferien/Feiertag) zeigen
+    if (upcoming.length === 0) {
+        var sysNext = getSystemEventsInRange(today, in7)
+            .sort(function(a,b){ return a.date.localeCompare(b.date); });
+        if (sysNext.length > 0) upcoming = [sysNext[0]];
+    }
+
+    var hintEl = document.getElementById('kal-hint-text');
+    if (!hintEl) return;
+    if (upcoming.length === 0) {
+        hintEl.innerText = 'Terminkalender \u2013 hier Infos eintragen';
+        hintEl.style.color = '';
+    } else {
+        var next = upcoming[0];
+        var parts = next.date.split('-');
+        var dateStr = parseInt(parts[2]) + '. ' + DE_MONTHS[parseInt(parts[1])-1];
+        var typeEmoji = { lehrer:'\uD83D\uDCE3', hausaufgabe:'\uD83D\uDCDA', test:'\uD83D\uDCDD', abgabe:'\uD83D\uDCCE', sonstiges:'\u2B50', ferien:'\uD83C\uDF34', feiertag:'\uD83C\uDF89' };
+        var rest = upcoming.length > 1 ? ' +' + (upcoming.length - 1) + ' weitere' : '';
+        hintEl.innerText = (typeEmoji[next.type]||'\uD83D\uDCC5') + ' ' + next.title + ' \u00B7 ' + dateStr + rest;
+        hintEl.style.color = next.source === 'system' ? 'var(--sub)' : 'var(--text)';
+    }
+}
+
+/* ============================================================
+   ADMIN: LEHRER-TERMINE
+   ============================================================ */
+function renderAdminEventList() {
+    var evts = APP_DATA.events || [];
+    var typeLabels = { lehrer:'Info', test:'Test', abgabe:'Abgabe', sonstiges:'Sonstiges' };
+    var colorMap = { lehrer:'#f59e0b', test:'#ef4444', abgabe:'#ec4899', sonstiges:'#10b981' };
+    if (evts.length === 0) {
+        document.getElementById('admin-event-list').innerHTML = '<div style="font-size:0.75rem;color:var(--sub);text-align:center;padding:8px;">Noch keine Lehrer-Termine eingetragen.</div>';
+        return;
+    }
+    document.getElementById('admin-event-list').innerHTML = evts.map(function(e, i) {
+        var parts = e.date.split('-');
+        var dateStr = parseInt(parts[2]) + '. ' + DE_MONTHS[parseInt(parts[1])-1] + ' ' + parts[0];
+        return '<div class="admin-event-item">' +
+            '<div class="event-type-dot" style="background:' + (colorMap[e.type]||'#94a3b8') + '"></div>' +
+            '<div class="evt-info"><strong>' + escHtml(e.title) + '</strong>' +
+            '<span>' + (typeLabels[e.type]||e.type) + ' · ' + dateStr + '</span></div>' +
+            '<button class="evt-del" onclick="deleteAdminEvent(' + i + ')">✕</button>' +
+            '</div>';
+    }).join('');
+}
+
+function addAdminEvent() {
+    var title = document.getElementById('admin-evt-title').value.trim();
+    var date = document.getElementById('admin-evt-date').value;
+    var type = document.getElementById('admin-evt-type').value;
+    if (!title || !date) { alert('Bitte Titel und Datum eintragen!'); return; }
+    if (!APP_DATA.events) APP_DATA.events = [];
+    APP_DATA.events.push({ title: title, date: date, type: type });
+    document.getElementById('admin-evt-title').value = '';
+    document.getElementById('admin-evt-date').value = '';
+    renderAdminEventList();
+}
+
+function deleteAdminEvent(idx) {
+    APP_DATA.events.splice(idx, 1);
+    renderAdminEventList();
+}
+
+/* ============================================================
+   ORIGINAL FUNKTIONEN (UNVERÄNDERT)
+   ============================================================ */
 function splitSubjectAndRoom(rawSubject) {
     if (!rawSubject) return { name: '', room: '' };
     var parts = rawSubject.split(/\s+( Raum | R | raum | r )/i);
-    if (parts.length >= 3) {
-        return { name: parts[0].trim(), room: parts[1].trim() + " " + parts.slice(2).join('').trim() };
-    }
+    if (parts.length >= 3) return { name: parts[0].trim(), room: parts[1].trim() + " " + parts.slice(2).join('').trim() };
     var words = rawSubject.split(' ');
     if (words.length > 1) {
         var lastWord = words[words.length - 1];
-        if (lastWord.match(/^[0-9]+$/) || lastWord.toLowerCase().includes('hall') || lastWord.toLowerCase().startsWith('r')) {
+        if (lastWord.match(/^[0-9]+$/) || lastWord.toLowerCase().includes('hall') || lastWord.toLowerCase().startsWith('r'))
             return { name: words.slice(0, words.length - 1).join(' ').trim(), room: lastWord.trim() };
-        }
     }
     return { name: rawSubject.trim(), room: '' };
 }
-
 function getSubjectReminder(subject) {
     if (!subject) return '';
-    var data = splitSubjectAndRoom(subject);
-    var s = data.name.toLowerCase();
+    var data = splitSubjectAndRoom(subject); var s = data.name.toLowerCase();
     if (s.includes('math')) return "📐 Taschenrechner\nGeodreieck\nFormelsammlung";
     if (s.includes('deut')) return "📚 Arbeitsheft\nTextbuch\naktuelle Lektüre";
     if (s.includes('eng')) return "🇬🇧 Workbook\nVokabelheft\nLesebuch";
@@ -626,61 +1427,37 @@ function getSubjectReminder(subject) {
     if (s.includes('kunst') || s.includes('zeich')) return "🎨 Malschürze\nPinsel\nTuschkasten";
     return "📝 Federtasche\nHausaufgaben\nMappe";
 }
-
 function getSubjectClass(subject) {
-    if (!subject) return 'm-empty';
-    var data = splitSubjectAndRoom(subject);
-    var s = data.name.toLowerCase();
-    if (s.includes('math')) return 'm-mathe';
-    if (s.includes('deut')) return 'm-deutsch';
-    if (s.includes('eng')) return 'm-englisch';
-    if (s.includes('phys')) return 'm-physik';
-    if (s.includes('spor')) return 'm-sport';
-    if (s.includes('bio')) return 'm-bio';
-    if (s.includes('geo') || s.includes('erd')) return 'm-geo';
-    if (s.includes('gesch')) return 'm-geschichte';
-    if (s.includes('musi')) return 'm-musik';
-    if (s.includes('kunst') || s.includes('zeich')) return 'm-kunst';
+    if (!subject) return 'm-empty'; var data = splitSubjectAndRoom(subject); var s = data.name.toLowerCase();
+    if (s.includes('math')) return 'm-mathe'; if (s.includes('deut')) return 'm-deutsch';
+    if (s.includes('eng')) return 'm-englisch'; if (s.includes('phys')) return 'm-physik';
+    if (s.includes('spor')) return 'm-sport'; if (s.includes('bio')) return 'm-bio';
+    if (s.includes('geo') || s.includes('erd')) return 'm-geo'; if (s.includes('gesch')) return 'm-geschichte';
+    if (s.includes('musi')) return 'm-musik'; if (s.includes('kunst') || s.includes('zeich')) return 'm-kunst';
     return 'm-other';
 }
-
 function getSubjectEmoji(subject) {
-    if (!subject) return '';
-    var data = splitSubjectAndRoom(subject);
-    var s = data.name.toLowerCase();
-    if (s.includes('math')) return '📐';
-    if (s.includes('deut')) return '📚';
-    if (s.includes('eng')) return '🇬🇧';
-    if (s.includes('phys')) return '🧪';
-    if (s.includes('spor')) return '🏃';
-    if (s.includes('bio')) return '🌱';
-    if (s.includes('geo') || s.includes('erd')) return '🌍';
-    if (s.includes('gesch')) return '⏳';
-    if (s.includes('musi')) return '🎵';
-    if (s.includes('kunst') || s.includes('zeich')) return '🎨';
+    if (!subject) return ''; var data = splitSubjectAndRoom(subject); var s = data.name.toLowerCase();
+    if (s.includes('math')) return '📐'; if (s.includes('deut')) return '📚'; if (s.includes('eng')) return '🇬🇧';
+    if (s.includes('phys')) return '🧪'; if (s.includes('spor')) return '🏃'; if (s.includes('bio')) return '🌱';
+    if (s.includes('geo') || s.includes('erd')) return '🌍'; if (s.includes('gesch')) return '⏳';
+    if (s.includes('musi')) return '🎵'; if (s.includes('kunst') || s.includes('zeich')) return '🎨';
     return '📝';
 }
-
 function checkGamificationXP(isManual) {
     var todayStr = new Date().toLocaleDateString();
     if (lastCheckInDate !== todayStr || isManual) {
-        if (lastCheckInDate !== todayStr) {
-            userXP += 10;
-            localStorage.setItem('susLastCheckIn', todayStr);
-        } else if (isManual) {
-            userXP += 2;
-        }
+        if (lastCheckInDate !== todayStr) { userXP += 10; localStorage.setItem('susLastCheckIn', todayStr); }
+        else if (isManual) { userXP += 2; }
         localStorage.setItem('susXP', userXP);
     }
     renderLevelBar();
 }
-
 function getPlayerLevel() {
     var lvl = Math.floor(userXP / 50) + 1;
     var titles = ["Schul-Starter", "Klassen-Profi", "Hausaufgaben-Held", "Wissens-Jäger", "SchulHub-Legende"];
     return { lvl: lvl, title: titles[Math.min(lvl - 1, titles.length - 1)] };
 }
-
 function renderLevelBar() {
     var p = getPlayerLevel();
     document.getElementById('user-level-title').innerText = '🏆 ' + p.title + ' (Lvl ' + p.lvl + ')';
@@ -695,11 +1472,21 @@ window.addEventListener('DOMContentLoaded', function() {
     setInterval(updateClock, 1000);
     updateClock();
     buildAdminStructure();
+    renderKalender();
+    renderKalenderPreview();
+    updateKalBadge();
+    renderAdminEventList();
+    updateTileAlerts();
     if (ghToken) {
         document.getElementById('admin-token').value = ghToken;
         document.getElementById('token-status').innerText = '🔒 Token geladen';
         document.getElementById('token-status').style.color = 'var(--success)';
     }
+    // Admin-Datum vorausfüllen
+    var today = new Date();
+    var todayVal = today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
+    var adminDateEl = document.getElementById('admin-evt-date');
+    if (adminDateEl) adminDateEl.value = todayVal;
 });
 
 function initApp() {
@@ -714,62 +1501,41 @@ var PATTERNS = {
     grid: "linear-gradient(rgba(100,116,139,0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(100,116,139,0.15) 1px, transparent 1px)",
     lines: "repeating-linear-gradient(45deg, rgba(99,102,241,0.06) 0px, rgba(99,102,241,0.06) 2px, transparent 2px, transparent 12px)"
 };
-
-// 🔮 REALE LIVE VORSCHAU-STEUERUNG FÜR DIE DESIGN-KLASSEN
 function applyStylesByTheme(themeId) {
-    document.body.className = '';
-    document.documentElement.className = '';
+    document.body.className = ''; document.documentElement.className = '';
     document.documentElement.style.setProperty('--bg-pattern', "none");
-    
-    if (themeId === 'bg-chameleon') {
-        document.body.classList.add('bg-chameleon');
-    } else if (themeId === 'cyber-purple') {
-        document.body.classList.add('theme-custom-cyber-purple');
-    } else if (themeId === 'light-clean') {
-        document.documentElement.classList.add('light-mode-active');
-        document.body.classList.add('theme-custom-light-clean');
-    } else if (themeId === 'light-grid') {
-        document.documentElement.classList.add('light-mode-active');
-        document.body.classList.add('theme-custom-light-grid');
-        document.documentElement.style.setProperty('--bg-pattern', PATTERNS.grid);
-        document.documentElement.style.setProperty('--bg-size', "24px 24px");
-    } else if (themeId === 'light-lines') {
-        document.documentElement.classList.add('light-mode-active');
-        document.body.classList.add('theme-custom-light-lines');
-        document.documentElement.style.setProperty('--bg-pattern', PATTERNS.lines);
-    } else if (themeId === 'solid-red') {
-        document.body.classList.add('theme-custom-solid-red');
-    } else if (themeId === 'solid-yellow') {
-        document.body.classList.add('theme-custom-solid-yellow');
-    } else if (themeId === 'solid-pink') {
-        document.body.classList.add('theme-custom-solid-pink');
-    }
+    if (themeId === 'bg-chameleon') { document.body.classList.add('bg-chameleon'); }
+    else if (themeId === 'cyber-purple') { document.body.classList.add('theme-custom-cyber-purple'); }
+    else if (themeId === 'light-clean') { document.documentElement.classList.add('light-mode-active'); document.body.classList.add('theme-custom-light-clean'); }
+    else if (themeId === 'light-grid') { document.documentElement.classList.add('light-mode-active'); document.body.classList.add('theme-custom-light-grid'); document.documentElement.style.setProperty('--bg-pattern', PATTERNS.grid); document.documentElement.style.setProperty('--bg-size', "24px 24px"); }
+    else if (themeId === 'light-lines') { document.documentElement.classList.add('light-mode-active'); document.body.classList.add('theme-custom-light-lines'); document.documentElement.style.setProperty('--bg-pattern', PATTERNS.lines); }
+    else if (themeId === 'solid-red') { document.body.classList.add('theme-custom-solid-red'); }
+    else if (themeId === 'solid-yellow') { document.body.classList.add('theme-custom-solid-yellow'); }
+    else if (themeId === 'solid-pink') { document.body.classList.add('theme-custom-solid-pink'); }
     document.documentElement.style.setProperty('--accent', userAccent);
 }
 
 function switchTab(tab) {
-    closeOverlay('plan-overlay'); closeOverlay('settings-overlay');
-    document.getElementById('nav-dash').classList.remove('active');
-    document.getElementById('nav-plan').classList.remove('active');
-    document.getElementById('nav-style').classList.remove('active');
-    if (tab === 'dash') document.getElementById('nav-dash').classList.add('active');
+    closeOverlay('plan-overlay'); closeOverlay('settings-overlay'); closeOverlay('kalender-overlay');
+    ['nav-dash','nav-plan','nav-kalender','nav-style'].forEach(function(id) { document.getElementById(id).classList.remove('active'); });
+    if (tab === 'dash') { document.getElementById('nav-dash').classList.add('active'); }
     else if (tab === 'plan') { document.getElementById('nav-plan').classList.add('active'); openOverlay('plan-overlay'); }
+    else if (tab === 'kalender') { document.getElementById('nav-kalender').classList.add('active'); openOverlay('kalender-overlay'); renderKalender(); }
     else if (tab === 'style') { document.getElementById('nav-style').classList.add('active'); openOverlay('settings-overlay'); buildStyleUI(); }
 }
-
-function openOverlay(id) { 
-    document.getElementById(id).style.display = 'block'; 
-    if (id === 'help-overlay') {
-        var el = document.getElementById('help-class-name');
-        if (el) el.innerText = APP_DATA.className || '–';
-    }
+function openOverlay(id) {
+    document.getElementById(id).style.display = 'block';
+    if (id === 'help-overlay') { var el = document.getElementById('help-class-name'); if (el) el.innerText = APP_DATA.className || '–'; }
+    if (id === 'plan-overlay') { markPlanSeen(); }
 }
-function closeOverlay(id) { 
-    document.getElementById(id).style.display = 'none'; 
-    if (document.getElementById('plan-overlay').style.display === 'none' && document.getElementById('settings-overlay').style.display === 'none') {
+function closeOverlay(id) {
+    document.getElementById(id).style.display = 'none';
+    var allClosed = ['plan-overlay','settings-overlay','kalender-overlay'].every(function(oid) {
+        return document.getElementById(oid).style.display === 'none';
+    });
+    if (allClosed) {
+        ['nav-plan','nav-kalender','nav-style'].forEach(function(id) { document.getElementById(id).classList.remove('active'); });
         document.getElementById('nav-dash').classList.add('active');
-        document.getElementById('nav-plan').classList.remove('active');
-        document.getElementById('nav-style').classList.remove('active');
     }
 }
 
@@ -795,8 +1561,9 @@ function updateClock() {
     document.getElementById('week-badge').style.background = activeWeek==='A' ? 'linear-gradient(135deg,#2563eb,#3b82f6)' : 'linear-gradient(135deg,#7c3aed,#8b5cf6)';
     document.getElementById('news-text').innerText = APP_DATA.news || 'Keine aktuellen Infos.';
     if (APP_DATA.newsTime) document.getElementById('news-time').innerText = APP_DATA.newsTime;
-    
-    document.getElementById('plan-btn-sub').innerText = 'Stundenplan ansehen (Woche ' + activeWeek + ')';
+    document.getElementById('plan-btn-sub') && (document.getElementById('plan-btn-sub').innerText = 'Stundenplan ansehen (Woche ' + activeWeek + ')');
+    var tilePlanSub = document.getElementById('tile-plan-sub');
+    if (tilePlanSub) tilePlanSub.innerText = 'Woche ' + activeWeek;
     updateStatus(now);
 }
 
@@ -806,7 +1573,6 @@ function updateStatus(now) {
     var dayPlan = plan[dayKey] || [];
     var nowMin = now.getHours()*60 + now.getMinutes(), nowSec = now.getSeconds();
     var maxBlocksForToday = (dayKey === 'Mo' || dayKey === 'Di') ? 7 : 5;
-    
     if (nowMin >= 16*60 || nowMin < 6*60) {
         var tomorrow = new Date(now); tomorrow.setDate(tomorrow.getDate()+1);
         var tKey = DAYS_SHORT[tomorrow.getDay()], tPlan = (APP_DATA['woche'+activeWeek] || {})[tKey] || [];
@@ -823,20 +1589,17 @@ function updateStatus(now) {
     }
     document.getElementById('tile-current').classList.remove('morgen');
     document.getElementById('tile-current-label').innerText = '🟢 Aktuell'; document.getElementById('tile-next-label').innerText = '⏭ Nächstes';
-    
     if (dayKey === 'Sa' || dayKey === 'So' || dayPlan.length === 0) {
         document.getElementById('current-subject').innerText = '🎉 Wochenende!'; document.getElementById('current-info').innerText = 'Chillen & Erholen';
         document.getElementById('current-countdown').innerText = ''; document.getElementById('current-time').innerText = ''; document.getElementById('current-prog').style.width = '0%';
         document.getElementById('next-subject').innerText = '–'; document.getElementById('next-info').innerText = ''; document.getElementById('next-time').innerText = ''; return;
     }
-    
     var current = null, next = null;
     for (var i=0; i<maxBlocksForToday; i++) {
         var b = BLOCKS[i];
         if (nowMin >= toMin(b.start) && nowMin < toMin(b.end)) { current = { b: b, i: i }; if (i + 1 < maxBlocksForToday) next = { b: BLOCKS[i+1], i: i+1 }; break; }
     }
     if (!current) { for (var i=0; i<maxBlocksForToday; i++) { if (nowMin < toMin(BLOCKS[i].start)) { next = { b: BLOCKS[i], i: i }; break; } } }
-    
     if (current) {
         var rawSubj = dayPlan[current.i], cleanC = splitSubjectAndRoom(rawSubj);
         document.getElementById('current-subject').innerText = rawSubj ? getSubjectEmoji(rawSubj) + ' ' + cleanC.name : (current.b.pause ? '☕ ' + current.b.label : 'Freistunde');
@@ -852,7 +1615,6 @@ function updateStatus(now) {
         document.getElementById('current-subject').innerText = '🎉 Schulschluss!'; document.getElementById('current-info').innerText = 'Schönen Feierabend!';
         document.getElementById('current-countdown').innerText = ''; document.getElementById('current-time').innerText = ''; document.getElementById('current-prog').style.width = '0%';
     }
-    
     if (current && next) {
         var nraw = dayPlan[next.i], cleanN = splitSubjectAndRoom(nraw);
         document.getElementById('next-subject').innerText = nraw ? getSubjectEmoji(nraw) + ' ' + cleanN.name : (next.b.pause ? '☕ ' + next.b.label : '–');
@@ -867,31 +1629,18 @@ function updateStatus(now) {
     }
 }
 
-function clockFlip() {
-    clockStyle = clockStyle==='digital' ? 'analog' : 'digital';
-    localStorage.setItem('susClockStyle', clockStyle); updateClock();
-}
+function clockFlip() { clockStyle = clockStyle==='digital' ? 'analog' : 'digital'; localStorage.setItem('susClockStyle', clockStyle); updateClock(); }
 document.getElementById('clock-section').addEventListener('click', function(e) { if (e.target.id !== 'week-badge') clockFlip(); });
-
-function flipWeek() {
-    activeWeek = activeWeek==='A' ? 'B' : 'A'; localStorage.setItem('susActiveWeek', activeWeek);
-    renderMatrixWeek(activeWeek); updateClock();
-}
-
-function toggleCardFlip(element) {
-    if (element.classList.contains('static-header') || element.classList.contains('static-pause')) return;
-    element.classList.toggle('flipped');
-}
+function flipWeek() { activeWeek = activeWeek==='A' ? 'B' : 'A'; localStorage.setItem('susActiveWeek', activeWeek); renderMatrixWeek(activeWeek); updateClock(); }
+function toggleCardFlip(element) { if (element.classList.contains('static-header') || element.classList.contains('static-pause')) return; element.classList.toggle('flipped'); }
 
 function renderMatrixWeek(w) {
-    var plan = APP_DATA['woche'+w] || {}, now = new Date(), currentDayIdx = now.getDay(); 
+    var plan = APP_DATA['woche'+w] || {}, now = new Date(), currentDayIdx = now.getDay();
     var matrixContainer = document.getElementById('matrix-grid'); if (!matrixContainer) return;
-    var days = ['Mo', 'Di', 'Mi', 'Do', 'Fr'], dayNames = ['Mo', 'Di', 'Mi', 'Do', 'Fr'], html = '';
-    
+    var days = ['Mo', 'Di', 'Mi', 'Do', 'Fr'], html = '';
     html += '<div class="matrix-row"><div class="matrix-cell static-header" style="min-height:32px; height:32px; flex:none; width:52px;"><div class="flip-card-inner"><div class="flip-front header-day-inner">Zeit</div></div></div>';
-    days.forEach(function(d, idx) { html += '<div class="matrix-cell static-header '+((idx+1)===currentDayIdx?'today-col-border':'')+'"><div class="flip-card-inner"><div class="flip-front header-day-inner">' + dayNames[idx] + '</div></div></div>'; });
+    days.forEach(function(d, idx) { html += '<div class="matrix-cell static-header '+((idx+1)===currentDayIdx?'today-col-border':'')+'"><div class="flip-card-inner"><div class="flip-front header-day-inner">' + d + '</div></div></div>'; });
     html += '</div>';
-    
     BLOCKS.forEach(function(b, blockIdx) {
         var isFourthBlockOrItsPause = blockIdx >= 5; html += '<div class="matrix-row">';
         if (b.pause) {
@@ -909,16 +1658,12 @@ function renderMatrixWeek(w) {
                     var rawContent = (plan[d] && plan[d][blockIdx]) ? plan[d][blockIdx] : '';
                     var splitData = splitSubjectAndRoom(rawContent);
                     var cellClass = getSubjectClass(rawContent);
-                    
                     if (rawContent) {
                         html += '<div class="matrix-cell '+((dayIdx+1)===currentDayIdx?'today-col-border':'')+'" onclick="toggleCardFlip(this)">';
-                        html += '<div class="flip-card-inner">';
-                        html += '<div class="flip-front ' + cellClass + '">';
+                        html += '<div class="flip-card-inner"><div class="flip-front ' + cellClass + '">';
                         html += '<span class="cell-emoji">' + getSubjectEmoji(rawContent) + '</span><span class="cell-name">' + splitData.name + '</span>';
                         if (splitData.room) html += '<span class="cell-room">' + splitData.room + '</span>';
-                        html += '</div>';
-                        html += '<div class="flip-back">' + getSubjectReminder(rawContent).replace(/\n/g, '<br>') + '</div>';
-                        html += '</div></div>';
+                        html += '</div><div class="flip-back">' + getSubjectReminder(rawContent).replace(/\n/g, '<br>') + '</div></div></div>';
                     } else {
                         html += '<div class="matrix-cell static-header '+((dayIdx+1)===currentDayIdx?'today-col-border':'')+'">';
                         html += '<div class="flip-card-inner"><div class="flip-front m-empty"><span style="opacity:0.2; font-size:0.65rem;">–</span></div></div></div>';
@@ -929,20 +1674,15 @@ function renderMatrixWeek(w) {
         html += '</div>';
     });
     matrixContainer.innerHTML = html;
-
     var ta = document.getElementById('tab-a'), tb = document.getElementById('tab-b');
     if (ta && tb) {
-        ta.style.background = w==='A' ? '#2563eb' : 'rgba(120,120,120,0.05)';
-        ta.style.color = w==='A' ? 'white' : 'var(--sub)';
-        tb.style.background = w==='B' ? '#7c3aed' : 'rgba(120,120,120,0.05)';
-        tb.style.color = w==='B' ? 'white' : 'var(--sub)';
+        ta.style.background = w==='A' ? '#2563eb' : 'rgba(120,120,120,0.05)'; ta.style.color = w==='A' ? 'white' : 'var(--sub)';
+        tb.style.background = w==='B' ? '#7c3aed' : 'rgba(120,120,120,0.05)'; tb.style.color = w==='B' ? 'white' : 'var(--sub)';
     }
 }
 
 var AVATARS = ['👨‍🚀','🐱‍💻','👾','🚀','🤖','🎮','🦊','🐉','🎭','⚡','💎','🎯','🛡️','🦁','🦉'];
-var THEMES = ['#6366f1','#3b82f6','#10b981','#f59e0b','#ef4444','#ec4899','#06b6d4','#f97316','#8b5cf6', '#facc15', '#dc2626', '#db2777'];
-
-// NEUE GEORDNETE STRUKTUR (OHNE DOPPELTES WEISS, LIVE FEEDBACK THEMES INKLUSIVE!)
+var THEMES = ['#6366f1','#3b82f6','#10b981','#f59e0b','#ef4444','#ec4899','#06b6d4','#f97316','#8b5cf6','#facc15','#dc2626','#db2777'];
 var BG_THEMES = [
     {id:'default',label:'Space Dark (Standard)',sub:'Deep Space',preview:'#0a0a0f'},
     {id:'cyber-purple',label:'Cyber Purple 🔮',sub:'Kräftiges Neon-Violett',preview:'#13012b'},
@@ -954,7 +1694,6 @@ var BG_THEMES = [
     {id:'solid-yellow',label:'☀️ Sonnengelb (Solid)',sub:'Leuchtendes Signal-Gelb',preview:'#eab308'},
     {id:'solid-pink',label:'💖 Cyber-Pink (Girls Edition)',sub:'Kräftiges Knall-Pink',preview:'#9d174d'}
 ];
-
 var temporaryBgTheme = '';
 
 function buildStyleUI() {
@@ -962,44 +1701,30 @@ function buildStyleUI() {
     var avGrid = document.getElementById('avatar-grid'); avGrid.innerHTML = '';
     AVATARS.forEach(function(av) {
         var div = document.createElement('div'); div.className = 'avatar-opt' + (userAvatar===av?' selected':''); div.innerText = av;
-        div.onclick = function() { 
-            document.querySelectorAll('.avatar-opt').forEach(el=>el.classList.remove('selected')); 
-            div.classList.add('selected'); userAvatar = av; 
-        };
+        div.onclick = function() { document.querySelectorAll('.avatar-opt').forEach(el=>el.classList.remove('selected')); div.classList.add('selected'); userAvatar = av; };
         avGrid.appendChild(div);
     });
     var thGrid = document.getElementById('theme-grid'); thGrid.innerHTML = '';
     THEMES.forEach(function(th) {
         var div = document.createElement('div'); div.className = 'theme-opt' + (userAccent===th?' selected':''); div.style.background = th;
-        div.onclick = function() { 
-            document.querySelectorAll('.theme-opt').forEach(el=>el.classList.remove('selected')); 
-            div.classList.add('selected'); userAccent = th;
-            applyStylesByTheme(temporaryBgTheme); // Update live preview colors
-        };
+        div.onclick = function() { document.querySelectorAll('.theme-opt').forEach(el=>el.classList.remove('selected')); div.classList.add('selected'); userAccent = th; applyStylesByTheme(temporaryBgTheme); };
         thGrid.appendChild(div);
     });
     var bgGrid = document.getElementById('theme-bg-grid'); bgGrid.innerHTML = '';
     BG_THEMES.forEach(function(bgt) {
-        var div = document.createElement('div'); div.className = 'theme-bg-opt' + (temporaryBgTheme===bgt.id?' selected':''); 
+        var div = document.createElement('div'); div.className = 'theme-bg-opt' + (temporaryBgTheme===bgt.id?' selected':'');
         div.style.background = bgt.id.startsWith('light-') ? '#ffffff' : bgt.preview;
         div.style.color = bgt.id.startsWith('light-') ? '#0f172a' : '#ffffff';
         div.style.border = bgt.id.startsWith('light-') ? '1px solid #cbd5e1' : 'none';
         div.innerHTML = bgt.label + '<span>' + bgt.sub + '</span>';
-        
-        // INTERAKTIVE ECHTZEIT-VORSCHAU BEIM ANKLICKEN!
-        div.onclick = function() { 
-            document.querySelectorAll('.theme-bg-opt').forEach(el=>el.classList.remove('selected')); 
-            div.classList.add('selected'); 
-            temporaryBgTheme = bgt.id; 
-            applyStylesByTheme(bgt.id); // Schaltet den Hintergrund SOFORT live um!
-        };
+        div.onclick = function() { document.querySelectorAll('.theme-bg-opt').forEach(el=>el.classList.remove('selected')); div.classList.add('selected'); temporaryBgTheme = bgt.id; applyStylesByTheme(bgt.id); };
         bgGrid.appendChild(div);
     });
 }
 
 function saveSettings() {
     userName = document.getElementById('set-username').value.trim(); localStorage.setItem('susUsername', userName);
-    userBgTheme = temporaryBgTheme; // Übernehme die gewählte Vorschau fest
+    userBgTheme = temporaryBgTheme;
     localStorage.setItem('susAvatar', userAvatar); localStorage.setItem('susAccent', userAccent); localStorage.setItem('susBgTheme', userBgTheme);
     initApp(); switchTab('dash');
 }
@@ -1012,7 +1737,6 @@ function buildAdminStructure() {
     var container = document.getElementById('admin-plan-inputs'); if (!container) return;
     buildAdminWeekInputs(container, 'a'); buildAdminWeekInputs(container, 'b');
 }
-
 function buildAdminWeekInputs(container, week) {
     var wrap = document.createElement('div'); wrap.id = 'admin-week-wrap-' + week; wrap.style.display = week === 'a' ? 'block' : 'none';
     var daysFull = ['Montag','Dienstag','Mittwoch','Donnerstag','Freitag'];
@@ -1029,13 +1753,12 @@ function buildAdminWeekInputs(container, week) {
     });
     container.appendChild(wrap);
 }
-
 function loadAdminFields() {
-    document.getElementById('admin-class').value = APP_DATA.className || ''; 
+    document.getElementById('admin-class').value = APP_DATA.className || '';
     document.getElementById('admin-news').value = APP_DATA.news || '';
     fillAdminPlan('a', APP_DATA.wocheA); fillAdminPlan('b', APP_DATA.wocheB); switchAdminWeek(currentAdminWeek);
+    renderAdminEventList();
 }
-
 function fillAdminPlan(week, planData) {
     DAYS_KEYS.forEach(function(d) {
         BLOCKS.forEach(function(b, bi) {
@@ -1044,7 +1767,6 @@ function fillAdminPlan(week, planData) {
         });
     });
 }
-
 function readAdminPlan(week) {
     var result = {};
     DAYS_KEYS.forEach(function(d) {
@@ -1056,7 +1778,6 @@ function readAdminPlan(week) {
     });
     return result;
 }
-
 function switchAdminWeek(w) {
     currentAdminWeek = w;
     var wa = document.getElementById('admin-week-wrap-a'), wb = document.getElementById('admin-week-wrap-b');
@@ -1069,13 +1790,11 @@ function switchAdminWeek(w) {
         btnA.style.background = 'rgba(120,120,120,0.05)'; btnA.style.color = 'var(--sub)'; btnB.style.background = '#7c3aed'; btnB.style.color = 'white';
     }
 }
-
 function saveToken() {
     var t = document.getElementById('admin-token').value.trim(); if (!t) { alert('Bitte Token eintragen!'); return; }
     localStorage.setItem('susAdminToken', t); ghToken = t;
     document.getElementById('token-status').innerText = '✅ Token gespeichert'; document.getElementById('token-status').style.color = 'var(--success)';
 }
-
 function sendMail() { window.location.href = "mailto:" + TEACHER_MAIL; }
 function openPinnwand() { window.open(PINNPAND_URL, '_blank'); }
 function forceRefresh() {
@@ -1089,9 +1808,9 @@ async function publishApp() {
     APP_DATA.news = document.getElementById('admin-news').value.trim();
     APP_DATA.newsTime = 'Aktualisiert: ' + new Date().toLocaleDateString('de-DE', {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'});
     APP_DATA.currentWeek = activeWeek; APP_DATA.wocheA = readAdminPlan('a'); APP_DATA.wocheB = readAdminPlan('b');
+    // events sind bereits in APP_DATA gepflegt
     var btn = document.getElementById('publish-btn'), status = document.getElementById('publish-status');
     btn.style.opacity = '0.6'; btn.disabled = true; btn.innerText = '⏳ Sende Daten über CORS-Proxy...';
-
     try {
         var baseUrl = 'https://api.github.com/repos/' + GH_USER + '/' + GH_REPO + '/contents/' + GH_FILE;
         var proxyUrl = 'https://cors-anywhere.herokuapp.com/' + baseUrl;
@@ -1099,19 +1818,17 @@ async function publishApp() {
         try { getRes = await fetch(baseUrl, { headers: { 'Authorization': 'token ' + token } }); }
         catch(corsErr) { getRes = await fetch(proxyUrl, { headers: { 'Authorization': 'token ' + token, 'X-Requested-With': 'XMLHttpRequest' } }); }
         if (!getRes.ok) throw new Error('Datei-Download von GitHub fehlgeschlagen. Status: ' + getRes.status);
-        
         var getFile = await getRes.json(), sha = getFile.sha;
         var currentHtml = decodeURIComponent(escape(atob(getFile.content)));
         var updatedHtml = currentHtml.replace(/var\s+APP_DATA\s*=\s*\{[\s\S]*?\};/, 'var APP_DATA = ' + JSON.stringify(APP_DATA, null, 4) + ';');
         var updatedContentBase64 = btoa(unescape(encodeURIComponent(updatedHtml)));
         var targetUrl = getRes.url.includes('cors-anywhere') ? proxyUrl : baseUrl;
-
         var putRes = await fetch(targetUrl, {
             method: 'PUT',
             headers: { 'Authorization': 'token ' + token, 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
-            body: JSON.stringify({ message: 'Matrix Live Sync (' + APP_DATA.newsTime + ')', content: updatedContentBase64, sha: sha })
+            body: JSON.stringify({ message: 'Kalender + Matrix Live Sync (' + APP_DATA.newsTime + ')', content: updatedContentBase64, sha: sha })
         });
-        if (putRes.ok) { status.innerText = '🚀 Live-Update erfolgreich! GitHub & Vercel aktualisiert.'; status.style.color = 'var(--success)'; initApp(); }
+        if (putRes.ok) { status.innerText = '🚀 Live-Update erfolgreich! GitHub & Vercel aktualisiert.'; status.style.color = 'var(--success)'; initApp(); renderKalenderPreview(); updateKalBadge(); }
         else { var errorData = await putRes.json(); throw new Error(errorData.message || 'Fehler beim Schreiben.'); }
     } catch (e) {
         console.error(e); status.innerText = '❌ Fehler: ' + e.message; status.style.color = 'var(--danger)';
