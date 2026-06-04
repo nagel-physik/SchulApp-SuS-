@@ -22,8 +22,12 @@
     --bg-size: auto;
 }
 .theme-custom-cyber-purple { --bg: #13012b; --card: #210245; --card2: #2d045c; --border: rgba(255,255,255,0.1); }
+.theme-custom-warm-cream  { --bg: #f5f0e8; --card: #fdf8f0; --card2: #ede8df; --border: rgba(0,0,0,0.07); --text: #2c1f0e; --sub: #8a7560; }
+.theme-custom-warm-dusk   { --bg: #1a0e05; --card: #261507; --card2: #321c08; --border: rgba(255,200,120,0.1); --text: #fde8c8; --sub: #c4956a; }
+.theme-custom-forest      { --bg: #071a0e; --card: #0d2416; --card2: #122e1c; --border: rgba(100,255,150,0.08); --text: #d4f5df; --sub: #6db88a; }
+.theme-custom-midnight    { --bg: #040d1a; --card: #071525; --card2: #0a1d30; --border: rgba(100,160,255,0.1); --text: #d0e8ff; --sub: #6699cc; }
 .theme-custom-light-clean { --bg: #f8fafc; --card: #ffffff; --card2: #f1f5f9; --border: rgba(0,0,0,0.08); --text: #0f172a; --sub: #64748b; }
-.theme-custom-light-grid { --bg: #f1f5f9; --card: #ffffff; --card2: #e2e8f0; --border: rgba(0,0,0,0.08); --text: #0f172a; --sub: #64748b; }
+.theme-custom-light-grid  { --bg: #f1f5f9; --card: #ffffff; --card2: #e2e8f0; --border: rgba(0,0,0,0.08); --text: #0f172a; --sub: #64748b; }
 .theme-custom-light-lines { --bg: #e2e8f0; --card: #ffffff; --card2: #cbd5e1; --border: rgba(0,0,0,0.08); --text: #0f172a; --sub: #64748b; }
 .theme-custom-solid-red { --bg: #7f1d1d; --card: #991b1b; --card2: #b91c1c; --border: rgba(255,255,255,0.15); --text: #fef2f2; --sub: #fca5a5; }
 .theme-custom-solid-yellow { --bg: #eab308; --card: #facc15; --card2: #fef08a; --border: rgba(0,0,0,0.08); --text: #451a03; --sub: #713f12; }
@@ -369,6 +373,14 @@ body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; heigh
 .kal-type-option { padding:13px 14px; font-size:0.9rem; font-weight:700; cursor:pointer; }
 .kal-type-option:active { background:var(--card2); }
 
+/* Textarea im Modal */
+.kal-textarea {
+    resize: none;
+    line-height: 1.5;
+    min-height: 80px;
+    margin-bottom: 10px;
+}
+
 /* ============================================================
    KALENDER OVERLAY
    ============================================================ */
@@ -632,24 +644,11 @@ body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; heigh
     <!-- Bestehende Termine für diesen Tag -->
     <div id="kal-modal-existing" style="margin-bottom:10px;"></div>
 
-    <!-- Neuen Termin eintragen -->
-    <input type="text" class="kal-input" id="kal-new-title" placeholder="Was ist an dem Tag? z.B. Mathe Test">
+    <!-- Eintrag: nur freies Textfeld -->
+    <textarea class="kal-input kal-textarea" id="kal-new-title" placeholder="Was möchtest du eintragen?&#10;z.B.: Mathe Hausaufgaben S.47&#10;oder: Morgen Sportzeug mitbringen" rows="3"></textarea>
 
-    <!-- Typ-Auswahl als einzelner Button mit Popup -->
-    <div class="kal-type-wrap" id="kal-type-wrap">
-        <button class="kal-type-toggle" id="kal-type-toggle" onclick="toggleTypeMenu()">
-            <span id="kal-type-label">📚 Hausaufgabe</span>
-            <span style="opacity:0.5; font-size:0.8rem;">▾</span>
-        </button>
-        <div class="kal-type-menu" id="kal-type-menu" style="display:none;">
-            <div class="kal-type-option" onclick="pickType('hausaufgabe','📚 Hausaufgabe')">📚 Hausaufgabe</div>
-            <div class="kal-type-option" onclick="pickType('test','📝 Test / Klassenarbeit')">📝 Test / Klassenarbeit</div>
-            <div class="kal-type-option" onclick="pickType('abgabe','📎 Abgabe')">📎 Abgabe</div>
-            <div class="kal-type-option" onclick="pickType('sonstiges','⭐ Sonstiges')">⭐ Sonstiges</div>
-        </div>
-    </div>
-
-    <button class="kal-add-btn" onclick="addKalenderEvent()">✅ Speichern</button>
+    <button class="kal-add-btn" id="kal-save-btn" onclick="addKalenderEvent()">✅ Speichern</button>
+    <div id="kal-save-feedback" style="display:none; text-align:center; padding:8px; font-size:0.9rem; font-weight:800; color:#10b981;">✅ Gespeichert!</div>
 </div>
 
 <!-- ADMIN OVERLAY -->
@@ -800,111 +799,25 @@ body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; heigh
 
 <script>
 var APP_DATA = {
-    "className": "7c",
-    "news": "Hallo an alle.",
-    "newsTime": "Aktualisiert: 04.06., 10:49",
-    "newsUpdatedAt": "2026-06-04T08:49:19.947Z",
-    "currentWeek": "B",
-    "events": [
-        {
-            "title": "Morgen Vertretung Deutsch statt Mathe. 2.Block Raum 110",
-            "date": "2026-06-04",
-            "type": "lehrer"
-        }
-    ],
-    "wocheA": {
-        "Mo": [
-            "Mathe R204",
-            "",
-            "Englisch R201",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Di": [
-            "Sport Halle",
-            "",
-            "Biologie R115",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Mi": [
-            "Deutsch R110",
-            "",
-            "Kunst R301",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Do": [
-            "Geographie R210",
-            "",
-            "Deutsch R110",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Fr": [
-            "Englisch R201",
-            "",
-            "Physik R101",
-            "",
-            "",
-            "",
-            ""
-        ]
+    className: "8b",
+    news: "Willkommen bei SchulHub Pro! Tipp: Gib Fächer im Admin-Bereich mit Raum ein (z.B. Mathe R204), damit es perfekt auf den Kacheln getrennt wird.",
+    newsTime: "Aktualisiert: Heute",
+    newsUpdatedAt: "",
+    currentWeek: "A",
+    events: [],
+    wocheA: {
+        Mo: ["Mathe R204","Deutsch R110","Englisch R201","Physik R101","","",""],
+        Di: ["Sport Halle","Mathe R204","Biologie R115","Geschichte R202","","",""],
+        Mi: ["Deutsch R110","Englisch R201","Kunst R301","","","",""],
+        Do: ["Geographie R210","Mathe R204","Deutsch R110","","","",""],
+        Fr: ["Englisch R201","Biologie R115","Physik R101","","","",""]
     },
-    "wocheB": {
-        "Mo": [
-            "Deutsch R110",
-            "",
-            "Physik R101",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Di": [
-            "Biologie R115",
-            "",
-            "Geschichte R202",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Mi": [
-            "Kunst R301",
-            "",
-            "Musik R305",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Do": [
-            "Mathe R204",
-            "",
-            "Sport Halle",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Fr": [
-            "Physik R101",
-            "",
-            "Geschichte R202",
-            "",
-            "",
-            "",
-            ""
-        ]
+    wocheB: {
+        Mo: ["Deutsch R110","Mathe R204","Physik R101","Englisch R201","","",""],
+        Di: ["Biologie R115","Sport Halle","Geschichte R202","Mathe R204","","",""],
+        Mi: ["Kunst R301","Deutsch R110","Musik R305","","","",""],
+        Do: ["Mathe R204","Geographie R210","Sport Halle","","","",""],
+        Fr: ["Physik R101","Englisch R201","Geschichte R202","","","",""]
     }
 };
 
@@ -1111,15 +1024,20 @@ function addKalenderEvent() {
     if (!title) { document.getElementById('kal-new-title').focus(); return; }
     if (!kalModalDate) return;
     var evts = getLocalEvents();
-    evts.push({ id: Date.now().toString(), title: title, date: kalModalDate, type: kalSelectedEventType });
+    evts.push({ id: Date.now().toString(), title: title, date: kalModalDate, type: 'sonstiges' });
     saveLocalEvents(evts);
-    document.getElementById('kal-new-title').value = '';
+    // Feedback anzeigen, Button verstecken
+    document.getElementById('kal-save-btn').style.display = 'none';
+    document.getElementById('kal-save-feedback').style.display = 'block';
     renderKalModalExisting(kalModalDate);
     renderKalender();
     renderKalenderPreview();
     updateKalBadge();
     updateTileAlerts();
-    alert('✅ Termin gespeichert!');
+    // Nach 1 Sekunde Modal automatisch schließen
+    setTimeout(function() {
+        closeKalModal();
+    }, 1000);
 }
 
 function deleteLocalEvent(id) {
@@ -1260,10 +1178,13 @@ function openKalModal(dateStr) {
     var wochentage = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
     document.getElementById('kal-modal-date').innerText = wochentage[d.getDay()] + ', ' + parseInt(parts[2]) + '. ' + DE_MONTHS[parseInt(parts[1])-1] + ' ' + parts[0];
     document.getElementById('kal-new-title').value = '';
-    // Typ zurücksetzen
-    document.getElementById('kal-type-label').innerText = '\uD83D\uDCDA Hausaufgabe';
-    kalSelectedEventType = 'hausaufgabe';
-    document.getElementById('kal-type-menu').style.display = 'none';
+    // Button/Feedback zurücksetzen
+    var saveBtn = document.getElementById('kal-save-btn');
+    var feedback = document.getElementById('kal-save-feedback');
+    if (saveBtn) saveBtn.style.display = 'block';
+    if (feedback) feedback.style.display = 'none';
+    // Typ zurücksetzen (intern, kein UI mehr nötig)
+    kalSelectedEventType = 'sonstiges';
     // Bestehende Termine anzeigen
     renderKalModalExisting(dateStr);
     // Modal anzeigen
@@ -1605,12 +1526,16 @@ function applyStylesByTheme(themeId) {
     document.documentElement.style.setProperty('--bg-pattern', "none");
     if (themeId === 'bg-chameleon') { document.body.classList.add('bg-chameleon'); }
     else if (themeId === 'cyber-purple') { document.body.classList.add('theme-custom-cyber-purple'); }
+    else if (themeId === 'warm-cream')  { document.documentElement.classList.add('light-mode-active'); document.body.classList.add('theme-custom-warm-cream'); }
+    else if (themeId === 'warm-dusk')   { document.body.classList.add('theme-custom-warm-dusk'); }
+    else if (themeId === 'forest')      { document.body.classList.add('theme-custom-forest'); }
+    else if (themeId === 'midnight')    { document.body.classList.add('theme-custom-midnight'); }
     else if (themeId === 'light-clean') { document.documentElement.classList.add('light-mode-active'); document.body.classList.add('theme-custom-light-clean'); }
-    else if (themeId === 'light-grid') { document.documentElement.classList.add('light-mode-active'); document.body.classList.add('theme-custom-light-grid'); document.documentElement.style.setProperty('--bg-pattern', PATTERNS.grid); document.documentElement.style.setProperty('--bg-size', "24px 24px"); }
+    else if (themeId === 'light-grid')  { document.documentElement.classList.add('light-mode-active'); document.body.classList.add('theme-custom-light-grid'); document.documentElement.style.setProperty('--bg-pattern', PATTERNS.grid); document.documentElement.style.setProperty('--bg-size', "24px 24px"); }
     else if (themeId === 'light-lines') { document.documentElement.classList.add('light-mode-active'); document.body.classList.add('theme-custom-light-lines'); document.documentElement.style.setProperty('--bg-pattern', PATTERNS.lines); }
-    else if (themeId === 'solid-red') { document.body.classList.add('theme-custom-solid-red'); }
-    else if (themeId === 'solid-yellow') { document.body.classList.add('theme-custom-solid-yellow'); }
-    else if (themeId === 'solid-pink') { document.body.classList.add('theme-custom-solid-pink'); }
+    else if (themeId === 'solid-red')   { document.body.classList.add('theme-custom-solid-red'); }
+    else if (themeId === 'solid-yellow'){ document.body.classList.add('theme-custom-solid-yellow'); }
+    else if (themeId === 'solid-pink')  { document.body.classList.add('theme-custom-solid-pink'); }
     document.documentElement.style.setProperty('--accent', userAccent);
 }
 
@@ -1800,15 +1725,19 @@ function renderMatrixWeek(w) {
 var AVATARS = ['👨‍🚀','🐱‍💻','👾','🚀','🤖','🎮','🦊','🐉','🎭','⚡','💎','🎯','🛡️','🦁','🦉'];
 var THEMES = ['#6366f1','#3b82f6','#10b981','#f59e0b','#ef4444','#ec4899','#06b6d4','#f97316','#8b5cf6','#facc15','#dc2626','#db2777'];
 var BG_THEMES = [
-    {id:'default',label:'Space Dark (Standard)',sub:'Deep Space',preview:'#0a0a0f'},
-    {id:'cyber-purple',label:'Cyber Purple 🔮',sub:'Kräftiges Neon-Violett',preview:'#13012b'},
-    {id:'bg-chameleon',label:'🌈 Multiverse Chameleon',sub:'Kräftiger permanenter Farbwechsel',preview:'linear-gradient(45deg, #2b0018, #020035)'},
-    {id:'light-clean',label:'Light Clean (Pure Weiß)',sub:'Heller Modus Minimalist',preview:'#f8fafc'},
-    {id:'light-grid',label:'Light Matrix Grid 🟦',sub:'Helles sichtbares Plan-Raster',preview:'#f1f5f9'},
-    {id:'light-lines',label:'Light Geo Lines 📈',sub:'Helle ausgeprägte Struktur-Linien',preview:'#e2e8f0'},
-    {id:'solid-red',label:'🔥 Vulkan-Rot (Solid)',sub:'Extrem kraftvolles Rot',preview:'#7f1d1d'},
-    {id:'solid-yellow',label:'☀️ Sonnengelb (Solid)',sub:'Leuchtendes Signal-Gelb',preview:'#eab308'},
-    {id:'solid-pink',label:'💖 Cyber-Pink (Girls Edition)',sub:'Kräftiges Knall-Pink',preview:'#9d174d'}
+    {id:'default',     label:'🌌 Space Dark',        sub:'Klassisches Dunkel',          preview:'#0a0a0f'},
+    {id:'cyber-purple',label:'Cyber Purple 🔮',       sub:'Neon-Violett',                preview:'#13012b'},
+    {id:'bg-chameleon',label:'🌈 Chameleon',          sub:'Permanenter Farbwechsel',     preview:'linear-gradient(45deg,#2b0018,#020035)'},
+    {id:'warm-cream',  label:'🧁 Creme & Warm',       sub:'Sanftes Beige, augenschonend',preview:'#f5f0e8'},
+    {id:'warm-dusk',   label:'🌅 Sonnenuntergang',    sub:'Warmes Dunkelbraun',          preview:'#1a0e05'},
+    {id:'forest',      label:'🌲 Waldgrün',           sub:'Sattes Dunkelgrün',           preview:'#071a0e'},
+    {id:'midnight',    label:'🌙 Mitternacht',        sub:'Tiefes Nachtblau',            preview:'#040d1a'},
+    {id:'light-clean', label:'Light Clean',           sub:'Reines Weiß',                 preview:'#f8fafc'},
+    {id:'light-grid',  label:'Light Matrix Grid 🟦',  sub:'Helles Plan-Raster',          preview:'#f1f5f9'},
+    {id:'light-lines', label:'Light Geo Lines 📈',    sub:'Helle Struktur-Linien',       preview:'#e2e8f0'},
+    {id:'solid-red',   label:'🔥 Vulkan-Rot',         sub:'Kraftvolles Rot',             preview:'#7f1d1d'},
+    {id:'solid-yellow',label:'☀️ Sonnengelb',         sub:'Signal-Gelb',                 preview:'#eab308'},
+    {id:'solid-pink',  label:'💖 Cyber-Pink',         sub:'Knall-Pink',                  preview:'#9d174d'}
 ];
 var temporaryBgTheme = '';
 
@@ -1828,10 +1757,12 @@ function buildStyleUI() {
     });
     var bgGrid = document.getElementById('theme-bg-grid'); bgGrid.innerHTML = '';
     BG_THEMES.forEach(function(bgt) {
-        var div = document.createElement('div'); div.className = 'theme-bg-opt' + (temporaryBgTheme===bgt.id?' selected':'');
-        div.style.background = bgt.id.startsWith('light-') ? '#ffffff' : bgt.preview;
-        div.style.color = bgt.id.startsWith('light-') ? '#0f172a' : '#ffffff';
-        div.style.border = bgt.id.startsWith('light-') ? '1px solid #cbd5e1' : 'none';
+        var isLight = bgt.id.startsWith('light-') || bgt.id === 'warm-cream';
+        var div = document.createElement('div');
+        div.className = 'theme-bg-opt' + (temporaryBgTheme===bgt.id?' selected':'');
+        div.style.background = isLight ? bgt.preview : bgt.preview;
+        div.style.color = isLight ? '#1a1000' : '#ffffff';
+        div.style.border = isLight ? '1px solid rgba(0,0,0,0.12)' : 'none';
         div.innerHTML = bgt.label + '<span>' + bgt.sub + '</span>';
         div.onclick = function() { document.querySelectorAll('.theme-bg-opt').forEach(el=>el.classList.remove('selected')); div.classList.add('selected'); temporaryBgTheme = bgt.id; applyStylesByTheme(bgt.id); };
         bgGrid.appendChild(div);
