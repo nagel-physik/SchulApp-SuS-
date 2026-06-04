@@ -75,8 +75,20 @@ body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; heigh
 .tile-prog-fill { height:100%; background:linear-gradient(90deg,var(--accent),var(--accent2)); border-radius:2px; transition:width 1s linear; }
 
 .section-label { font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:2px; color:var(--sub); padding:4px 20px 6px; max-width:600px; margin:0 auto; }
-.news-card { margin:0 16px 14px; background:linear-gradient(135deg,rgba(99,102,241,0.08),rgba(139,92,246,0.04)); border-radius:18px; padding:16px; border:1px solid rgba(99,102,241,0.2); position:relative; overflow:hidden; box-shadow: 0 4px 14px rgba(0,0,0,0.02); }
+.news-card { margin:0 16px 14px; background:linear-gradient(135deg,rgba(99,102,241,0.08),rgba(139,92,246,0.04)); border-radius:18px; padding:16px; border:1px solid rgba(99,102,241,0.2); position:relative; overflow:hidden; box-shadow: 0 4px 14px rgba(0,0,0,0.02); transition: border-color 0.3s, box-shadow 0.3s; }
 .news-card::after { content:'📢'; position:absolute; right:14px; top:14px; font-size:1.6rem; opacity:0.15; }
+
+/* Neues News-Alert: oranger blinkender Rahmen */
+.news-card.news-alert {
+    border: 2px solid #f97316 !important;
+    box-shadow: 0 0 0 0 rgba(249,115,22,0.6), 0 4px 14px rgba(0,0,0,0.02) !important;
+    animation: news-border-pulse 1.4s ease-in-out infinite !important;
+}
+@keyframes news-border-pulse {
+    0%   { box-shadow: 0 0 0 0px rgba(249,115,22,0.7); }
+    50%  { box-shadow: 0 0 0 6px rgba(249,115,22,0); }
+    100% { box-shadow: 0 0 0 0px rgba(249,115,22,0); }
+}
 .news-title { font-size:0.62rem; font-weight:800; color:var(--accent); text-transform:uppercase; letter-spacing:1px; margin-bottom:5px; }
 .news-text { font-size:0.92rem; font-weight:700; line-height:1.4; padding-right:28px; }
 .news-time { font-size:0.62rem; color:var(--sub); margin-top:6px; }
@@ -502,7 +514,7 @@ body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; heigh
     </div>
 
     <div class="section-label">📢 News & Hausaufgaben</div>
-    <div class="news-card">
+    <div class="news-card" id="news-card-el">
         <div class="news-title">Aktuelle Info</div>
         <div class="news-text" id="news-text">Lade Daten...</div>
         <div class="news-time" id="news-time"></div>
@@ -791,6 +803,7 @@ var APP_DATA = {
     className: "8b",
     news: "Willkommen bei SchulHub Pro! Tipp: Gib Fächer im Admin-Bereich mit Raum ein (z.B. Mathe R204), damit es perfekt auf den Kacheln getrennt wird.",
     newsTime: "Aktualisiert: Heute",
+    newsUpdatedAt: "",
     currentWeek: "A",
     events: [],
     wocheA: {
@@ -1561,10 +1574,27 @@ function updateClock() {
     document.getElementById('week-badge').style.background = activeWeek==='A' ? 'linear-gradient(135deg,#2563eb,#3b82f6)' : 'linear-gradient(135deg,#7c3aed,#8b5cf6)';
     document.getElementById('news-text').innerText = APP_DATA.news || 'Keine aktuellen Infos.';
     if (APP_DATA.newsTime) document.getElementById('news-time').innerText = APP_DATA.newsTime;
+    checkNewsAlert();
     document.getElementById('plan-btn-sub') && (document.getElementById('plan-btn-sub').innerText = 'Stundenplan ansehen (Woche ' + activeWeek + ')');
     var tilePlanSub = document.getElementById('tile-plan-sub');
     if (tilePlanSub) tilePlanSub.innerText = 'Woche ' + activeWeek;
     updateStatus(now);
+}
+
+/* News-Alert: oranger Rahmen für 1 Stunde nach Update */
+function checkNewsAlert() {
+    var card = document.getElementById('news-card-el');
+    if (!card) return;
+    var ts = APP_DATA.newsUpdatedAt;
+    if (!ts) { card.classList.remove('news-alert'); return; }
+    var updated = new Date(ts);
+    var diffMs = Date.now() - updated.getTime();
+    var oneHour = 60 * 60 * 1000;
+    if (diffMs < oneHour) {
+        card.classList.add('news-alert');
+    } else {
+        card.classList.remove('news-alert');
+    }
 }
 
 function updateStatus(now) {
@@ -1807,6 +1837,7 @@ async function publishApp() {
     APP_DATA.className = document.getElementById('admin-class').value.trim() || APP_DATA.className;
     APP_DATA.news = document.getElementById('admin-news').value.trim();
     APP_DATA.newsTime = 'Aktualisiert: ' + new Date().toLocaleDateString('de-DE', {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'});
+    APP_DATA.newsUpdatedAt = new Date().toISOString();
     APP_DATA.currentWeek = activeWeek; APP_DATA.wocheA = readAdminPlan('a'); APP_DATA.wocheB = readAdminPlan('b');
     // events sind bereits in APP_DATA gepflegt
     var btn = document.getElementById('publish-btn'), status = document.getElementById('publish-status');
