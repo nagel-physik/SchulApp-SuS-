@@ -775,43 +775,92 @@ body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; heigh
 <div class="overlay" id="help-overlay">
     <div class="overlay-header">
         <button class="close-btn" onclick="closeOverlay('help-overlay')">✕</button>
-        <div class="overlay-title">❓ App-Erklärung & Infos</div>
+        <div class="overlay-title">❓ Hilfe & Datenschutz</div>
         <div style="width:30px;"></div>
     </div>
-    <div class="help-section" style="padding:16px;">
+    <div class="help-section" style="padding:16px 16px 100px;">
+
+        <!-- DATENSCHUTZ zuerst – für Eltern -->
+        <div style="background:linear-gradient(135deg,rgba(16,185,129,0.1),rgba(16,185,129,0.04)); border-radius:16px; padding:16px; margin-bottom:12px; border:1.5px solid rgba(16,185,129,0.3);">
+            <div style="font-size:1rem; font-weight:900; margin-bottom:6px; color:#10b981;">🔒 Datenschutz – für Eltern &amp; Schüler</div>
+            <div style="font-size:0.85rem; color:var(--sub); line-height:1.6;">
+                <strong style="color:var(--text);">Diese App speichert keine persönlichen Daten auf einem Server.</strong><br><br>
+                Alle Einstellungen, Termine und das Design werden ausschließlich <strong style="color:var(--text);">lokal auf dem Gerät</strong> gespeichert (sogenannter „localStorage" des Browsers). Niemand außer dem Nutzer selbst kann diese Daten sehen oder abrufen.<br><br>
+                📵 <strong style="color:var(--text);">Es werden keine Daten erhoben</strong> – kein Name, keine E-Mail, kein Standort, keine Nutzungsstatistik.<br>
+                🍪 <strong style="color:var(--text);">Keine Cookies, keine Tracker, keine Werbung.</strong><br>
+                🌐 <strong style="color:var(--text);">Keine Verbindung zu Drittanbietern.</strong> Die einzige externe Verbindung ist das Laden der App selbst von GitHub/Vercel.<br><br>
+                Wenn das Gerät gewechselt wird oder der Browser-Cache gelöscht wird, sind die lokal gespeicherten Termine und Einstellungen weg – das ist normal und kein Fehler.<br><br>
+                <strong style="color:var(--text);">Die App wurde von einem Lehrer für seine Klasse erstellt</strong> und wird ausschließlich schulintern genutzt.
+            </div>
+        </div>
+
+        <!-- WAS IST SCHULHUB -->
         <div style="background:var(--card); border-radius:16px; padding:16px; margin-bottom:12px; border:1px solid var(--border);">
             <div style="font-size:1rem; font-weight:900; margin-bottom:6px;">✨ Was ist SchulHub?</div>
-            <div style="font-size:0.88rem; color:var(--sub); line-height:1.5;">SchulHub ist deine persönliche Schul-Zentrale – direkt auf dem Handy. Die App zeigt dir in Echtzeit, welches Fach gerade läuft, wie viele Minuten der Block noch geht und was dein Lehrer dir als aktuellen Hinweis oder Hausaufgabe geschickt hat.</div>
+            <div style="font-size:0.85rem; color:var(--sub); line-height:1.6;">SchulHub ist eine digitale Schul-Zentrale für den Browser auf dem Handy. Die App zeigt in Echtzeit welches Fach gerade läuft, wie lange der Block noch geht, und was der Lehrer als aktuelle Information hinterlegt hat.<br><br>
+            Um neue Informationen vom Lehrer zu erhalten, muss der <strong style="color:var(--text);">🔄 Aktualisieren-Button</strong> am unteren Ende des Dashboards gedrückt werden. Die App lädt sich dann neu. <strong style="color:var(--text);">Ohne diesen Klick erscheinen keine neuen Infos</strong> – das ist bewusst so, damit die SuS die App aktiv öffnen müssen.</div>
         </div>
+
+        <!-- AKTUELLE INFOS / NEWS -->
         <div style="background:var(--card); border-radius:16px; padding:16px; margin-bottom:12px; border:1px solid var(--border);">
-            <div style="font-size:1rem; font-weight:900; margin-bottom:6px;">⏱ Live-Kacheln auf dem Dashboard</div>
-            <div style="font-size:0.88rem; color:var(--sub); line-height:1.5;">Die zwei Kacheln unter der Uhr zeigen dir immer den <strong style="color:var(--text);">aktuellen Block</strong> (mit Countdown und Fortschrittsbalken) und das <strong style="color:var(--text);">nächste Fach</strong>.</div>
+            <div style="font-size:1rem; font-weight:900; margin-bottom:6px;">📢 Aktuelle Infos &amp; News</div>
+            <div style="font-size:0.85rem; color:var(--sub); line-height:1.6;">Der Lehrer kann jederzeit eine aktuelle Nachricht für die Klasse hinterlegen – z.B. Hausaufgaben, Raumwechsel oder besondere Hinweise.<br><br>
+            Wenn eine <strong style="color:var(--text);">neue Info veröffentlicht</strong> wird, erscheint automatisch ein <strong style="color:orange;">oranger blinkender Rahmen</strong> um die News-Box. So ist auf einen Blick erkennbar: hier gibt es etwas Neues!<br><br>
+            Der Rahmen verschwindet nach <strong style="color:var(--text);">60 Minuten</strong> automatisch. Wenn danach eine weitere neue Info kommt, erscheint er erneut.</div>
         </div>
+
+        <!-- LIVE-KACHELN -->
         <div style="background:var(--card); border-radius:16px; padding:16px; margin-bottom:12px; border:1px solid var(--border);">
-            <div style="font-size:1rem; font-weight:900; margin-bottom:6px;">🗓️ Persönlicher Terminkalender</div>
-            <div style="font-size:0.88rem; color:var(--sub); line-height:1.5;">Tippe auf <strong style="color:var(--text);">„Kalender"</strong> unten in der Leiste. Du siehst eine Monatsansicht mit farbigen Punkten auf Tagen mit Terminen. Antippen eines Tages zeigt dir die Termine für genau diesen Tag.<br><br>
-            <strong style="color:var(--text);">Eigene Termine eintragen:</strong> Scrolle im Kalender nach unten zum Formular. Gib einen Titel ein, wähle das Datum und den Typ:<br>
-            📚 <strong style="color:var(--text);">Hausaufgabe</strong> – für HA-Abgaben<br>
-            📝 <strong style="color:var(--text);">Test / Klassenarbeit</strong> – für Prüfungen<br>
-            📎 <strong style="color:var(--text);">Abgabe</strong> – für Projekte, Referate<br>
-            ⭐ <strong style="color:var(--text);">Sonstiges</strong> – alles andere<br><br>
-            Deine Termine werden nur auf <strong style="color:var(--text);">deinem Gerät</strong> gespeichert. Du kannst sie mit ✕ wieder löschen.<br><br>
-            <strong style="color:var(--text);">Lehrer-Termine</strong> (mit 📣-Badge) werden von deinem Lehrer für alle veröffentlicht – die kannst du nicht löschen.<br><br>
-            Auf dem Dashboard zeigt dir die Zeile mit 🗓️ deinen nächsten anstehenden Termin auf einen Blick.</div>
+            <div style="font-size:1rem; font-weight:900; margin-bottom:6px;">⏱ Live-Anzeige: Aktuell &amp; Nächstes</div>
+            <div style="font-size:0.85rem; color:var(--sub); line-height:1.6;">Die zwei Kacheln unter der Uhr zeigen immer den <strong style="color:var(--text);">aktuellen Block</strong> mit Countdown und Fortschrittsbalken sowie das <strong style="color:var(--text);">nächste Fach</strong>. Die Uhrzeit läuft in Echtzeit – kein Aktualisieren nötig.</div>
         </div>
+
+        <!-- STUNDENPLAN -->
         <div style="background:var(--card); border-radius:16px; padding:16px; margin-bottom:12px; border:1px solid var(--border);">
-            <div style="font-size:1rem; font-weight:900; margin-bottom:6px;">📅 3D Stundenplan-Matrix</div>
-            <div style="font-size:0.88rem; color:var(--sub); line-height:1.5;">Tippe auf <strong style="color:var(--text);">„Plan"</strong> unten oder auf den großen Button im Dashboard. <strong style="color:var(--text);">Antippen → Kachel dreht sich (3D-Flip)</strong> und zeigt dir, was du nicht vergessen darfst.</div>
+            <div style="font-size:1rem; font-weight:900; margin-bottom:6px;">📅 Stundenplan-Matrix</div>
+            <div style="font-size:0.85rem; color:var(--sub); line-height:1.6;">Tippe auf die <strong style="color:var(--text);">Stundenplan-Kachel</strong>. Es erscheinen farbige Kacheln für jeden Block der Woche. Ein Antippen dreht die Kachel (3D-Flip) und zeigt was nicht vergessen werden darf.<br><br>
+            Wenn der Lehrer den Stundenplan aktualisiert, <strong style="color:var(--text);">leuchtet und vibriert die Kachel</strong> und zeigt ein „NEU"-Badge – bis du sie einmal geöffnet hast.</div>
         </div>
+
+        <!-- KALENDER -->
+        <div style="background:var(--card); border-radius:16px; padding:16px; margin-bottom:12px; border:1px solid var(--border);">
+            <div style="font-size:1rem; font-weight:900; margin-bottom:6px;">🗓️ Persönlicher Kalender</div>
+            <div style="font-size:0.85rem; color:var(--sub); line-height:1.6;">
+                Tippe auf die <strong style="color:var(--text);">Kalender-Kachel</strong>. Du siehst eine Monatsansicht mit farbigen Punkten auf Tagen mit Terminen. Antippen eines Tages öffnet ein kleines Fenster zum Eintragen.<br><br>
+                <strong style="color:var(--text);">🕐 Schulzeit-Sperre:</strong> Von <strong style="color:var(--text);">Montag bis Freitag zwischen 7:30 und 13:00 Uhr</strong> ist der Kalender gesperrt. Auf der Kachel läuft ein Countdown bis 13:00 Uhr. Der Kalender soll zu Hause genutzt werden, nicht in der Schule.<br><br>
+                <strong style="color:var(--text);">Eingetragene Termine</strong> werden nur auf diesem Gerät gespeichert – niemand anderes kann sie sehen.<br><br>
+                Farbige Punkte im Kalender bedeuten:<br>
+                🟢 <strong style="color:var(--text);">Grün (Hintergrund)</strong> = Schulferien Brandenburg<br>
+                🟡 <strong style="color:var(--text);">Gelb (Hintergrund)</strong> = Gesetzlicher Feiertag<br>
+                🔵 <strong style="color:var(--text);">Blauer Punkt</strong> = Eigener Termin<br>
+                🔴 <strong style="color:var(--text);">Roter Punkt</strong> = Test / Klassenarbeit<br>
+                🟠 <strong style="color:var(--text);">Oranger Punkt</strong> = Termin vom Lehrer<br><br>
+                Lehrer-Termine können nicht gelöscht werden, eigene schon (✕-Button).
+            </div>
+        </div>
+
+        <!-- XP -->
         <div style="background:var(--card); border-radius:16px; padding:16px; margin-bottom:12px; border:1px solid var(--border);">
             <div style="font-size:1rem; font-weight:900; margin-bottom:6px;">🏆 XP &amp; Level-System</div>
-            <div style="font-size:0.88rem; color:var(--sub); line-height:1.5;">Jeden Tag, wenn du die App öffnest, bekommst du automatisch <strong style="color:var(--text);">+10 XP</strong>. Beim Aktualisieren gibt es nochmal <strong style="color:var(--text);">+2 XP</strong> obendrauf. Sammel XP und steig auf – von Schul-Starter bis SchulHub-Legende!</div>
+            <div style="font-size:0.85rem; color:var(--sub); line-height:1.6;">Jeden Tag beim Öffnen der App gibt es <strong style="color:var(--text);">+10 XP</strong>. Beim Drücken des Aktualisieren-Buttons nochmal <strong style="color:var(--text);">+2 XP</strong>. Durch Sammeln von XP steigt man im Level auf – von „Schul-Starter" bis „SchulHub-Legende". Die XP werden lokal auf dem Gerät gespeichert.</div>
         </div>
+
+        <!-- STYLE -->
         <div style="background:var(--card); border-radius:16px; padding:16px; margin-bottom:12px; border:1px solid var(--border);">
-            <div style="font-size:1rem; font-weight:900; margin-bottom:6px;">🎨 Style & Avatar</div>
-            <div style="font-size:0.88rem; color:var(--sub); line-height:1.5;">Tippe unten auf <strong style="color:var(--text);">„Style"</strong>, um deinen Namen, Avatar, die Akzentfarbe und den Hintergrund anzupassen. Die Änderungen werden als Live-Vorschau angezeigt – erst nach <strong style="color:var(--text);">„Design aktivieren"</strong> dauerhaft gespeichert.</div>
+            <div style="font-size:1rem; font-weight:900; margin-bottom:6px;">🎨 Style &amp; Design</div>
+            <div style="font-size:0.85rem; color:var(--sub); line-height:1.6;">Über die <strong style="color:var(--text);">Style-Kachel</strong> kann jeder sein eigenes Design wählen: Name/Spitzname, Avatar-Emoji, Akzentfarbe und Hintergrund-Theme. Es gibt über 13 verschiedene Themes – von dunkel bis hell, von Creme bis Waldgrün.<br><br>
+            Alle Design-Einstellungen bleiben <strong style="color:var(--text);">nur auf diesem Gerät</strong> gespeichert. Erst nach Tippen auf <strong style="color:var(--text);">„Design aktivieren"</strong> wird alles dauerhaft gespeichert.</div>
         </div>
-        <div style="text-align:center; padding:10px 0 6px; font-size:0.7rem; color:var(--sub); font-weight:700; letter-spacing:0.5px;">SchulHub · Made with ❤️ für Klasse <span id="help-class-name">–</span></div>
+
+        <!-- FUSS -->
+        <div style="background:rgba(99,102,241,0.06); border-radius:16px; padding:14px 16px; margin-bottom:12px; border:1px solid rgba(99,102,241,0.15); text-align:center;">
+            <div style="font-size:0.78rem; color:var(--sub); line-height:1.7; font-weight:600;">
+                SchulHub wurde von einem Lehrer der Oberschule Perleberg entwickelt.<br>
+                Bei Fragen oder Anmerkungen bitte direkt beim Lehrer melden.<br><br>
+                <span style="font-size:0.7rem; opacity:0.7;">SchulHub · Klasse <span id="help-class-name">–</span> · Keine Datenerhebung · Lokal gespeichert</span>
+            </div>
+        </div>
+
     </div>
 </div>
 
