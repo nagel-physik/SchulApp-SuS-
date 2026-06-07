@@ -1062,106 +1062,26 @@ body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; heigh
 
 <script>
 var APP_DATA = {
-    "className": "7c",
-    "news": "Hallo an alle 😏",
-    "newsTime": "Aktualisiert: 07.06., 12:20",
-    "newsUpdatedAt": "2026-06-07T10:20:57.317Z",
-    "kalenderSperrAktiv": true,
-    "currentWeek": "A",
-    "events": [],
-    "wocheA": {
-        "Mo": [
-            "Mathe R204",
-            "",
-            "Englisch R201",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Di": [
-            "Sport Halle",
-            "",
-            "Biologie R115",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Mi": [
-            "Deutsch R110",
-            "",
-            "Kunst R301",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Do": [
-            "Geographie R210",
-            "",
-            "Deutsch R110",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Fr": [
-            "Englisch R201",
-            "",
-            "Physik R101",
-            "",
-            "",
-            "",
-            ""
-        ]
+    className: "8b",
+    news: "Willkommen bei SchulHub Pro! Tipp: Gib Fächer im Admin-Bereich mit Raum ein (z.B. Mathe R204), damit es perfekt auf den Kacheln getrennt wird.",
+    newsTime: "Aktualisiert: Heute",
+    newsUpdatedAt: "",
+    kalenderSperrAktiv: true,
+    currentWeek: "A",
+    events: [],
+    wocheA: {
+        Mo: ["Mathe R204","Deutsch R110","Englisch R201","Physik R101","","",""],
+        Di: ["Sport Halle","Mathe R204","Biologie R115","Geschichte R202","","",""],
+        Mi: ["Deutsch R110","Englisch R201","Kunst R301","","","",""],
+        Do: ["Geographie R210","Mathe R204","Deutsch R110","","","",""],
+        Fr: ["Englisch R201","Biologie R115","Physik R101","","","",""]
     },
-    "wocheB": {
-        "Mo": [
-            "Deutsch R110",
-            "",
-            "Physik R101",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Di": [
-            "Biologie R115",
-            "",
-            "Geschichte R202",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Mi": [
-            "Kunst R301",
-            "",
-            "Musik R305",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Do": [
-            "Mathe R204",
-            "",
-            "Sport Halle",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Fr": [
-            "Physik R101",
-            "",
-            "Geschichte R202",
-            "",
-            "",
-            "",
-            ""
-        ]
+    wocheB: {
+        Mo: ["Deutsch R110","Mathe R204","Physik R101","Englisch R201","","",""],
+        Di: ["Biologie R115","Sport Halle","Geschichte R202","Mathe R204","","",""],
+        Mi: ["Kunst R301","Deutsch R110","Musik R305","","","",""],
+        Do: ["Mathe R204","Geographie R210","Sport Halle","","","",""],
+        Fr: ["Physik R101","Englisch R201","Geschichte R202","","","",""]
     }
 };
 
@@ -2049,9 +1969,62 @@ function updateStatus(now) {
     document.getElementById('tile-current').classList.remove('morgen');
     document.getElementById('tile-current-label').innerText = '🟢 Aktuell'; document.getElementById('tile-next-label').innerText = '⏭ Nächstes';
     if (dayKey === 'Sa' || dayKey === 'So' || dayPlan.length === 0) {
-        document.getElementById('current-subject').innerText = '🎉 Wochenende!'; document.getElementById('current-info').innerText = 'Chillen & Erholen';
-        document.getElementById('current-countdown').innerText = ''; document.getElementById('current-time').innerText = ''; document.getElementById('current-prog').style.width = '0%';
-        document.getElementById('next-subject').innerText = '–'; document.getElementById('next-info').innerText = ''; document.getElementById('next-time').innerText = ''; return;
+        document.getElementById('current-subject').innerText = '🎉 Wochenende!';
+        document.getElementById('current-info').innerText = 'Chillen & Erholen';
+        document.getElementById('current-countdown').innerText = '';
+        document.getElementById('current-time').innerText = '';
+        document.getElementById('current-prog').style.width = '0%';
+
+        // Nächsten Montag berechnen
+        var daysUntilMon = (8 - now.getDay()) % 7 || 7;
+        var nextMon = new Date(now);
+        nextMon.setDate(now.getDate() + daysUntilMon);
+        nextMon.setHours(0,0,0,0);
+        var nextMonStr = fmt(nextMon);
+
+        // Ferien/Feiertag-Check für diesen Montag
+        var sysMonMap = getPublicEventsForMonth(nextMon.getFullYear(), nextMon.getMonth());
+        var sysMonEvts = sysMonMap[nextMonStr] || [];
+        var ferienEvt = sysMonEvts.find(function(e){ return e.type === 'ferien'; });
+        var feiertagEvt = sysMonEvts.find(function(e){ return e.type === 'feiertag'; });
+
+        if (ferienEvt) {
+            // Ferien — Ferienname anzeigen
+            document.getElementById('tile-next-label').innerText = '🌴 Montag ist schulfrei';
+            document.getElementById('next-subject').innerText = ferienEvt.title;
+            document.getElementById('next-info').innerText = 'Keine Schule · Erhol dich gut!';
+            document.getElementById('next-time').innerText = '😎 Ferien genießen!';
+        } else if (feiertagEvt) {
+            // Feiertag — Name anzeigen
+            document.getElementById('tile-next-label').innerText = '🎉 Montag ist Feiertag';
+            document.getElementById('next-subject').innerText = feiertagEvt.title;
+            document.getElementById('next-info').innerText = 'Kein Unterricht';
+            document.getElementById('next-time').innerText = '✌️ Freier Tag!';
+        } else {
+            // Normaler Montag — erste Stunde anzeigen
+            var monPlan = (APP_DATA['woche' + activeWeek] || {})['Mo'] || [];
+            var firstMonSubj = '';
+            var firstMonBlockIdx = -1;
+            for (var i = 0; i < BLOCKS.length; i++) {
+                if (!BLOCKS[i].pause && monPlan[i]) {
+                    firstMonSubj = monPlan[i];
+                    firstMonBlockIdx = i;
+                    break;
+                }
+            }
+            document.getElementById('tile-next-label').innerText = '📅 Montag startet mit';
+            if (firstMonSubj) {
+                var cleanMon = splitSubjectAndRoom(firstMonSubj);
+                document.getElementById('next-subject').innerText = getSubjectEmoji(firstMonSubj) + ' ' + cleanMon.name;
+                document.getElementById('next-info').innerText = (cleanMon.room ? cleanMon.room + ' · ' : '') + BLOCKS[firstMonBlockIdx].start + ' Uhr';
+                document.getElementById('next-time').innerText = '👜 ' + getSubjectReminder(firstMonSubj).split('\n').slice(0,2).join(' · ');
+            } else {
+                document.getElementById('next-subject').innerText = '📋 Stundenplan';
+                document.getElementById('next-info').innerText = 'Jetzt schon mal reinschauen!';
+                document.getElementById('next-time').innerText = 'Damit nichts vergessen wird 😊';
+            }
+        }
+        return;
     }
     var current = null, next = null;
     for (var i=0; i<maxBlocksForToday; i++) {
