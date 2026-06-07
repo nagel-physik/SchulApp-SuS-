@@ -62,7 +62,7 @@ body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; heigh
 .hand-s { width:2px; height:45px; margin-left:-1px; background:var(--accent); }
 .clock-center { position:absolute; width:8px; height:8px; background:var(--accent); border-radius:50%; top:50%; left:50%; transform:translate(-50%,-50%); }
 .clock-date { font-size:0.8rem; color:var(--sub); font-weight:700; text-transform:uppercase; letter-spacing:2px; margin-top:4px; }
-.week-badge { display:inline-block; margin-top:8px; padding:5px 18px; border-radius:20px; font-size:0.8rem; font-weight:900; color:white; cursor:pointer; }
+.week-badge { display:inline-block; margin-top:8px; padding:5px 18px; border-radius:20px; font-size:0.8rem; font-weight:900; color:white; cursor:default; }
 .clock-hint { font-size:0.55rem; color:var(--sub); margin-top:4px; letter-spacing:0.5px; }
 
 .status-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:0 16px 14px; }
@@ -302,6 +302,13 @@ body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; heigh
 .save-btn:active { transform: scale(0.96); box-shadow: 0 2px 10px rgba(217,70,239,0.2); }
 .bg-chameleon { animation: chameleon-shift 12s linear infinite !important; background-size: 400% 400% !important; }
 @keyframes chameleon-shift { 0% { background-color: #2b0018; } 25% { background-color: #020035; } 50% { background-color: #002d13; } 75% { background-color: #382400; } 100% { background-color: #2b0018; } }
+
+/* Admin Uhrzeit-Leiste */
+.admin-clock-bar { display:flex; align-items:center; gap:14px; padding:10px 16px 14px; border-bottom:1px solid var(--border); margin-bottom:4px; }
+.admin-clock-time { font-size:2rem; font-weight:900; color:var(--accent); letter-spacing:-1px; font-variant-numeric:tabular-nums; line-height:1; }
+.admin-clock-info { display:flex; flex-direction:column; gap:2px; }
+.admin-clock-date { font-size:0.78rem; font-weight:800; color:var(--text); }
+.admin-clock-week { display:inline-block; font-size:0.68rem; font-weight:900; color:white; background:var(--accent); padding:2px 8px; border-radius:8px; text-transform:uppercase; letter-spacing:1px; margin-top:2px; }
 
 /* ============================================================
    ACCORDION (Aufklapp-Sektionen Admin)
@@ -554,8 +561,8 @@ body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; heigh
             <div class="clock-center"></div>
         </div>
         <div class="clock-date" id="clock-date">Montag</div>
-        <div class="week-badge" id="week-badge" onclick="flipWeek()">WOCHE A</div>
-        <div class="clock-hint">⏰ Uhr tippen · Woche tippen zum Wechseln</div>
+        <div class="week-badge" id="week-badge">WOCHE A</div>
+        <div class="clock-hint">⏰ Uhr tippen zum Wechseln</div>
     </div>
 
     <div class="status-grid">
@@ -720,10 +727,19 @@ body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; heigh
     <div class="overlay-header">
         <button class="close-btn" onclick="closeOverlay('admin-overlay')">✕</button>
         <div class="overlay-title">⚙️ Lehrer-Zentrale</div>
-        <div style="width:30px;"></div>
+        <button class="help-btn" onclick="openOverlay('admin-help-overlay')" title="Hilfe für Lehrer">?</button>
     </div>
 
-    <div style="padding:14px 16px 80px;">
+    <!-- Uhrzeit + Woche Leiste -->
+    <div class="admin-clock-bar">
+        <div class="admin-clock-time" id="admin-clock-time">00:00</div>
+        <div class="admin-clock-info">
+            <div class="admin-clock-date" id="admin-clock-date">Montag, 1. Januar</div>
+            <div class="admin-clock-week" id="admin-clock-week">Woche A</div>
+        </div>
+    </div>
+
+    <div style="padding:0 16px 80px;">
 
         <!-- ADMIN OFFEN HALTEN -->
         <div class="admin-toggle-row" style="margin-bottom:14px;">
@@ -828,9 +844,17 @@ body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; heigh
                 <div class="accordion-arrow">›</div>
             </div>
             <div class="accordion-body">
+                <!-- Aktive Woche einstellen -->
+                <div style="margin-bottom:14px; background:var(--card2); border-radius:12px; padding:12px;">
+                    <div style="font-size:0.75rem; font-weight:800; color:var(--sub); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.5px;">Aktuell laufende Woche (für SuS sichtbar):</div>
+                    <div style="display:flex; gap:8px;">
+                        <button id="admin-active-week-a" onclick="setActiveWeekAdmin('A')" style="flex:1; padding:10px; border-radius:10px; border:none; font-weight:900; font-family:inherit; font-size:0.9rem; cursor:pointer; background:#2563eb; color:white;">Woche A</button>
+                        <button id="admin-active-week-b" onclick="setActiveWeekAdmin('B')" style="flex:1; padding:10px; border-radius:10px; border:none; font-weight:900; font-family:inherit; font-size:0.9rem; cursor:pointer; background:rgba(255,255,255,0.05); color:var(--sub);">Woche B</button>
+                    </div>
+                </div>
                 <div class="week-tabs" style="padding:0 0 12px 0;">
-                    <button class="week-tab" id="admin-tab-a" onclick="switchAdminWeek('A')" style="padding:8px; background:#2563eb; color:white;">Woche A</button>
-                    <button class="week-tab" id="admin-tab-b" onclick="switchAdminWeek('B')" style="padding:8px; background:rgba(255,255,255,0.05); color:var(--sub);">Woche B</button>
+                    <button class="week-tab" id="admin-tab-a" onclick="switchAdminWeek('A')" style="padding:8px; background:#2563eb; color:white;">Woche A bearbeiten</button>
+                    <button class="week-tab" id="admin-tab-b" onclick="switchAdminWeek('B')" style="padding:8px; background:rgba(255,255,255,0.05); color:var(--sub);">Woche B bearbeiten</button>
                 </div>
                 <div id="admin-plan-inputs"></div>
             </div>
@@ -840,6 +864,62 @@ body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; heigh
         <div style="margin-top:6px;">
             <button class="publish-btn" id="publish-btn" onclick="publishApp()">🚀 CLOUD-LIVE-UPDATE SENDEN</button>
             <div id="publish-status" style="text-align:center; margin-top:10px; font-size:0.85rem; font-weight:bold;"></div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ADMIN HILFE OVERLAY -->
+<div class="overlay" id="admin-help-overlay">
+    <div class="overlay-header">
+        <button class="close-btn" onclick="closeOverlay('admin-help-overlay')">✕</button>
+        <div class="overlay-title">❓ Lehrer-Hilfe</div>
+        <div style="width:30px;"></div>
+    </div>
+    <div style="padding:16px 16px 100px;">
+
+        <div style="background:linear-gradient(135deg,rgba(99,102,241,0.1),rgba(99,102,241,0.04)); border-radius:16px; padding:16px; margin-bottom:12px; border:1.5px solid rgba(99,102,241,0.25);">
+            <div style="font-size:1rem; font-weight:900; margin-bottom:6px;">⚙️ Was ist die Lehrer-Zentrale?</div>
+            <div style="font-size:0.85rem; color:var(--sub); line-height:1.6;">Hier verwaltest du alle Inhalte der SchulHub-App für deine Klasse. Alle Änderungen werden erst nach dem <strong style="color:var(--text);">🚀 Cloud-Live-Update</strong> für die SuS sichtbar. Bis dahin siehst nur du die Änderungen.</div>
+        </div>
+
+        <div style="background:var(--card); border-radius:16px; padding:16px; margin-bottom:12px; border:1px solid var(--border);">
+            <div style="font-size:1rem; font-weight:900; margin-bottom:6px;">🔑 GitHub Authentifizierung</div>
+            <div style="font-size:0.85rem; color:var(--sub); line-height:1.6;">Hier gibst du einmalig deinen <strong style="color:var(--text);">GitHub Personal Access Token</strong> ein. Ohne diesen Token kann kein Cloud-Update gesendet werden.<br><br>Den Token bekommst du auf GitHub unter:<br><strong style="color:var(--text);">Settings → Developer settings → Personal access tokens</strong><br><br>Nach dem Speichern bleibt er auf diesem Gerät gespeichert – du musst ihn nicht jedes Mal neu eingeben.</div>
+        </div>
+
+        <div style="background:var(--card); border-radius:16px; padding:16px; margin-bottom:12px; border:1px solid var(--border);">
+            <div style="font-size:1rem; font-weight:900; margin-bottom:6px;">📢 Klasse &amp; News</div>
+            <div style="font-size:0.85rem; color:var(--sub); line-height:1.6;">Trage hier die <strong style="color:var(--text);">Klassen-Bezeichnung</strong> ein (z.B. 8b) und schreibe den <strong style="color:var(--text);">aktuellen News-Text</strong> für deine SuS – z.B. Hausaufgaben, Raumänderungen oder besondere Hinweise.<br><br>Nach einem Update erscheint bei den SuS automatisch ein <strong style="color:orange;">oranger blinkender Rahmen</strong> um die News-Box. Der Rahmen verschwindet nach 60 Minuten von selbst.</div>
+        </div>
+
+        <div style="background:var(--card); border-radius:16px; padding:16px; margin-bottom:12px; border:1px solid var(--border);">
+            <div style="font-size:1rem; font-weight:900; margin-bottom:6px;">🗓️ Kalender-Einstellungen</div>
+            <div style="font-size:0.85rem; color:var(--sub); line-height:1.6;">Mit dem Schalter <strong style="color:var(--text);">„Kalender während Schulzeit sperren"</strong> kannst du den persönlichen Kalender der SuS während der Unterrichtszeit (Mo–Fr 7:30–13:00 Uhr) sperren.<br><br>Ist die Sperre aktiv, sehen die SuS auf der Kalender-Kachel einen <strong style="color:var(--text);">Countdown bis 13:00 Uhr</strong> und können nichts eintragen. Nach 13:00 Uhr ist der Kalender automatisch frei.<br><br>Schalter aus = Kalender immer zugänglich.</div>
+        </div>
+
+        <div style="background:var(--card); border-radius:16px; padding:16px; margin-bottom:12px; border:1px solid var(--border);">
+            <div style="font-size:1rem; font-weight:900; margin-bottom:6px;">📅 Lehrer-Termine</div>
+            <div style="font-size:0.85rem; color:var(--sub); line-height:1.6;">Hier kannst du <strong style="color:var(--text);">Termine für alle SuS</strong> eintragen – z.B. Klassenarbeiten, Abgaben oder Veranstaltungen. Gib Titel, Datum und Typ ein und tippe auf <strong style="color:var(--text);">„+ Termin hinzufügen"</strong>.<br><br>Die Termine erscheinen bei den SuS im Kalender mit einem <strong style="color:#f59e0b;">📣-Badge</strong> als Lehrer-Termin. SuS können diese Termine nicht löschen.<br><br>Erst nach dem <strong style="color:var(--text);">🚀 Cloud-Live-Update</strong> sind die Termine für alle sichtbar.</div>
+        </div>
+
+        <div style="background:var(--card); border-radius:16px; padding:16px; margin-bottom:12px; border:1px solid var(--border);">
+            <div style="font-size:1rem; font-weight:900; margin-bottom:6px;">📋 Stundenpläne</div>
+            <div style="font-size:0.85rem; color:var(--sub); line-height:1.6;">Bearbeite hier die <strong style="color:var(--text);">Stundenpläne für Woche A und Woche B</strong>. Gib Fächer immer mit Raum ein, z.B. <strong style="color:var(--text);">Mathe R204</strong> – dann wird Fach und Raum auf den Kacheln sauber getrennt angezeigt.<br><br>Nach einem Update <strong style="color:var(--text);">vibriert und leuchtet</strong> die Stundenplan-Kachel bei den SuS und zeigt ein „NEU"-Badge – bis sie den Plan einmal geöffnet haben.</div>
+        </div>
+
+        <div style="background:var(--card); border-radius:16px; padding:16px; margin-bottom:12px; border:1px solid var(--border);">
+            <div style="font-size:1rem; font-weight:900; margin-bottom:6px;">🚀 Cloud-Live-Update</div>
+            <div style="font-size:0.85rem; color:var(--sub); line-height:1.6;">Der große rote Button am Ende sendet <strong style="color:var(--text);">alle Änderungen</strong> (News, Termine, Stundenplan, Kalender-Einstellung) in einem Schritt an GitHub. Vercel veröffentlicht die neue Version innerhalb von Sekunden.<br><br>Die SuS müssen danach auf <strong style="color:var(--text);">„🔄 App aktualisieren"</strong> drücken um die neuen Inhalte zu sehen.<br><br>⚠️ <strong style="color:var(--text);">Ohne GitHub-Token funktioniert das Update nicht.</strong></div>
+        </div>
+
+        <div style="background:var(--card); border-radius:16px; padding:16px; margin-bottom:12px; border:1px solid var(--border);">
+            <div style="font-size:1rem; font-weight:900; margin-bottom:6px;">🔓 Lehrer-Zentrale offen halten</div>
+            <div style="font-size:0.85rem; color:var(--sub); line-height:1.6;">Wenn dieser Schalter aktiv ist, öffnet die App sich beim nächsten Start direkt in der Lehrer-Zentrale – ohne Passwort-Abfrage. Das ist nur auf <strong style="color:var(--text);">diesem Gerät</strong> gespeichert und für SuS nicht sichtbar.<br><br>Zum Deaktivieren einfach den Schalter umlegen.</div>
+        </div>
+
+        <div style="text-align:center; padding:10px 0; font-size:0.7rem; color:var(--sub); font-weight:700;">
+            SchulHub · Lehrer-Zentrale · Bei Fragen: michael.nagel@lk.brandenburg.de
         </div>
 
     </div>
@@ -982,106 +1062,26 @@ body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; heigh
 
 <script>
 var APP_DATA = {
-    "className": "7c",
-    "news": "Hallo an alle 🙃",
-    "newsTime": "Aktualisiert: 07.06., 12:00",
-    "newsUpdatedAt": "2026-06-07T10:00:07.314Z",
-    "kalenderSperrAktiv": true,
-    "currentWeek": "A",
-    "events": [],
-    "wocheA": {
-        "Mo": [
-            "Mathe R204",
-            "",
-            "Englisch R201",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Di": [
-            "Sport Halle",
-            "",
-            "Biologie R115",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Mi": [
-            "Deutsch R110",
-            "",
-            "Kunst R301",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Do": [
-            "Geographie R210",
-            "",
-            "Deutsch R110",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Fr": [
-            "Englisch R201",
-            "",
-            "Physik R101",
-            "",
-            "",
-            "",
-            ""
-        ]
+    className: "8b",
+    news: "Willkommen bei SchulHub Pro! Tipp: Gib Fächer im Admin-Bereich mit Raum ein (z.B. Mathe R204), damit es perfekt auf den Kacheln getrennt wird.",
+    newsTime: "Aktualisiert: Heute",
+    newsUpdatedAt: "",
+    kalenderSperrAktiv: true,
+    currentWeek: "A",
+    events: [],
+    wocheA: {
+        Mo: ["Mathe R204","Deutsch R110","Englisch R201","Physik R101","","",""],
+        Di: ["Sport Halle","Mathe R204","Biologie R115","Geschichte R202","","",""],
+        Mi: ["Deutsch R110","Englisch R201","Kunst R301","","","",""],
+        Do: ["Geographie R210","Mathe R204","Deutsch R110","","","",""],
+        Fr: ["Englisch R201","Biologie R115","Physik R101","","","",""]
     },
-    "wocheB": {
-        "Mo": [
-            "Deutsch R110",
-            "",
-            "Physik R101",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Di": [
-            "Biologie R115",
-            "",
-            "Geschichte R202",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Mi": [
-            "Kunst R301",
-            "",
-            "Musik R305",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Do": [
-            "Mathe R204",
-            "",
-            "Sport Halle",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Fr": [
-            "Physik R101",
-            "",
-            "Geschichte R202",
-            "",
-            "",
-            "",
-            ""
-        ]
+    wocheB: {
+        Mo: ["Deutsch R110","Mathe R204","Physik R101","Englisch R201","","",""],
+        Di: ["Biologie R115","Sport Halle","Geschichte R202","Mathe R204","","",""],
+        Mi: ["Kunst R301","Deutsch R110","Musik R305","","","",""],
+        Do: ["Mathe R204","Geographie R210","Sport Halle","","","",""],
+        Fr: ["Physik R101","Englisch R201","Geschichte R202","","","",""]
     }
 };
 
@@ -1105,7 +1105,7 @@ var DAYS_SHORT = ["So","Mo","Di","Mi","Do","Fr","Sa"];
 var DAYS_KEYS = ["Mo","Di","Mi","Do","Fr"];
 
 var clockStyle = localStorage.getItem('susClockStyle') || 'digital';
-var activeWeek = localStorage.getItem('susActiveWeek') || APP_DATA.currentWeek;
+var activeWeek = APP_DATA.currentWeek || 'A';
 var userAccent = localStorage.getItem('susAccent') || '#6366f1';
 var userBgTheme = localStorage.getItem('susBgTheme') || 'default';
 var userAvatar = localStorage.getItem('susAvatar') || '👨‍🚀';
@@ -1883,6 +1883,7 @@ function openOverlay(id) {
 }
 function closeOverlay(id) {
     document.getElementById(id).style.display = 'none';
+    if (id === 'admin-help-overlay') return; // Admin-Hilfe schließt nur sich selbst
     var allClosed = ['plan-overlay','settings-overlay','kalender-overlay'].every(function(oid) {
         return document.getElementById(oid).style.display === 'none';
     });
@@ -1916,6 +1917,13 @@ function updateClock() {
     if (APP_DATA.newsTime) document.getElementById('news-time').innerText = APP_DATA.newsTime;
     checkNewsAlert();
     updateKalenderLockState();
+    // Admin-Uhr aktualisieren
+    var adminTime = document.getElementById('admin-clock-time');
+    var adminDate = document.getElementById('admin-clock-date');
+    var adminWeek = document.getElementById('admin-clock-week');
+    if (adminTime) adminTime.innerText = h + ':' + m;
+    if (adminDate) adminDate.innerText = now.toLocaleDateString('de-DE', {weekday:'long', day:'2-digit', month:'long'});
+    if (adminWeek) adminWeek.innerText = 'Woche ' + activeWeek;
     document.getElementById('plan-btn-sub') && (document.getElementById('plan-btn-sub').innerText = 'Stundenplan ansehen (Woche ' + activeWeek + ')');
     var tilePlanSub = document.getElementById('tile-plan-sub');
     if (tilePlanSub) tilePlanSub.innerText = 'Woche ' + activeWeek;
@@ -2002,7 +2010,8 @@ function updateStatus(now) {
 
 function clockFlip() { clockStyle = clockStyle==='digital' ? 'analog' : 'digital'; localStorage.setItem('susClockStyle', clockStyle); updateClock(); }
 document.getElementById('clock-section').addEventListener('click', function(e) { if (e.target.id !== 'week-badge') clockFlip(); });
-function flipWeek() { activeWeek = activeWeek==='A' ? 'B' : 'A'; localStorage.setItem('susActiveWeek', activeWeek); renderMatrixWeek(activeWeek); updateClock(); }
+// Woche wird nur vom Lehrer über APP_DATA.currentWeek gesteuert
+function flipWeek() { /* gesperrt – nur Lehrer stellt Woche ein */ }
 function toggleCardFlip(element) { if (element.classList.contains('static-header') || element.classList.contains('static-pause')) return; element.classList.toggle('flipped'); }
 
 function renderMatrixWeek(w) {
@@ -2256,6 +2265,8 @@ function loadAdminFields() {
     // Schalter-Zustände setzen
     document.getElementById('toggle-kal-sperre').checked = APP_DATA.kalenderSperrAktiv !== false;
     document.getElementById('toggle-admin-open').checked = localStorage.getItem('susAdminAlwaysOpen') === '1';
+    // Aktive-Woche-Buttons setzen
+    setActiveWeekAdmin(APP_DATA.currentWeek || 'A');
 }
 /* ---- Accordion ---- */
 function toggleAccordion(id) {
@@ -2275,6 +2286,21 @@ function setKalenderSperre(active) {
 }
 
 /* ---- Admin offen halten ---- */
+function setActiveWeekAdmin(w) {
+    activeWeek = w;
+    APP_DATA.currentWeek = w;
+    var btnA = document.getElementById('admin-active-week-a');
+    var btnB = document.getElementById('admin-active-week-b');
+    if (btnA && btnB) {
+        btnA.style.background = w==='A' ? '#2563eb' : 'rgba(255,255,255,0.05)';
+        btnA.style.color = w==='A' ? 'white' : 'var(--sub)';
+        btnB.style.background = w==='B' ? '#7c3aed' : 'rgba(255,255,255,0.05)';
+        btnB.style.color = w==='B' ? 'white' : 'var(--sub)';
+    }
+    renderMatrixWeek(w);
+    updateClock();
+}
+
 function setAdminAlwaysOpen(active) {
     localStorage.setItem('susAdminAlwaysOpen', active ? '1' : '0');
 }
