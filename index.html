@@ -304,6 +304,32 @@ body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; heigh
 @keyframes chameleon-shift { 0% { background-color: #2b0018; } 25% { background-color: #020035; } 50% { background-color: #002d13; } 75% { background-color: #382400; } 100% { background-color: #2b0018; } }
 
 /* ============================================================
+   ACCORDION (Aufklapp-Sektionen Admin)
+   ============================================================ */
+.accordion-item { background:var(--card); border:1px solid var(--border); border-radius:16px; margin-bottom:10px; overflow:hidden; }
+.accordion-header { display:flex; justify-content:space-between; align-items:center; padding:14px 16px; cursor:pointer; user-select:none; gap:10px; }
+.accordion-header:active { background:var(--card2); }
+.accordion-title { font-size:0.88rem; font-weight:900; }
+.accordion-sub { font-size:0.65rem; color:var(--sub); font-weight:600; margin-top:2px; }
+.accordion-arrow { font-size:1.3rem; font-weight:900; color:var(--sub); transition:transform 0.25s; flex-shrink:0; }
+.accordion-item.open .accordion-arrow { transform:rotate(90deg); }
+.accordion-body { display:none; padding:0 16px 16px; border-top:1px solid var(--border); }
+.accordion-item.open .accordion-body { display:block; }
+.accordion-body .admin-input { margin-top:10px; }
+
+/* Toggle-Schalter */
+.admin-toggle-row { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 0; }
+.admin-toggle-info { flex:1; }
+.admin-toggle-label { font-size:0.85rem; font-weight:800; }
+.admin-toggle-sub { font-size:0.65rem; color:var(--sub); font-weight:600; margin-top:2px; }
+.toggle-switch { position:relative; display:inline-block; width:46px; height:26px; flex-shrink:0; }
+.toggle-switch input { opacity:0; width:0; height:0; }
+.toggle-slider { position:absolute; cursor:pointer; inset:0; background:rgba(120,120,120,0.25); border-radius:26px; transition:.25s; }
+.toggle-slider:before { content:""; position:absolute; height:20px; width:20px; left:3px; bottom:3px; background:white; border-radius:50%; transition:.25s; box-shadow:0 1px 4px rgba(0,0,0,0.3); }
+.toggle-switch input:checked + .toggle-slider { background:var(--accent); }
+.toggle-switch input:checked + .toggle-slider:before { transform:translateX(20px); }
+
+/* ============================================================
    ADMIN
    ============================================================ */
 .admin-section { margin:0 16px; background:rgba(239,68,68,0.04); border:1.5px solid rgba(239,68,68,0.2); border-radius:16px; padding:16px; margin-bottom:14px; }
@@ -693,59 +719,129 @@ body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; heigh
 <div class="overlay" id="admin-overlay">
     <div class="overlay-header">
         <button class="close-btn" onclick="closeOverlay('admin-overlay')">✕</button>
-        <div class="overlay-title">⚙️ Lehrer-Zentrale (Cloud-Sync)</div>
+        <div class="overlay-title">⚙️ Lehrer-Zentrale</div>
         <div style="width:30px;"></div>
     </div>
-    
-    <div style="padding:14px 0 80px;">
-        <div class="admin-section" style="background:rgba(16,185,129,0.05); border-color:rgba(16,185,129,0.25);">
-            <div class="admin-title" style="color:var(--success);">🔑 GitHub Authentifizierung</div>
-            <input type="password" class="admin-input" id="admin-token" placeholder="GitHub Personal Access Token (ghp_...)">
-            <button class="publish-btn" onclick="saveToken()" style="background:linear-gradient(135deg,#059669,#10b981); padding:10px; font-size:0.85rem; margin-bottom:6px;">Token lokal auf Gerät sichern</button>
-            <div id="token-status" style="font-size:0.72rem; font-weight:bold; text-align:center;"></div>
+
+    <div style="padding:14px 16px 80px;">
+
+        <!-- ADMIN OFFEN HALTEN -->
+        <div class="admin-toggle-row" style="margin-bottom:14px;">
+            <div class="admin-toggle-info">
+                <div class="admin-toggle-label">🔓 Lehrer-Zentrale offen halten</div>
+                <div class="admin-toggle-sub">App öffnet direkt hier – kein Passwort nötig</div>
+            </div>
+            <label class="toggle-switch">
+                <input type="checkbox" id="toggle-admin-open" onchange="setAdminAlwaysOpen(this.checked)">
+                <span class="toggle-slider"></span>
+            </label>
         </div>
 
-        <div class="admin-section">
-            <div class="admin-title">📢 Klassen-Bezeichnung & News</div>
-            <div style="font-size:0.75rem; color:var(--sub); margin-bottom:4px; font-weight:bold;">Klassenbezeichnung:</div>
-            <input type="text" class="admin-input" id="admin-class" placeholder="z.B. 8b">
-            <div style="font-size:0.75rem; color:var(--sub); margin-bottom:4px; font-weight:bold;">News-Text für Schüler (Hausaufgaben etc.):</div>
-            <textarea class="admin-textarea" id="admin-news" placeholder="Tipp: Schreibe Räume direkt hinter das Fach, z.B. Mathe R204"></textarea>
-        </div>
-
-        <!-- NEU: LEHRER-TERMINE -->
-        <div class="admin-section" style="background:rgba(245,158,11,0.04); border-color:rgba(245,158,11,0.25);">
-            <div class="admin-title" style="color:var(--warn);">📅 Lehrer-Termine (sichtbar für alle SuS)</div>
-            <div style="font-size:0.72rem; color:var(--sub); margin-bottom:10px;">Termine werden beim Cloud-Update für alle Schülerinnen und Schüler sichtbar.</div>
-            
-            <div class="admin-event-list" id="admin-event-list"></div>
-
-            <div style="display:flex; flex-direction:column; gap:8px; background:var(--card2); border-radius:12px; padding:12px;">
-                <input type="text" class="admin-input" id="admin-evt-title" placeholder="z.B. Klassenarbeit Mathe" style="margin-bottom:0;">
-                <input type="date" class="admin-input" id="admin-evt-date" style="margin-bottom:0;">
-                <select class="admin-input" id="admin-evt-type" style="margin-bottom:0;">
-                    <option value="lehrer">📣 Allgemeine Info</option>
-                    <option value="test">📝 Test / Klassenarbeit</option>
-                    <option value="abgabe">📎 Abgabe</option>
-                    <option value="sonstiges">⭐ Sonstiges</option>
-                </select>
-                <button class="publish-btn" onclick="addAdminEvent()" style="background:linear-gradient(135deg,#d97706,#f59e0b); padding:10px; font-size:0.85rem;">+ Termin hinzufügen</button>
+        <!-- ACCORDION: GITHUB -->
+        <div class="accordion-item" id="acc-github">
+            <div class="accordion-header" onclick="toggleAccordion('acc-github')">
+                <div>
+                    <div class="accordion-title" style="color:#10b981;">🔑 GitHub Authentifizierung</div>
+                    <div class="accordion-sub">Token verwalten</div>
+                </div>
+                <div class="accordion-arrow">›</div>
+            </div>
+            <div class="accordion-body">
+                <input type="password" class="admin-input" id="admin-token" placeholder="GitHub Personal Access Token (ghp_...)">
+                <button class="publish-btn" onclick="saveToken()" style="background:linear-gradient(135deg,#059669,#10b981); padding:10px; font-size:0.85rem; margin-bottom:6px;">Token lokal auf Gerät sichern</button>
+                <div id="token-status" style="font-size:0.72rem; font-weight:bold; text-align:center;"></div>
             </div>
         </div>
 
-        <div class="admin-section">
-            <div class="admin-title">📅 Stundenpläne anpassen</div>
-            <div class="week-tabs" style="padding:0 0 12px 0;">
-                <button class="week-tab" id="admin-tab-a" onclick="switchAdminWeek('A')" style="padding:8px; background:#2563eb; color:white;">Woche A bearbeiten</button>
-                <button class="week-tab" id="admin-tab-b" onclick="switchAdminWeek('B')" style="padding:8px; background:rgba(255,255,255,0.05); color:var(--sub);">Woche B bearbeiten</button>
+        <!-- ACCORDION: KLASSE & NEWS -->
+        <div class="accordion-item" id="acc-news">
+            <div class="accordion-header" onclick="toggleAccordion('acc-news')">
+                <div>
+                    <div class="accordion-title">📢 Klasse &amp; News</div>
+                    <div class="accordion-sub">Klassen-Bezeichnung und aktuelle Infos</div>
+                </div>
+                <div class="accordion-arrow">›</div>
             </div>
-            <div id="admin-plan-inputs"></div>
+            <div class="accordion-body">
+                <div style="font-size:0.75rem; color:var(--sub); margin-bottom:4px; font-weight:bold;">Klassenbezeichnung:</div>
+                <input type="text" class="admin-input" id="admin-class" placeholder="z.B. 8b">
+                <div style="font-size:0.75rem; color:var(--sub); margin-bottom:4px; font-weight:bold;">News-Text für Schüler:</div>
+                <textarea class="admin-textarea admin-input" id="admin-news" placeholder="z.B. Hausaufgaben, Hinweise..." style="min-height:80px;"></textarea>
+            </div>
         </div>
 
-        <div style="padding:0 16px;">
+        <!-- ACCORDION: KALENDER-EINSTELLUNGEN -->
+        <div class="accordion-item" id="acc-kalsettings">
+            <div class="accordion-header" onclick="toggleAccordion('acc-kalsettings')">
+                <div>
+                    <div class="accordion-title">🗓️ Kalender-Einstellungen</div>
+                    <div class="accordion-sub">Schulzeit-Sperre für SuS</div>
+                </div>
+                <div class="accordion-arrow">›</div>
+            </div>
+            <div class="accordion-body">
+                <div class="admin-toggle-row">
+                    <div class="admin-toggle-info">
+                        <div class="admin-toggle-label">⏰ Kalender während Schulzeit sperren</div>
+                        <div class="admin-toggle-sub">Mo–Fr 7:30–13:00 Uhr gesperrt + Countdown</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-kal-sperre" onchange="setKalenderSperre(this.checked)">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- ACCORDION: LEHRER-TERMINE -->
+        <div class="accordion-item" id="acc-termine">
+            <div class="accordion-header" onclick="toggleAccordion('acc-termine')">
+                <div>
+                    <div class="accordion-title" style="color:var(--warn);">📅 Lehrer-Termine</div>
+                    <div class="accordion-sub">Sichtbar für alle SuS nach Update</div>
+                </div>
+                <div class="accordion-arrow">›</div>
+            </div>
+            <div class="accordion-body">
+                <div class="admin-event-list" id="admin-event-list"></div>
+                <div style="display:flex; flex-direction:column; gap:8px; background:var(--card2); border-radius:12px; padding:12px;">
+                    <input type="text" class="admin-input" id="admin-evt-title" placeholder="z.B. Klassenarbeit Mathe" style="margin-bottom:0;">
+                    <input type="date" class="admin-input" id="admin-evt-date" style="margin-bottom:0;">
+                    <select class="admin-input" id="admin-evt-type" style="margin-bottom:0;">
+                        <option value="lehrer">📣 Allgemeine Info</option>
+                        <option value="test">📝 Test / Klassenarbeit</option>
+                        <option value="abgabe">📎 Abgabe</option>
+                        <option value="sonstiges">⭐ Sonstiges</option>
+                    </select>
+                    <button class="publish-btn" onclick="addAdminEvent()" style="background:linear-gradient(135deg,#d97706,#f59e0b); padding:10px; font-size:0.85rem;">+ Termin hinzufügen</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ACCORDION: STUNDENPLÄNE -->
+        <div class="accordion-item" id="acc-plan">
+            <div class="accordion-header" onclick="toggleAccordion('acc-plan')">
+                <div>
+                    <div class="accordion-title">📋 Stundenpläne</div>
+                    <div class="accordion-sub">Woche A und Woche B bearbeiten</div>
+                </div>
+                <div class="accordion-arrow">›</div>
+            </div>
+            <div class="accordion-body">
+                <div class="week-tabs" style="padding:0 0 12px 0;">
+                    <button class="week-tab" id="admin-tab-a" onclick="switchAdminWeek('A')" style="padding:8px; background:#2563eb; color:white;">Woche A</button>
+                    <button class="week-tab" id="admin-tab-b" onclick="switchAdminWeek('B')" style="padding:8px; background:rgba(255,255,255,0.05); color:var(--sub);">Woche B</button>
+                </div>
+                <div id="admin-plan-inputs"></div>
+            </div>
+        </div>
+
+        <!-- CLOUD UPDATE -->
+        <div style="margin-top:6px;">
             <button class="publish-btn" id="publish-btn" onclick="publishApp()">🚀 CLOUD-LIVE-UPDATE SENDEN</button>
             <div id="publish-status" style="text-align:center; margin-top:10px; font-size:0.85rem; font-weight:bold;"></div>
         </div>
+
     </div>
 </div>
 
@@ -886,105 +982,26 @@ body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; heigh
 
 <script>
 var APP_DATA = {
-    "className": "7c",
-    "news": "Hallo an alle 👍",
-    "newsTime": "Aktualisiert: 06.06., 14:47",
-    "newsUpdatedAt": "2026-06-06T12:47:25.965Z",
-    "currentWeek": "A",
-    "events": [],
-    "wocheA": {
-        "Mo": [
-            "Mathe R204",
-            "",
-            "Englisch R201",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Di": [
-            "Sport Halle",
-            "",
-            "Biologie R115",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Mi": [
-            "Deutsch R110",
-            "",
-            "Kunst R301",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Do": [
-            "Geographie R210",
-            "",
-            "Deutsch R110",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Fr": [
-            "Englisch R201",
-            "",
-            "Physik R101",
-            "",
-            "",
-            "",
-            ""
-        ]
+    className: "8b",
+    news: "Willkommen bei SchulHub Pro! Tipp: Gib Fächer im Admin-Bereich mit Raum ein (z.B. Mathe R204), damit es perfekt auf den Kacheln getrennt wird.",
+    newsTime: "Aktualisiert: Heute",
+    newsUpdatedAt: "",
+    kalenderSperrAktiv: true,
+    currentWeek: "A",
+    events: [],
+    wocheA: {
+        Mo: ["Mathe R204","Deutsch R110","Englisch R201","Physik R101","","",""],
+        Di: ["Sport Halle","Mathe R204","Biologie R115","Geschichte R202","","",""],
+        Mi: ["Deutsch R110","Englisch R201","Kunst R301","","","",""],
+        Do: ["Geographie R210","Mathe R204","Deutsch R110","","","",""],
+        Fr: ["Englisch R201","Biologie R115","Physik R101","","","",""]
     },
-    "wocheB": {
-        "Mo": [
-            "Deutsch R110",
-            "",
-            "Physik R101",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Di": [
-            "Biologie R115",
-            "",
-            "Geschichte R202",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Mi": [
-            "Kunst R301",
-            "",
-            "Musik R305",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Do": [
-            "Mathe R204",
-            "",
-            "Sport Halle",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "Fr": [
-            "Physik R101",
-            "",
-            "Geschichte R202",
-            "",
-            "",
-            "",
-            ""
-        ]
+    wocheB: {
+        Mo: ["Deutsch R110","Mathe R204","Physik R101","Englisch R201","","",""],
+        Di: ["Biologie R115","Sport Halle","Geschichte R202","Mathe R204","","",""],
+        Mi: ["Kunst R301","Deutsch R110","Musik R305","","","",""],
+        Do: ["Mathe R204","Geographie R210","Sport Halle","","","",""],
+        Fr: ["Physik R101","Englisch R201","Geschichte R202","","","",""]
     }
 };
 
@@ -1220,9 +1237,11 @@ function deleteLocalEvent(id) {
    KALENDER SPERRE: Mo-Fr 7:30 - 13:00 Uhr
    ============================================================ */
 function isKalenderLocked() {
+    // Wenn Sperre vom Lehrer deaktiviert: immer frei
+    if (!APP_DATA.kalenderSperrAktiv) return false;
     var now = new Date();
-    var day = now.getDay(); // 0=So, 1=Mo, ..., 6=Sa
-    if (day === 0 || day === 6) return false; // Wochenende: immer frei
+    var day = now.getDay();
+    if (day === 0 || day === 6) return false; // Wochenende immer frei
     var mins = now.getHours() * 60 + now.getMinutes();
     return mins >= 7*60+30 && mins < 13*60;
 }
@@ -1726,6 +1745,7 @@ window.addEventListener('DOMContentLoaded', function() {
     renderAdminEventList();
     updateTileAlerts();
     updateKalenderLockState();
+    checkAdminAlwaysOpen();
     if (ghToken) {
         document.getElementById('admin-token').value = ghToken;
         document.getElementById('token-status').innerText = '🔒 Token geladen';
@@ -2153,7 +2173,39 @@ function loadAdminFields() {
     document.getElementById('admin-news').value = APP_DATA.news || '';
     fillAdminPlan('a', APP_DATA.wocheA); fillAdminPlan('b', APP_DATA.wocheB); switchAdminWeek(currentAdminWeek);
     renderAdminEventList();
+    // Schalter-Zustände setzen
+    document.getElementById('toggle-kal-sperre').checked = APP_DATA.kalenderSperrAktiv !== false;
+    document.getElementById('toggle-admin-open').checked = localStorage.getItem('susAdminAlwaysOpen') === '1';
 }
+/* ---- Accordion ---- */
+function toggleAccordion(id) {
+    var item = document.getElementById(id);
+    var isOpen = item.classList.contains('open');
+    // Alle schließen
+    document.querySelectorAll('.accordion-item').forEach(function(el) { el.classList.remove('open'); });
+    // Dieses öffnen wenn es vorher zu war
+    if (!isOpen) item.classList.add('open');
+}
+
+/* ---- Kalender-Sperre Schalter ---- */
+function setKalenderSperre(active) {
+    APP_DATA.kalenderSperrAktiv = active;
+    updateKalenderLockState();
+    applyKalenderLockOverlay();
+}
+
+/* ---- Admin offen halten ---- */
+function setAdminAlwaysOpen(active) {
+    localStorage.setItem('susAdminAlwaysOpen', active ? '1' : '0');
+}
+
+function checkAdminAlwaysOpen() {
+    if (localStorage.getItem('susAdminAlwaysOpen') === '1') {
+        openOverlay('admin-overlay');
+        loadAdminFields();
+    }
+}
+
 function fillAdminPlan(week, planData) {
     DAYS_KEYS.forEach(function(d) {
         BLOCKS.forEach(function(b, bi) {
@@ -2203,6 +2255,7 @@ async function publishApp() {
     APP_DATA.news = document.getElementById('admin-news').value.trim();
     APP_DATA.newsTime = 'Aktualisiert: ' + new Date().toLocaleDateString('de-DE', {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'});
     APP_DATA.newsUpdatedAt = new Date().toISOString();
+    APP_DATA.kalenderSperrAktiv = document.getElementById('toggle-kal-sperre').checked;
     APP_DATA.currentWeek = activeWeek; APP_DATA.wocheA = readAdminPlan('a'); APP_DATA.wocheB = readAdminPlan('b');
     // events sind bereits in APP_DATA gepflegt
     var btn = document.getElementById('publish-btn'), status = document.getElementById('publish-status');
