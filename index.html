@@ -118,6 +118,26 @@ body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; heigh
 @keyframes tt-scroll { from { transform:translateX(0); } to { transform:translateX(-50%); } }
 @media (prefers-reduced-motion: reduce) { .tt-track { animation:none !important; white-space:normal; } .tt-run + .tt-run { display:none; } .tt-run { white-space:normal; flex-wrap:wrap; } }
 .light-mode-active .termin-ticker:not(.tt-empty) { background:#1e293b; }
+.vt-cell .flip-front { outline:2px dashed #06b6d4; outline-offset:-3px; }
+.vt-badge { font-size:0.48rem; font-weight:900; letter-spacing:0.5px; background:#06b6d4; color:#fff; border-radius:6px; padding:1px 4px; margin-bottom:2px; }
+.rocket-fly { position:fixed; z-index:900; width:48px; height:48px; pointer-events:none; animation:rocket-launch 1.5s cubic-bezier(.45,.05,.55,.95) forwards; }
+.rocket-body { display:block; font-size:44px; line-height:48px; transform:rotate(-45deg); filter:drop-shadow(0 4px 10px rgba(249,115,22,0.6)); }
+@keyframes rocket-launch {
+    0%   { transform:translate(0,0) scale(0.8); }
+    15%  { transform:translate(-4px,6px) scale(1); }
+    25%  { transform:translate(4px,-10px) scale(1.05); }
+    100% { transform:translate(35vw,-110vh) scale(1.4); }
+}
+.rocket-puff { position:fixed; z-index:899; pointer-events:none; font-size:22px; animation:rocket-puff .9s ease-out forwards; }
+@keyframes rocket-puff { from { opacity:0.9; transform:scale(0.6); } to { opacity:0; transform:translateY(24px) scale(1.6); } }
+.update-toast { position:fixed; left:50%; top:18px; transform:translateX(-50%); z-index:950; background:linear-gradient(135deg,#059669,#10b981); color:#fff; font-weight:900; font-size:0.9rem; padding:12px 18px; border-radius:16px; box-shadow:0 8px 24px rgba(16,185,129,0.4); animation:toast-in .35s ease-out; transition:opacity .5s, transform .5s; max-width:92vw; text-align:center; }
+.update-toast.hide { opacity:0; transform:translate(-50%,-20px); }
+@keyframes toast-in { from { opacity:0; transform:translate(-50%,-20px); } to { opacity:1; transform:translate(-50%,0); } }
+#saison-layer { position:fixed; inset:0; pointer-events:none; z-index:150; overflow:hidden; }
+.saison-p { position:absolute; top:-40px; line-height:1; will-change:transform; animation-name:saison-fall, saison-sway; animation-timing-function:linear, ease-in-out; animation-iteration-count:1, infinite; animation-direction:normal, alternate; }
+.saison-snow { color:#fff; text-shadow:0 0 4px rgba(148,163,184,0.9); }
+@keyframes saison-fall { from { transform:translateY(0) rotate(0deg); } to { transform:translateY(calc(100vh + 60px)) rotate(var(--rot)); } }
+@keyframes saison-sway { from { margin-left:calc(var(--sway) * -0.5); } to { margin-left:calc(var(--sway) * 0.5); } }
 .kal-lock-list { width:100%; max-width:320px; margin-top:10px; text-align:left; }
 .kal-lock-list-title { font-size:0.72rem; font-weight:900; color:var(--sub); text-transform:uppercase; letter-spacing:1px; margin:6px 0; text-align:center; }
 .kal-lock-item { background:var(--card2); border-radius:10px; padding:8px 10px; margin-bottom:6px; font-size:0.85rem; }
@@ -560,6 +580,7 @@ body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; heigh
     <button onclick="closePwModal()" style="width:100%;margin-top:8px;background:none;border:none;color:var(--sub);cursor:pointer;padding:8px;font-family:inherit;font-size:0.8rem;">Abbrechen</button>
 </div>
 
+<div id="saison-layer" aria-hidden="true"></div>
 <div class="app" id="main-app">
     <div class="top-bar">
         <div class="top-left">
@@ -840,6 +861,45 @@ body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; heigh
                         <span class="toggle-slider"></span>
                     </label>
                 </div>
+                <div class="admin-toggle-row">
+                    <div class="admin-toggle-info">
+                        <div class="admin-toggle-label">🍂 Jahreszeiten-Effekt</div>
+                        <div class="admin-toggle-sub">Dezent rieselnde Blätter, Schneeflocken oder Blüten auf dem Dashboard</div>
+                    </div>
+                </div>
+                <select id="toggle-saison" class="admin-input" onchange="APP_DATA.saisonEffekt=this.value; startSaisonEffekt();">
+                    <option value="aus">Aus</option>
+                    <option value="auto">Automatisch nach Jahreszeit</option>
+                    <option value="herbst">🍂 Herbst – Blätter</option>
+                    <option value="winter">❄️ Winter – Schneeflocken</option>
+                    <option value="fruehling">🌸 Frühling – Blüten</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- ACCORDION: VERTRETUNG -->
+        <div class="accordion-item" id="acc-vertretung">
+            <div class="accordion-header" onclick="toggleAccordion('acc-vertretung'); vtAdminHint();">
+                <div>
+                    <div class="accordion-title">🔁 Vertretung / Ausfall</div>
+                    <div class="accordion-sub">Ersetzt einzelne Blöcke in der Live-Anzeige</div>
+                </div>
+                <div class="accordion-arrow">›</div>
+            </div>
+            <div class="accordion-body">
+                <div style="display:flex; gap:8px;">
+                    <input type="date" class="admin-input" id="vt-date" onchange="vtAdminHint()" style="flex:1.3;">
+                    <select class="admin-input" id="vt-block" onchange="vtAdminHint()" style="flex:1;">
+                        <option value="0">1. Block</option><option value="2">2. Block</option><option value="4">3. Block</option><option value="6">4. Block</option>
+                    </select>
+                </div>
+                <div id="vt-plan-hint" style="font-size:0.78rem; color:var(--sub); font-weight:700; margin:-4px 0 10px;"></div>
+                <input type="text" class="admin-input" id="vt-fach" placeholder="Stattdessen: Fach + Raum, z.B. Mathe 224">
+                <input type="text" class="admin-input" id="vt-info" placeholder="Hinweis (optional), z.B. bei Frau Koch">
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.85rem; font-weight:700; margin-bottom:10px; cursor:pointer;"><input type="checkbox" id="vt-entfall"> Stunde fällt aus</label>
+                <button class="publish-btn" onclick="addVertretung()" style="background:linear-gradient(135deg,#0891b2,#06b6d4); padding:10px; font-size:0.85rem;">+ Vertretung eintragen</button>
+                <div id="vt-admin-list" style="margin-top:10px;"></div>
+                <div style="font-size:0.7rem; color:var(--sub); margin-top:6px; line-height:1.5;">Sichtbar erst nach dem 🚀 Cloud-Update. Vergangene Einträge werden beim Update automatisch entfernt. Die News-Box bleibt davon unberührt – deinen Hinweis schreibst du wie gewohnt dort.</div>
             </div>
         </div>
 
@@ -880,11 +940,22 @@ body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; heigh
             <div class="accordion-body">
                 <!-- Aktive Woche einstellen -->
                 <div style="margin-bottom:14px; background:var(--card2); border-radius:12px; padding:12px;">
-                    <div style="font-size:0.75rem; font-weight:800; color:var(--sub); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.5px;">Aktuell laufende Woche (für SuS sichtbar):</div>
+                    <div style="font-size:0.75rem; font-weight:800; color:var(--sub); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.5px;">Diese Woche ist (für SuS sichtbar):</div>
                     <div style="display:flex; gap:8px;">
                         <button id="admin-active-week-a" onclick="setActiveWeekAdmin('A')" style="flex:1; padding:10px; border-radius:10px; border:none; font-weight:900; font-family:inherit; font-size:0.9rem; cursor:pointer; background:#2563eb; color:white;">Woche A</button>
                         <button id="admin-active-week-b" onclick="setActiveWeekAdmin('B')" style="flex:1; padding:10px; border-radius:10px; border:none; font-weight:900; font-family:inherit; font-size:0.9rem; cursor:pointer; background:rgba(255,255,255,0.05); color:var(--sub);">Woche B</button>
                     </div>
+                    <div class="admin-toggle-row" style="margin-top:8px;">
+                        <div class="admin-toggle-info">
+                            <div class="admin-toggle-label">🔁 Jeden Sonntag automatisch wechseln</div>
+                            <div class="admin-toggle-sub" id="week-auto-info">–</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="toggle-week-auto" onchange="APP_DATA.weekAuto=this.checked; setActiveWeekAdmin(activeWeek, true);">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div style="font-size:0.7rem; color:var(--sub); line-height:1.5;">Ändert die Schulleitung den Rhythmus (z.B. nach den Ferien), einfach oben die richtige Woche antippen und das Cloud-Update senden – ab dann zählt die Automatik von dort weiter.</div>
                 </div>
                 <div class="week-tabs" style="padding:0 0 12px 0;">
                     <button class="week-tab" id="admin-tab-a" onclick="switchAdminWeek('A')" style="padding:8px; background:#2563eb; color:white;">Woche A bearbeiten</button>
@@ -939,7 +1010,7 @@ body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; heigh
 
         <div style="background:var(--card); border-radius:16px; padding:16px; margin-bottom:12px; border:1px solid var(--border);">
             <div style="font-size:1rem; font-weight:900; margin-bottom:6px;">📋 Stundenpläne</div>
-            <div style="font-size:0.85rem; color:var(--sub); line-height:1.6;">Bearbeite hier die <strong style="color:var(--text);">Stundenpläne für Woche A und Woche B</strong>. Gib Fächer immer mit Raum ein, z.B. <strong style="color:var(--text);">Mathe R204</strong> – dann wird Fach und Raum auf den Kacheln sauber getrennt angezeigt. Den <strong style="color:var(--text);">4. Block</strong> nur an Tagen eintragen, an denen er stattfindet – leere Tage werden ausgeblendet.<br><br>Nach einem Update <strong style="color:var(--text);">vibriert und leuchtet</strong> die Stundenplan-Kachel bei den SuS und zeigt ein „NEU"-Badge – bis sie den Plan einmal geöffnet haben.</div>
+            <div style="font-size:0.85rem; color:var(--sub); line-height:1.6;">Bearbeite hier die <strong style="color:var(--text);">Stundenpläne für Woche A und Woche B</strong>. Gib Fächer immer mit Raum ein, z.B. <strong style="color:var(--text);">Mathe R204</strong> – dann wird Fach und Raum auf den Kacheln sauber getrennt angezeigt. Den <strong style="color:var(--text);">4. Block</strong> nur an Tagen eintragen, an denen er stattfindet – leere Tage werden ausgeblendet. <br><br><strong style="color:var(--text);">A/B-Woche:</strong> Wechselt automatisch jeden Sonntag. Stimmt sie mal nicht (z.B. nach den Ferien), unter „Diese Woche ist“ die richtige Woche antippen und das Cloud-Update senden – ab dann zählt die App von dort weiter. Mit dem Schalter lässt sich die Automatik auch ganz ausschalten.<br><br>Nach einem Update <strong style="color:var(--text);">vibriert und leuchtet</strong> die Stundenplan-Kachel bei den SuS und zeigt ein „NEU"-Badge – bis sie den Plan einmal geöffnet haben.</div>
         </div>
 
         <div style="background:var(--card); border-radius:16px; padding:16px; margin-bottom:12px; border:1px solid var(--border);">
@@ -1008,14 +1079,14 @@ body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; heigh
         <div style="background:var(--card); border-radius:16px; padding:16px; margin-bottom:12px; border:1px solid var(--border);">
             <div style="font-size:1rem; font-weight:900; margin-bottom:6px;">✨ Was ist SchulHub?</div>
             <div style="font-size:0.85rem; color:var(--sub); line-height:1.6;">SchulHub ist eine digitale Schul-Zentrale für den Browser auf dem Handy. Die App zeigt in Echtzeit welches Fach gerade läuft, wie lange der Block noch geht, und was der Lehrer als aktuelle Information hinterlegt hat.<br><br>
-            Um neue Informationen vom Lehrer zu erhalten, muss der <strong style="color:var(--text);">🔄 Aktualisieren-Button</strong> am unteren Ende des Dashboards gedrückt werden. Die App lädt sich dann neu. <strong style="color:var(--text);">Ohne diesen Klick erscheinen keine neuen Infos</strong> – das ist bewusst so, damit die SuS die App aktiv öffnen müssen.</div>
+            Um neue Informationen vom Lehrer zu erhalten, muss der <strong style="color:var(--text);">🔄 Aktualisieren-Button</strong> am unteren Ende des Dashboards gedrückt werden. Die App lädt sich dann neu. <strong style="color:var(--text);">Ohne diesen Klick erscheinen keine neuen Infos</strong> – das ist bewusst so, damit die SuS die App aktiv öffnen müssen. Beim Drücken startet eine 🚀 Rakete, danach bestätigt ein grüner Hinweis: „Aktualisiert!“.</div>
         </div>
 
         <!-- AKTUELLE INFOS / NEWS -->
         <div style="background:var(--card); border-radius:16px; padding:16px; margin-bottom:12px; border:1px solid var(--border);">
             <div style="font-size:1rem; font-weight:900; margin-bottom:6px;">📢 Aktuelle Infos &amp; News</div>
             <div style="font-size:0.85rem; color:var(--sub); line-height:1.6;">Hier steht immer, was der Klassenlehrer euch gerade mitteilen möchte – z.B. Vertretung, Raumwechsel, wichtige Ergänzungen oder Änderungen zum Unterricht. Ist die Info jünger als 24 Stunden, blinkt daneben ein rotes <strong style="color:var(--text);">NEU</strong>.<br><br>
-            <strong style="color:var(--text);">📅 Laufschrift „Termine“:</strong> Unter der Info laufen deine nächsten Termine (14 Tage) durch – eigene Einträge, Lehrer-Termine und die nächsten Ferien/Feiertage. So siehst du sie auch, wenn der Kalender in der Schulzeit gesperrt ist. Hausaufgaben und Termine gehören trotzdem ins <strong style="color:var(--text);">Hausaufgabenheft</strong>!<br><br>
+            <strong style="color:var(--text);">🔁 Vertretung:</strong> Hat der Klassenlehrer eine Vertretung oder einen Ausfall eingetragen, zeigen die Kacheln „Aktuell“ und „Nächstes“ das direkt an (mit „statt …“). Im Stundenplan ist der Block markiert, und in der Laufschrift steht es auch.<br><br><strong style="color:var(--text);">📅 Laufschrift „Termine“:</strong> Unter der Info laufen deine nächsten Termine (14 Tage) durch – eigene Einträge, Lehrer-Termine und die nächsten Ferien/Feiertage. So siehst du sie auch, wenn der Kalender in der Schulzeit gesperrt ist. Hausaufgaben und Termine gehören trotzdem ins <strong style="color:var(--text);">Hausaufgabenheft</strong>!<br><br>
             Wenn eine <strong style="color:var(--text);">neue Info veröffentlicht</strong> wird, erscheint automatisch ein <strong style="color:orange;">oranger blinkender Rahmen</strong> um die News-Box. So ist auf einen Blick erkennbar: hier gibt es etwas Neues!<br><br>
             Der Rahmen verschwindet nach <strong style="color:var(--text);">60 Minuten</strong> automatisch. Wenn danach eine weitere neue Info kommt, erscheint er erneut.</div>
         </div>
@@ -1098,106 +1169,107 @@ body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; heigh
 <script>
 var APP_DATA = {
     "className": "7c",
-    "news": "Hallo an alle 🙋‍♂️",
-    "newsTime": "Aktualisiert: 07.06., 12:33",
-    "newsUpdatedAt": "2026-06-07T10:33:26.799Z",
+    "news": "Willkommen bei SchulHub, liebe 7c! 🎉 Hier stehen ab jetzt meine wichtigsten Infos für euch.",
+    "newsTime": "Aktualisiert: 06.10., 15:30",
+    "newsUpdatedAt": "2026-10-06T13:30:00.000Z",
     "kalenderSperrAktiv": true,
     "currentWeek": "A",
     "events": [],
     "wocheA": {
         "Mo": [
-            "Mathe R204",
+            "Mathe 224",
             "",
-            "Englisch R201",
+            "Erdkunde 401",
             "",
-            "",
+            "Deutsch 401",
             "",
             ""
         ],
         "Di": [
-            "Sport Halle",
+            "Kunst 308",
             "",
-            "Biologie R115",
+            "Englisch 329",
             "",
+            "Mathe 224",
             "",
-            "",
-            ""
+            "LER 404"
         ],
         "Mi": [
-            "Deutsch R110",
+            "Sport Turnhalle 1",
             "",
-            "Kunst R301",
+            "Deutsch 401",
             "",
-            "",
+            "Mathe 224",
             "",
             ""
         ],
         "Do": [
-            "Geographie R210",
+            "Sport Turnhalle 1",
             "",
-            "Deutsch R110",
+            "Englisch 329",
             "",
-            "",
+            "Klassenleiter 329",
             "",
             ""
         ],
         "Fr": [
-            "Englisch R201",
+            "Biologie 304",
             "",
-            "Physik R101",
+            "Physik 221",
             "",
-            "",
+            "WP",
             "",
             ""
         ]
     },
     "wocheB": {
         "Mo": [
-            "Deutsch R110",
+            "Mathe 224",
             "",
-            "Physik R101",
+            "Erdkunde 401",
             "",
-            "",
+            "Deutsch 401",
             "",
             ""
         ],
         "Di": [
-            "Biologie R115",
+            "WP",
             "",
-            "Geschichte R202",
+            "Englisch 329",
             "",
+            "Physik 204",
             "",
-            "",
-            ""
+            "Religion 133"
         ],
         "Mi": [
-            "Kunst R301",
+            "Sport Turnhalle 1",
             "",
-            "Musik R305",
+            "Deutsch 401",
             "",
-            "",
+            "Mathe 224",
             "",
             ""
         ],
         "Do": [
-            "Mathe R204",
+            "Musik 408",
             "",
-            "Sport Halle",
+            "Englisch 329",
             "",
-            "",
+            "Geschichte 224",
             "",
             ""
         ],
         "Fr": [
-            "Physik R101",
+            "Biologie 301",
             "",
-            "Geschichte R202",
+            "Deutsch 401",
             "",
-            "",
+            "WP",
             "",
             ""
         ]
-    }
+    },
+    "vertretungen": []
 }; /*APP_DATA_END*/
 
 var ADMIN_PW_HASH = "ed16f1a0567fcd73254c37e4759caa0544aa8a3b6eb0526504c9bcf158135c4d";
@@ -1220,7 +1292,34 @@ var DAYS_SHORT = ["So","Mo","Di","Mi","Do","Fr","Sa"];
 var DAYS_KEYS = ["Mo","Di","Mi","Do","Fr"];
 
 var clockStyle = localStorage.getItem('susClockStyle') || 'digital';
-var activeWeek = APP_DATA.currentWeek || 'A';
+// A/B-Woche: wechselt automatisch jeden Sonntag (Bezug: weekRef). Lehrer kann jederzeit umstellen.
+var DEFAULT_WEEK_REF = { monday: '2026-10-05', week: 'A' }; // Startwert: Woche ab 05.10.2026 = A-Woche
+function mondayOf(d) { var x = new Date(d); x.setHours(12,0,0,0); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return x; }
+function getWeekFor(date) {
+    if (APP_DATA.weekAuto === false) return APP_DATA.currentWeek || 'A';
+    var ref = APP_DATA.weekRef || DEFAULT_WEEK_REF;
+    var d = new Date(date); d.setHours(12,0,0,0);
+    if (d.getDay() === 0) d.setDate(d.getDate() + 1); // Sonntag zaehlt schon zur neuen Woche
+    var diff = Math.round((mondayOf(d) - mondayOf(new Date(ref.monday + 'T12:00:00'))) / (7 * 86400000));
+    var other = ref.week === 'A' ? 'B' : 'A';
+    return (Math.abs(diff) % 2 === 0) ? ref.week : other;
+}
+var activeWeek = getWeekFor(new Date());
+
+// Vertretung/Ausfall fuer ein Datum + Block (Block-Index wie BLOCKS: 0,2,4,6)
+function vtListFor(dateStr) { return (APP_DATA.vertretungen || []).filter(function(v){ return v.date === dateStr; }); }
+function effDayPlan(date) {
+    var key = DAYS_SHORT[date.getDay()];
+    var base = ((APP_DATA['woche' + getWeekFor(date)] || {})[key] || []).slice();
+    while (base.length < 7) base.push('');
+    var map = {};
+    vtListFor(fmt(date)).forEach(function(v) {
+        map[v.block] = { orig: base[v.block] || '', fach: v.fach || '', entfall: !!v.entfall, info: v.info || '' };
+        base[v.block] = v.entfall ? '' : (v.fach || '');
+    });
+    return { plan: base, vt: map };
+}
+function vtOrigName(v) { return v && v.orig ? splitSubjectAndRoom(v.orig).name : 'Freistunde'; }
 var userAccent = localStorage.getItem('susAccent') || '#6366f1';
 var userBgTheme = localStorage.getItem('susBgTheme') || 'default';
 var userAvatar = localStorage.getItem('susAvatar') || '👨‍🚀';
@@ -1886,6 +1985,9 @@ function deleteAdminEvent(idx) {
    ============================================================ */
 function splitSubjectAndRoom(rawSubject) {
     if (!rawSubject) return { name: '', room: '' };
+    // z.B. "Mathe 224" -> R224, "Sport Turnhalle 1" -> Turnhalle 1, "Mathe R204" -> R204
+    var mm = String(rawSubject).trim().match(/^(.*?)\s+((?:Turnhalle|Sporthalle|Halle|Raum|R)\s*\d+[a-z]?|\d{2,4}[a-z]?)$/i);
+    if (mm && mm[1]) { var rm = mm[2].trim(); if (/^\d/.test(rm)) rm = 'R' + rm; if (/^raum\s*/i.test(rm)) rm = 'R' + rm.replace(/^raum\s*/i,''); return { name: mm[1].trim(), room: rm }; }
     var parts = rawSubject.split(/\s+( Raum | R | raum | r )/i);
     if (parts.length >= 3) return { name: parts[0].trim(), room: parts[1].trim() + " " + parts.slice(2).join('').trim() };
     var words = rawSubject.split(' ');
@@ -1899,6 +2001,10 @@ function splitSubjectAndRoom(rawSubject) {
 function getSubjectReminder(subject) {
     if (!subject) return '';
     var data = splitSubjectAndRoom(subject); var s = data.name.toLowerCase();
+    if (s.includes('klassenl')) return "📒 Hausaufgabenheft\nInfo-Zettel\nUnterschriften";
+    if (s === 'wp' || s.startsWith('wp ')) return "🧩 Material für dein WP-Fach";
+    if (s.includes('ler') || s.includes('reli')) return "🕊️ Hefter\nFedertasche";
+
     if (s.includes('math')) return "📐 Taschenrechner\nGeodreieck\nFormelsammlung";
     if (s.includes('deut')) return "📚 Arbeitsheft\nTextbuch\naktuelle Lektüre";
     if (s.includes('eng')) return "🇬🇧 Workbook\nVokabelheft\nLesebuch";
@@ -1922,6 +2028,9 @@ function getSubjectClass(subject) {
 }
 function getSubjectEmoji(subject) {
     if (!subject) return ''; var data = splitSubjectAndRoom(subject); var s = data.name.toLowerCase();
+    if (s.includes('klassenl')) return '👥'; if (s === 'wp' || s.startsWith('wp ')) return '🧩';
+    if (s === 'ler' || s.includes('reli')) return '🕊️';
+
     if (s.includes('math')) return '📐'; if (s.includes('deut')) return '📚'; if (s.includes('eng')) return '🇬🇧';
     if (s.includes('phys')) return '🧪'; if (s.includes('spor')) return '🏃'; if (s.includes('bio')) return '🌱';
     if (s.includes('geo') || s.includes('erd')) return '🌍'; if (s.includes('gesch')) return '⏳';
@@ -1957,6 +2066,8 @@ function renderLevelBar() {
 window.addEventListener('DOMContentLoaded', function() {
     checkGamificationXP(false);
     initApp();
+    startSaisonEffekt();
+    showUpdateToast();
     setInterval(updateClock, 1000);
     updateClock();
     buildAdminStructure();
@@ -2060,7 +2171,12 @@ function updateClock() {
     updateKalenderLockState();
     var kalOv = document.getElementById('kalender-overlay');
     if (kalOv && kalOv.style.display === 'block') applyKalenderLockOverlay();
-    if (now.getSeconds() === 0) renderTermineTicker();
+    if (now.getSeconds() === 0) {
+        renderTermineTicker();
+        var adminOpen = document.getElementById('admin-overlay') && document.getElementById('admin-overlay').style.display === 'block';
+        var w = getWeekFor(now);
+        if (!adminOpen && w !== activeWeek) { activeWeek = w; renderMatrixWeek(w); }
+    }
     // Admin-Uhr aktualisieren
     var adminTime = document.getElementById('admin-clock-time');
     var adminDate = document.getElementById('admin-clock-date');
@@ -2092,13 +2208,12 @@ function checkNewsAlert() {
 
 function updateStatus(now) {
     var dayKey = DAYS_SHORT[now.getDay()];
-    var plan = APP_DATA['woche'+activeWeek] || {};
-    var dayPlan = plan[dayKey] || [];
+    var _eff = effDayPlan(now), dayPlan = _eff.plan, vtMap = _eff.vt;
     var nowMin = now.getHours()*60 + now.getMinutes(), nowSec = now.getSeconds();
     var maxBlocksForToday = dayPlan[6] ? 7 : 5; // 4. Block nur, wenn er an diesem Tag eingetragen ist
     if (nowMin >= 16*60 || nowMin < 6*60) {
         var tomorrow = new Date(now); tomorrow.setDate(tomorrow.getDate()+1);
-        var tKey = DAYS_SHORT[tomorrow.getDay()], tPlan = (APP_DATA['woche'+activeWeek] || {})[tKey] || [];
+        var tKey = DAYS_SHORT[tomorrow.getDay()], tPlan = effDayPlan(tomorrow).plan;
         var firstSubj = '', firstIdx = -1;
         var tFree = getFreeDayInfo(fmt(tomorrow));
         if (!tFree) { for (var i=0; i<BLOCKS.length; i++) { if (!BLOCKS[i].pause && tPlan[i]) { firstSubj = tPlan[i]; firstIdx = i; break; } } }
@@ -2160,7 +2275,7 @@ function updateStatus(now) {
             document.getElementById('next-time').innerText = '✌️ Freier Tag!';
         } else {
             // Normaler Montag — erste Stunde anzeigen
-            var monPlan = (APP_DATA['woche' + activeWeek] || {})['Mo'] || [];
+            var monPlan = effDayPlan(nextMon).plan;
             var firstMonSubj = '';
             var firstMonBlockIdx = -1;
             for (var i = 0; i < BLOCKS.length; i++) {
@@ -2205,6 +2320,12 @@ function updateStatus(now) {
         document.getElementById('current-subject').innerText = '🎉 Schulschluss!'; document.getElementById('current-info').innerText = 'Schönen Feierabend!';
         document.getElementById('current-countdown').innerText = ''; document.getElementById('current-time').innerText = ''; document.getElementById('current-prog').style.width = '0%';
     }
+    if (current && !current.b.pause && vtMap[current.i]) {
+        var cv = vtMap[current.i];
+        document.getElementById('tile-current-label').innerText = cv.entfall ? '❌ Fällt aus' : '🔁 Vertretung';
+        if (cv.entfall) document.getElementById('current-subject').innerText = '❌ Entfällt';
+        document.getElementById('current-info').innerText = current.b.label + (cv.entfall ? '' : (splitSubjectAndRoom(cv.fach).room ? ' · ' + splitSubjectAndRoom(cv.fach).room : '')) + ' · statt ' + vtOrigName(cv) + (cv.info ? ' · ' + cv.info : '');
+    }
     if (current && next) {
         var nraw = dayPlan[next.i], cleanN = splitSubjectAndRoom(nraw);
         document.getElementById('next-subject').innerText = nraw ? getSubjectEmoji(nraw) + ' ' + cleanN.name : (next.b.pause ? '☕ ' + next.b.label : '–');
@@ -2217,6 +2338,12 @@ function updateStatus(now) {
     } else {
         document.getElementById('next-subject').innerText = '🏁 Keine Stunden mehr'; document.getElementById('next-info').innerText = ''; document.getElementById('next-time').innerText = '';
     }
+    if (next && !next.b.pause && vtMap[next.i]) {
+        var nv = vtMap[next.i];
+        document.getElementById('tile-next-label').innerText = nv.entfall ? '❌ Fällt aus' : '🔁 Vertretung';
+        if (nv.entfall) document.getElementById('next-subject').innerText = '❌ Entfällt';
+        document.getElementById('next-info').innerText = next.b.label + ' · statt ' + vtOrigName(nv) + (nv.info ? ' · ' + nv.info : '');
+    }
 }
 
 function clockFlip() { clockStyle = clockStyle==='digital' ? 'analog' : 'digital'; localStorage.setItem('susClockStyle', clockStyle); updateClock(); }
@@ -2227,6 +2354,12 @@ function toggleCardFlip(element) { if (element.classList.contains('static-header
 
 function renderMatrixWeek(w) {
     var plan = APP_DATA['woche'+w] || {}, now = new Date(), currentDayIdx = now.getDay();
+    var vtWeek = {};
+    if (w === getWeekFor(now)) {
+        var effNow = new Date(now); if (effNow.getDay() === 0) effNow.setDate(effNow.getDate() + 1);
+        var mon = mondayOf(effNow);
+        ['Mo','Di','Mi','Do','Fr'].forEach(function(d, i) { var dt = new Date(mon); dt.setDate(mon.getDate() + i); vtWeek[d] = effDayPlan(dt).vt; });
+    }
     var matrixContainer = document.getElementById('matrix-grid'); if (!matrixContainer) return;
     var days = ['Mo', 'Di', 'Mi', 'Do', 'Fr'], html = '';
     html += '<div class="matrix-row"><div class="matrix-cell static-header" style="min-height:32px; height:32px; flex:none; width:52px;"><div class="flip-card-inner"><div class="flip-front header-day-inner">Zeit</div></div></div>';
@@ -2248,6 +2381,15 @@ function renderMatrixWeek(w) {
                     html += '<div class="matrix-cell static-header" style="opacity:0; border:none;"></div>';
                 } else {
                     var rawContent = (plan[d] && plan[d][blockIdx]) ? plan[d][blockIdx] : '';
+                    var vtc = vtWeek[d] && vtWeek[d][blockIdx];
+                    if (vtc) {
+                        var vtName = vtc.entfall ? 'Entfällt' : splitSubjectAndRoom(vtc.fach).name, vtRoom = vtc.entfall ? '' : splitSubjectAndRoom(vtc.fach).room;
+                        html += '<div class="matrix-cell vt-cell '+((dayIdx+1)===currentDayIdx?'today-col-border':'')+'" onclick="toggleCardFlip(this)"><div class="flip-card-inner"><div class="flip-front ' + (vtc.entfall ? 'm-empty' : getSubjectClass(vtc.fach)) + '">';
+                        html += '<span class="vt-badge">' + (vtc.entfall ? '❌ AUSFALL' : '🔁 VERTR.') + '</span><span class="cell-name">' + escHtml(vtName) + '</span>';
+                        if (vtRoom) html += '<span class="cell-room">' + escHtml(vtRoom) + '</span>';
+                        html += '</div><div class="flip-back">statt ' + escHtml(vtOrigName(vtc)) + (vtc.info ? '<br>' + escHtml(vtc.info) : '') + '</div></div></div>';
+                        return;
+                    }
                     var splitData = splitSubjectAndRoom(rawContent);
                     var cellClass = getSubjectClass(rawContent);
                     if (rawContent) {
@@ -2477,7 +2619,12 @@ function loadAdminFields() {
     document.getElementById('toggle-kal-sperre').checked = APP_DATA.kalenderSperrAktiv !== false;
     document.getElementById('toggle-admin-open').checked = localStorage.getItem('susAdminAlwaysOpen') === '1';
     // Aktive-Woche-Buttons setzen
-    setActiveWeekAdmin(APP_DATA.currentWeek || 'A');
+    document.getElementById('toggle-week-auto').checked = APP_DATA.weekAuto !== false;
+    setActiveWeekAdmin(getWeekFor(new Date()), true);
+    document.getElementById('toggle-saison').value = APP_DATA.saisonEffekt || 'aus';
+    var vd = new Date(); if (vd.getDay() === 0 || vd.getDay() === 6 || getFreeDayInfo(fmt(vd)) || vd.getHours() >= 13) vd = getNextSchoolDay(vd) || vd;
+    document.getElementById('vt-date').value = fmt(vd);
+    renderVertretungAdmin(); vtAdminHint();
 }
 /* ---- Accordion ---- */
 function toggleAccordion(id) {
@@ -2497,9 +2644,16 @@ function setKalenderSperre(active) {
 }
 
 /* ---- Admin offen halten ---- */
-function setActiveWeekAdmin(w) {
+function setActiveWeekAdmin(w, nurAnzeige) {
     activeWeek = w;
     APP_DATA.currentWeek = w;
+    if (!nurAnzeige) {
+        // "Diese Woche ist w" -> ab hier wechselt es jeden Sonntag weiter
+        var eff = new Date(); if (eff.getDay() === 0) eff.setDate(eff.getDate() + 1);
+        APP_DATA.weekRef = { monday: fmt(mondayOf(eff)), week: w };
+    }
+    var info = document.getElementById('week-auto-info');
+    if (info) info.innerText = (APP_DATA.weekAuto === false) ? 'Automatik aus – die Woche bleibt, bis du sie umstellst.' : ('Automatik an – ab Sonntag gilt Woche ' + (w === 'A' ? 'B' : 'A') + '.');
     var btnA = document.getElementById('admin-active-week-a');
     var btnB = document.getElementById('admin-active-week-b');
     if (btnA && btnB) {
@@ -2562,8 +2716,11 @@ function saveToken() {
 function sendMail() { window.location.href = "mailto:" + TEACHER_MAIL; }
 function openPinnwand() { window.open(PINNPAND_URL, '_blank'); }
 function forceRefresh() {
-    var btn = document.getElementById('update-btn'); btn.innerText = '⏳ Suche Cloud-Daten...';
-    checkGamificationXP(true); setTimeout(function() { window.location.replace(window.location.pathname + '?t=' + Date.now()); }, 600);
+    var btn = document.getElementById('update-btn'); btn.innerText = '🚀 Start! Lade neue Infos...'; btn.disabled = true;
+    checkGamificationXP(true);
+    launchRocket(btn);
+    try { sessionStorage.setItem('susJustUpdated', '1'); } catch(e) {}
+    setTimeout(function() { window.location.replace(window.location.pathname + '?t=' + Date.now()); }, 1500);
 }
 
 async function publishApp() {
@@ -2573,7 +2730,13 @@ async function publishApp() {
     APP_DATA.newsTime = 'Aktualisiert: ' + new Date().toLocaleDateString('de-DE', {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'});
     APP_DATA.newsUpdatedAt = new Date().toISOString();
     APP_DATA.kalenderSperrAktiv = document.getElementById('toggle-kal-sperre').checked;
-    APP_DATA.currentWeek = activeWeek; APP_DATA.wocheA = readAdminPlan('a'); APP_DATA.wocheB = readAdminPlan('b');
+    APP_DATA.currentWeek = activeWeek;
+    APP_DATA.weekAuto = document.getElementById('toggle-week-auto').checked;
+    if (!APP_DATA.weekRef) { var eff0 = new Date(); if (eff0.getDay() === 0) eff0.setDate(eff0.getDate() + 1); APP_DATA.weekRef = { monday: fmt(mondayOf(eff0)), week: activeWeek }; }
+    APP_DATA.saisonEffekt = document.getElementById('toggle-saison').value;
+    var heuteStr = fmt(new Date());
+    APP_DATA.vertretungen = (APP_DATA.vertretungen || []).filter(function(v){ return v.date >= heuteStr; });
+    APP_DATA.wocheA = readAdminPlan('a'); APP_DATA.wocheB = readAdminPlan('b');
     // events sind bereits in APP_DATA gepflegt
     var btn = document.getElementById('publish-btn'), status = document.getElementById('publish-status');
     btn.style.opacity = '0.6'; btn.disabled = true; btn.innerText = '⏳ Sende Update an GitHub...';
@@ -2604,6 +2767,120 @@ async function publishApp() {
     } catch (e) {
         console.error(e); status.innerText = '❌ Fehler: ' + e.message; status.style.color = 'var(--danger)';
     } finally { btn.style.opacity = '1'; btn.disabled = false; btn.innerText = '🚀 CLOUD-LIVE-UPDATE SENDEN'; }
+}
+
+/* ============================================================
+   RAKETE (Aktualisieren) + Bestaetigung nach dem Neuladen
+   ============================================================ */
+function launchRocket(fromEl) {
+    var r = fromEl.getBoundingClientRect();
+    var rocket = document.createElement('div');
+    rocket.className = 'rocket-fly'; rocket.innerHTML = '<span class="rocket-body">🚀</span>';
+    rocket.style.left = Math.max(10, r.left + r.width / 2 - 24) + 'px'; rocket.style.top = Math.min(Math.max(r.top - 10, 60), window.innerHeight - 120) + 'px';
+    document.body.appendChild(rocket);
+    for (var i = 0; i < 10; i++) {
+        (function(k) { setTimeout(function() {
+            var rr = rocket.getBoundingClientRect(), p = document.createElement('div');
+            p.className = 'rocket-puff'; p.innerText = k % 3 === 0 ? '✨' : '💨';
+            p.style.left = (rr.left + 6) + 'px'; p.style.top = (rr.top + rr.height - 10) + 'px';
+            document.body.appendChild(p); setTimeout(function(){ p.remove(); }, 900);
+        }, 80 + k * 100); })(i);
+    }
+    setTimeout(function(){ rocket.remove(); }, 1600);
+}
+function showUpdateToast() {
+    var flag = null; try { flag = sessionStorage.getItem('susJustUpdated'); sessionStorage.removeItem('susJustUpdated'); } catch(e) {}
+    if (!flag) return;
+    var t = document.createElement('div'); t.className = 'update-toast';
+    t.innerText = '✅ Aktualisiert! Du hast jetzt die neuesten Infos.';
+    document.body.appendChild(t);
+    setTimeout(function(){ t.classList.add('hide'); }, 2600); setTimeout(function(){ t.remove(); }, 3200);
+}
+
+/* ============================================================
+   VERTRETUNG (Lehrer-Zentrale)
+   ============================================================ */
+function vtAdminHint() {
+    var ds = document.getElementById('vt-date').value, bi = parseInt(document.getElementById('vt-block').value);
+    var el = document.getElementById('vt-plan-hint'); if (!el) return;
+    if (!ds) { el.innerText = ''; return; }
+    var d = new Date(ds + 'T12:00:00'), wd = d.getDay();
+    if (wd === 0 || wd === 6) { el.innerText = '⚠️ Das ist ein Wochenende.'; return; }
+    var fr = getFreeDayInfo(ds);
+    var orig = ((APP_DATA['woche' + getWeekFor(d)] || {})[DAYS_SHORT[wd]] || [])[bi] || '';
+    el.innerText = (fr ? '⚠️ Schulfrei: ' + fr.title + ' · ' : '') + 'Laut Plan (Woche ' + getWeekFor(d) + '): ' + (orig || 'frei');
+}
+function addVertretung() {
+    var ds = document.getElementById('vt-date').value, bi = parseInt(document.getElementById('vt-block').value);
+    var fach = document.getElementById('vt-fach').value.trim(), info = document.getElementById('vt-info').value.trim();
+    var entfall = document.getElementById('vt-entfall').checked;
+    if (!ds) { alert('Bitte ein Datum wählen.'); return; }
+    if (!entfall && !fach) { alert('Bitte eintragen, was stattdessen ist – oder „Stunde fällt aus“ anhaken.'); return; }
+    if (!APP_DATA.vertretungen) APP_DATA.vertretungen = [];
+    APP_DATA.vertretungen = APP_DATA.vertretungen.filter(function(v){ return !(v.date === ds && v.block === bi); });
+    APP_DATA.vertretungen.push({ date: ds, block: bi, fach: entfall ? '' : fach, info: info, entfall: entfall });
+    APP_DATA.vertretungen.sort(function(a,b){ return a.date.localeCompare(b.date) || a.block - b.block; });
+    document.getElementById('vt-fach').value = ''; document.getElementById('vt-info').value = ''; document.getElementById('vt-entfall').checked = false;
+    renderVertretungAdmin(); renderMatrixWeek(activeWeek); renderTermineTicker();
+}
+function deleteVertretung(i) { APP_DATA.vertretungen.splice(i, 1); renderVertretungAdmin(); renderMatrixWeek(activeWeek); _tickerKey=''; renderTermineTicker(); }
+function renderVertretungAdmin() {
+    var el = document.getElementById('vt-admin-list'); if (!el) return;
+    var list = APP_DATA.vertretungen || [];
+    if (!list.length) { el.innerHTML = '<div style="font-size:0.75rem;color:var(--sub);text-align:center;padding:8px;">Keine Vertretungen eingetragen.</div>'; return; }
+    el.innerHTML = list.map(function(v, i) {
+        var d = new Date(v.date + 'T12:00:00');
+        var orig = ((APP_DATA['woche' + getWeekFor(d)] || {})[DAYS_SHORT[d.getDay()]] || [])[v.block] || 'frei';
+        return '<div class="admin-event-item"><div class="event-type-dot" style="background:' + (v.entfall ? '#ef4444' : '#06b6d4') + '"></div>' +
+            '<div class="evt-info"><strong>' + d.toLocaleDateString('de-DE',{weekday:'short', day:'2-digit', month:'2-digit'}) + ' · ' + BLOCKS[v.block].label + ': ' + escHtml(v.entfall ? 'fällt aus' : v.fach) + '</strong>' +
+            '<span>statt ' + escHtml(orig) + (v.info ? ' · ' + escHtml(v.info) : '') + '</span></div>' +
+            '<button class="evt-del" onclick="deleteVertretung(' + i + ')">✕</button></div>';
+    }).join('');
+}
+
+/* ============================================================
+   JAHRESZEITEN-EFFEKT (dezent, max. ~9 Teilchen gleichzeitig)
+   ============================================================ */
+var SAISON_SET = {
+    herbst:    { items:['🍂','🍁','🍂','🍃'], max:7, every:2600 },
+    winter:    { items:['❄','❅','❆'],        max:9, every:2000, snow:true },
+    fruehling: { items:['🌸','🌼','🌸','🍃'], max:6, every:3000 }
+};
+var _saisonTimer = null;
+function saisonAktuell() {
+    var e = APP_DATA.saisonEffekt || 'aus';
+    if (e !== 'auto') return e;
+    var m = new Date().getMonth() + 1, d = new Date().getDate();
+    if ((m === 9 && d >= 22) || m === 10 || m === 11) return 'herbst';
+    if (m === 12 || m === 1 || m === 2) return 'winter';
+    if (m >= 3 && m <= 5) return 'fruehling';
+    return 'aus'; // Sommer bleibt wie er ist
+}
+function startSaisonEffekt() {
+    var layer = document.getElementById('saison-layer');
+    if (_saisonTimer) { clearInterval(_saisonTimer); _saisonTimer = null; }
+    if (layer) layer.innerHTML = '';
+    var art = saisonAktuell(), cfg = SAISON_SET[art];
+    if (!cfg || !layer) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    function spawn() {
+        if (document.hidden || layer.childElementCount >= cfg.max) return;
+        var el = document.createElement('span');
+        el.className = 'saison-p' + (cfg.snow ? ' saison-snow' : '');
+        el.innerText = cfg.items[Math.floor(Math.random() * cfg.items.length)];
+        var size = cfg.snow ? (10 + Math.random() * 9) : (13 + Math.random() * 8);
+        var dur = 11 + Math.random() * 9;
+        el.style.left = (Math.random() * 96) + 'vw';
+        el.style.fontSize = size + 'px';
+        el.style.opacity = (cfg.snow ? 0.5 : 0.42) + Math.random() * 0.25;
+        el.style.setProperty('--sway', (20 + Math.random() * 40) * (Math.random() < 0.5 ? -1 : 1) + 'px');
+        el.style.setProperty('--rot', (cfg.snow ? 90 : 240 + Math.random() * 240) * (Math.random() < 0.5 ? -1 : 1) + 'deg');
+        el.style.animationDuration = dur + 's, ' + (3 + Math.random() * 2) + 's';
+        el.addEventListener('animationend', function(ev) { if (ev.animationName === 'saison-fall') el.remove(); });
+        layer.appendChild(el);
+    }
+    spawn();
+    _saisonTimer = setInterval(spawn, cfg.every);
 }
 
 /* ============================================================
@@ -2641,10 +2918,17 @@ function renderTermineTicker() {
     var evts = getLocalEvents().map(function(e){ return {title:e.title, date:e.date, type:e.type||'sonstiges'}; })
         .concat((APP_DATA.events || []).map(function(e){ return {title:e.title, date:e.date, type:'lehrer'}; }))
         .filter(function(e){ return e.date >= todayStr && e.date <= bisStr; });
+    (APP_DATA.vertretungen || []).forEach(function(v) {
+        if (v.date < todayStr || v.date > bisStr) return;
+        var d0 = new Date(v.date + 'T12:00:00');
+        var orig = ((APP_DATA['woche' + getWeekFor(d0)] || {})[DAYS_SHORT[d0.getDay()]] || [])[v.block] || '';
+        var on = orig ? splitSubjectAndRoom(orig).name : '';
+        evts.push({ date: v.date, type: 'vertretung', title: BLOCKS[v.block].label + ': ' + (v.entfall ? (on || 'Stunde') + ' fällt aus' : splitSubjectAndRoom(v.fach).name + (on ? ' statt ' + on : '') + (splitSubjectAndRoom(v.fach).room ? ' (' + splitSubjectAndRoom(v.fach).room + ')' : '')) });
+    });
     var sys = getSystemEventsInRange(today, bis);
     if (sys.length) evts.push(sys.sort(function(a,b){ return a.date.localeCompare(b.date); })[0]);
     evts.sort(function(a,b){ return a.date.localeCompare(b.date); });
-    var emo = { lehrer:'📣', hausaufgabe:'📚', test:'📝', abgabe:'📎', sonstiges:'⭐', ferien:'🌴', feiertag:'🎉' };
+    var emo = { vertretung:'🔁', lehrer:'📣', hausaufgabe:'📚', test:'📝', abgabe:'📎', sonstiges:'⭐', ferien:'🌴', feiertag:'🎉' };
     var items = evts.slice(0, 8).map(function(e) {
         var d = new Date(e.date + 'T12:00:00');
         var diff = Math.floor((d - today) / 86400000);
