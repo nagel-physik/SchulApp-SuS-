@@ -69,6 +69,8 @@ body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; heigh
 .status-tile::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--accent),var(--accent2)); }
 .status-tile.next::before { background:linear-gradient(90deg,#64748b,#94a3b8); }
 .status-tile.morgen::before { background:linear-gradient(90deg,#f59e0b,#ef4444) !important; }
+.status-tile.next.morgen { border-color:rgba(245,158,11,0.55) !important; background:linear-gradient(160deg, rgba(245,158,11,0.14), var(--card)) !important; }
+.status-tile.next.morgen .tile-label { color:#f59e0b !important; }
 .tile-label { font-size:0.6rem; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:var(--sub); margin-bottom:4px; }
 .tile-subject { font-size:1.05rem; font-weight:900; line-height:1.2; margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .tile-info { font-size:0.72rem; color:var(--accent); font-weight:700; }
@@ -2211,22 +2213,8 @@ function updateStatus(now) {
     var _eff = effDayPlan(now), dayPlan = _eff.plan, vtMap = _eff.vt;
     var nowMin = now.getHours()*60 + now.getMinutes(), nowSec = now.getSeconds();
     var maxBlocksForToday = dayPlan[6] ? 7 : 5; // 4. Block nur, wenn er an diesem Tag eingetragen ist
-    if (nowMin >= 16*60 || nowMin < 6*60) {
-        var tomorrow = new Date(now); tomorrow.setDate(tomorrow.getDate()+1);
-        var tKey = DAYS_SHORT[tomorrow.getDay()], tPlan = effDayPlan(tomorrow).plan;
-        var firstSubj = '', firstIdx = -1;
-        var tFree = getFreeDayInfo(fmt(tomorrow));
-        if (!tFree) { for (var i=0; i<BLOCKS.length; i++) { if (!BLOCKS[i].pause && tPlan[i]) { firstSubj = tPlan[i]; firstIdx = i; break; } } }
-        var cleanData = splitSubjectAndRoom(firstSubj);
-        document.getElementById('tile-current-label').innerText = '🌅 Morgen früh';
-        document.getElementById('current-subject').innerText = tFree ? tFree.title : (firstSubj ? getSubjectEmoji(firstSubj) + ' ' + cleanData.name : 'Kein Unterricht');
-        document.getElementById('current-info').innerText = tFree ? 'Morgen ist schulfrei – genieß es! 😎' : (firstSubj ? BLOCKS[firstIdx].label + ' startet um ' + BLOCKS[firstIdx].start + ' ' + (cleanData.room ? '['+cleanData.room+']' : '') : 'Ausschlafen!');
-        document.getElementById('current-countdown').innerText = ''; document.getElementById('current-time').innerText = ''; document.getElementById('current-prog').style.width = '0%';
-        document.getElementById('tile-next-label').innerText = '⏭ Nächster Tag'; document.getElementById('next-subject').innerText = '📅 Plan öffnen';
-        document.getElementById('next-info').innerText = 'Alle Stunden im Kachel-Plan'; document.getElementById('next-time').innerText = '';
-        document.getElementById('tile-current').classList.add('morgen'); return;
-    }
     document.getElementById('tile-current').classList.remove('morgen');
+    document.getElementById('tile-next').classList.remove('morgen');
     document.getElementById('tile-current-label').innerText = '🟢 Aktuell'; document.getElementById('tile-next-label').innerText = '⏭ Nächstes';
     var todayFree = (dayKey !== 'Sa' && dayKey !== 'So') ? getFreeDayInfo(fmt(now)) : null;
     if (todayFree) {
@@ -2314,10 +2302,34 @@ function updateStatus(now) {
         document.getElementById('current-countdown').innerText = '⏱ Noch ' + Math.floor(diffSec / 60) + 'm ' + String(diffSec % 60).padStart(2,'0') + 's';
         document.getElementById('current-prog').style.width = ((nowMin - toMin(current.b.start)) / (toMin(current.b.end) - toMin(current.b.start))) * 100 + '%';
     } else if (next) {
-        document.getElementById('current-subject').innerText = '⏳ Warten auf Unterricht'; document.getElementById('current-info').innerText = 'Nächster Abschnitt: ' + next.b.label;
-        document.getElementById('current-countdown').innerText = ''; document.getElementById('current-time').innerText = 'Start um ' + next.b.start + ' Uhr'; document.getElementById('current-prog').style.width = '0%';
+        // Vor Schulbeginn (ab Mitternacht): erstes Fach heute oben, zweites Fach unter "Naechstes"
+        var lessons = [];
+        for (var li = 0; li < maxBlocksForToday; li++) { if (!BLOCKS[li].pause && dayPlan[li]) lessons.push(li); }
+        if (lessons.length) {
+            var f = lessons[0], fRaw = dayPlan[f], fC = splitSubjectAndRoom(fRaw);
+            document.getElementById('tile-current-label').innerText = vtMap[f] ? '🔁 Heute zuerst · Vertretung' : '🌅 Heute zuerst';
+            document.getElementById('current-subject').innerText = getSubjectEmoji(fRaw) + ' ' + fC.name;
+            document.getElementById('current-info').innerText = BLOCKS[f].label + (fC.room ? ' · ' + fC.room : '') + (vtMap[f] ? ' · statt ' + vtOrigName(vtMap[f]) : '');
+            var toStart = toMin(BLOCKS[f].start) * 60 - (nowMin * 60 + nowSec);
+            document.getElementById('current-countdown').innerText = '⏱ Start in ' + (toStart >= 3600 ? Math.floor(toStart / 3600) + 'h ' : '') + Math.floor((toStart % 3600) / 60) + 'm';
+            document.getElementById('current-time').innerText = 'Beginn ' + BLOCKS[f].start + ' Uhr'; document.getElementById('current-prog').style.width = '0%';
+            if (lessons.length > 1) {
+                var sI = lessons[1], sRaw = dayPlan[sI], sC = splitSubjectAndRoom(sRaw);
+                document.getElementById('next-subject').innerText = getSubjectEmoji(sRaw) + ' ' + sC.name;
+                document.getElementById('next-info').innerText = BLOCKS[sI].label + (sC.room ? ' · ' + sC.room : '') + (vtMap[sI] ? ' · statt ' + vtOrigName(vtMap[sI]) : '');
+                document.getElementById('next-time').innerText = 'Um ' + BLOCKS[sI].start + ' Uhr';
+                document.getElementById('tile-next-label').innerText = vtMap[sI] ? '🔁 Danach · Vertretung' : '⏭ Danach';
+            } else {
+                document.getElementById('next-subject').innerText = '🏁 Danach Schluss'; document.getElementById('next-info').innerText = 'Nur ein Block heute'; document.getElementById('next-time').innerText = '';
+            }
+            return;
+        }
+        // heute gar kein Unterricht eingetragen -> wie nach Schulschluss
+        document.getElementById('current-subject').innerText = '📭 Heute kein Unterricht'; document.getElementById('current-info').innerText = '';
+        document.getElementById('current-countdown').innerText = ''; document.getElementById('current-time').innerText = ''; document.getElementById('current-prog').style.width = '0%';
+        showNextSchoolDayInTile(now); return;
     } else {
-        document.getElementById('current-subject').innerText = '🎉 Schulschluss!'; document.getElementById('current-info').innerText = 'Schönen Feierabend!';
+        document.getElementById('current-subject').innerText = '🎉 Frei!'; document.getElementById('current-info').innerText = 'Schulschluss – schönen Nachmittag!';
         document.getElementById('current-countdown').innerText = ''; document.getElementById('current-time').innerText = ''; document.getElementById('current-prog').style.width = '0%';
     }
     if (current && !current.b.pause && vtMap[current.i]) {
@@ -2336,7 +2348,7 @@ function updateStatus(now) {
         document.getElementById('next-subject').innerText = nraw ? getSubjectEmoji(nraw) + ' ' + cleanN.name : (next.b.pause ? '☕ ' + next.b.label : '–');
         document.getElementById('next-info').innerText = next.b.label; document.getElementById('next-time').innerText = 'Um ' + next.b.start + ' Uhr';
     } else {
-        document.getElementById('next-subject').innerText = '🏁 Keine Stunden mehr'; document.getElementById('next-info').innerText = ''; document.getElementById('next-time').innerText = '';
+        showNextSchoolDayInTile(now); return;
     }
     if (next && !next.b.pause && vtMap[next.i]) {
         var nv = vtMap[next.i];
@@ -2344,6 +2356,25 @@ function updateStatus(now) {
         if (nv.entfall) document.getElementById('next-subject').innerText = '❌ Entfällt';
         document.getElementById('next-info').innerText = next.b.label + ' · statt ' + vtOrigName(nv) + (nv.info ? ' · ' + nv.info : '');
     }
+}
+
+// Erster Unterricht am naechsten Schultag in der Kachel "Naechstes" (deutlich als Morgen/Wochentag markiert)
+function showNextSchoolDayInTile(now) {
+    var nsd = getNextSchoolDay(now);
+    var lbl = document.getElementById('tile-next-label'), sub = document.getElementById('next-subject'), inf = document.getElementById('next-info'), tim = document.getElementById('next-time');
+    document.getElementById('tile-next').classList.add('morgen');
+    if (!nsd) { lbl.innerText = '⏭ Nächstes'; sub.innerText = '📅 Plan öffnen'; inf.innerText = ''; tim.innerText = ''; return; }
+    var tom = new Date(now); tom.setDate(tom.getDate() + 1);
+    var istMorgen = fmt(tom) === fmt(nsd);
+    var eff = effDayPlan(nsd), f = -1;
+    for (var i = 0; i < BLOCKS.length; i++) { if (!BLOCKS[i].pause && eff.plan[i]) { f = i; break; } }
+    var tag = istMorgen ? 'Morgen' : nsd.toLocaleDateString('de-DE', {weekday:'long'});
+    lbl.innerText = (istMorgen ? '🌅 Morgen früh' : '📅 ' + nsd.toLocaleDateString('de-DE', {weekday:'long', day:'2-digit', month:'2-digit'})) + (f >= 0 && eff.vt[f] ? ' · 🔁' : '');
+    if (f < 0) { sub.innerText = '📋 Stundenplan'; inf.innerText = 'Noch kein Unterricht eingetragen'; tim.innerText = ''; return; }
+    var c = splitSubjectAndRoom(eff.plan[f]);
+    sub.innerText = getSubjectEmoji(eff.plan[f]) + ' ' + c.name;
+    inf.innerText = tag + ' · ' + BLOCKS[f].label + (c.room ? ' · ' + c.room : '') + (eff.vt[f] ? ' · Vertretung statt ' + vtOrigName(eff.vt[f]) : '');
+    tim.innerText = 'Start ' + BLOCKS[f].start + ' Uhr';
 }
 
 function clockFlip() { clockStyle = clockStyle==='digital' ? 'analog' : 'digital'; localStorage.setItem('susClockStyle', clockStyle); updateClock(); }
