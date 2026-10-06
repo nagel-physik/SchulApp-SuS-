@@ -121,6 +121,11 @@ body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; heigh
 @media (prefers-reduced-motion: reduce) { .tt-track { animation:none !important; white-space:normal; } .tt-run + .tt-run { display:none; } .tt-run { white-space:normal; flex-wrap:wrap; } }
 .light-mode-active .termin-ticker:not(.tt-empty) { background:#1e293b; }
 .vt-cell .flip-front { outline:2px dashed #06b6d4; outline-offset:-3px; }
+.vt-badge-sonder { background:#a855f7 !important; }
+.vt-art-btn { flex:1; padding:9px 4px; border-radius:10px; border:1.5px solid var(--border); background:var(--card); color:var(--sub); font-weight:800; font-size:0.78rem; cursor:pointer; font-family:inherit; }
+.vt-art-btn.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+.vt-block-row { display:flex; gap:12px; align-items:center; margin-bottom:8px; font-size:0.9rem; font-weight:800; }
+.vt-block-row label { display:flex; align-items:center; gap:4px; cursor:pointer; }
 .vt-badge { font-size:0.48rem; font-weight:900; letter-spacing:0.5px; background:#06b6d4; color:#fff; border-radius:6px; padding:1px 4px; margin-bottom:2px; }
 .rocket-fly { position:fixed; z-index:900; width:48px; height:48px; pointer-events:none; animation:rocket-launch 1.5s cubic-bezier(.45,.05,.55,.95) forwards; }
 .rocket-body { display:block; font-size:44px; line-height:48px; transform:rotate(-45deg); filter:drop-shadow(0 4px 10px rgba(249,115,22,0.6)); }
@@ -883,23 +888,30 @@ body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; heigh
         <div class="accordion-item" id="acc-vertretung">
             <div class="accordion-header" onclick="toggleAccordion('acc-vertretung'); vtAdminHint();">
                 <div>
-                    <div class="accordion-title">🔁 Vertretung / Ausfall</div>
-                    <div class="accordion-sub">Ersetzt einzelne Blöcke in der Live-Anzeige</div>
+                    <div class="accordion-title">🔁 Vertretung · Ausfall · Besonderes</div>
+                    <div class="accordion-sub">z.B. Filmfest, Theater – ändert die Live-Anzeige nur für diese Blöcke</div>
                 </div>
                 <div class="accordion-arrow">›</div>
             </div>
             <div class="accordion-body">
-                <div style="display:flex; gap:8px;">
-                    <input type="date" class="admin-input" id="vt-date" onchange="vtAdminHint()" style="flex:1.3;">
-                    <select class="admin-input" id="vt-block" onchange="vtAdminHint()" style="flex:1;">
-                        <option value="0">1. Block</option><option value="2">2. Block</option><option value="4">3. Block</option><option value="6">4. Block</option>
-                    </select>
+                <div style="display:flex; gap:6px; margin-bottom:10px;" id="vt-art-btns">
+                    <button type="button" class="vt-art-btn active" data-art="vertretung" onclick="setVtArt('vertretung')">🔁 Vertretung</button>
+                    <button type="button" class="vt-art-btn" data-art="entfall" onclick="setVtArt('entfall')">❌ Ausfall</button>
+                    <button type="button" class="vt-art-btn" data-art="sonder" onclick="setVtArt('sonder')">🎉 Besonderes</button>
                 </div>
-                <div id="vt-plan-hint" style="font-size:0.78rem; color:var(--sub); font-weight:700; margin:-4px 0 10px;"></div>
+                <input type="date" class="admin-input" id="vt-date" onchange="vtAdminHint()">
+                <div style="font-size:0.75rem; color:var(--sub); font-weight:800; margin-bottom:6px;">Welche Blöcke?</div>
+                <div class="vt-block-row">
+                    <label><input type="checkbox" class="vt-blk" value="0" onchange="vtAdminHint()" checked> 1.</label>
+                    <label><input type="checkbox" class="vt-blk" value="2" onchange="vtAdminHint()"> 2.</label>
+                    <label><input type="checkbox" class="vt-blk" value="4" onchange="vtAdminHint()"> 3.</label>
+                    <label><input type="checkbox" class="vt-blk" value="6" onchange="vtAdminHint()"> 4.</label>
+                    <button type="button" onclick="vtAlleBloecke()" style="margin-left:auto; background:none; border:1px solid var(--border); color:var(--sub); border-radius:8px; padding:4px 8px; font-size:0.72rem; font-weight:800; cursor:pointer; font-family:inherit;">ganzer Tag</button>
+                </div>
+                <div id="vt-plan-hint" style="font-size:0.78rem; color:var(--sub); font-weight:700; margin:0 0 10px; line-height:1.5;"></div>
                 <input type="text" class="admin-input" id="vt-fach" placeholder="Stattdessen: Fach + Raum, z.B. Mathe 224">
                 <input type="text" class="admin-input" id="vt-info" placeholder="Hinweis (optional), z.B. bei Frau Koch">
-                <label style="display:flex; align-items:center; gap:8px; font-size:0.85rem; font-weight:700; margin-bottom:10px; cursor:pointer;"><input type="checkbox" id="vt-entfall"> Stunde fällt aus</label>
-                <button class="publish-btn" onclick="addVertretung()" style="background:linear-gradient(135deg,#0891b2,#06b6d4); padding:10px; font-size:0.85rem;">+ Vertretung eintragen</button>
+                <button class="publish-btn" id="vt-add-btn" onclick="addVertretung()" style="background:linear-gradient(135deg,#0891b2,#06b6d4); padding:10px; font-size:0.85rem;">+ Eintragen</button>
                 <div id="vt-admin-list" style="margin-top:10px;"></div>
                 <div style="font-size:0.7rem; color:var(--sub); margin-top:6px; line-height:1.5;">Sichtbar erst nach dem 🚀 Cloud-Update. Vergangene Einträge werden beim Update automatisch entfernt. Die News-Box bleibt davon unberührt – deinen Hinweis schreibst du wie gewohnt dort.</div>
             </div>
@@ -1088,7 +1100,7 @@ body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; heigh
         <div style="background:var(--card); border-radius:16px; padding:16px; margin-bottom:12px; border:1px solid var(--border);">
             <div style="font-size:1rem; font-weight:900; margin-bottom:6px;">📢 Aktuelle Infos &amp; News</div>
             <div style="font-size:0.85rem; color:var(--sub); line-height:1.6;">Hier steht immer, was der Klassenlehrer euch gerade mitteilen möchte – z.B. Vertretung, Raumwechsel, wichtige Ergänzungen oder Änderungen zum Unterricht. Ist die Info jünger als 24 Stunden, blinkt daneben ein rotes <strong style="color:var(--text);">NEU</strong>.<br><br>
-            <strong style="color:var(--text);">🔁 Vertretung:</strong> Hat der Klassenlehrer eine Vertretung oder einen Ausfall eingetragen, zeigen die Kacheln „Aktuell“ und „Nächstes“ das direkt an (mit „statt …“). Im Stundenplan ist der Block markiert, und in der Laufschrift steht es auch.<br><br><strong style="color:var(--text);">📅 Laufschrift „Termine“:</strong> Unter der Info laufen deine nächsten Termine (14 Tage) durch – eigene Einträge, Lehrer-Termine und die nächsten Ferien/Feiertage. So siehst du sie auch, wenn der Kalender in der Schulzeit gesperrt ist. Hausaufgaben und Termine gehören trotzdem ins <strong style="color:var(--text);">Hausaufgabenheft</strong>!<br><br>
+            <strong style="color:var(--text);">🔁 Vertretung & 🎉 Besonderes:</strong> Hat der Klassenlehrer eine Vertretung, einen Ausfall oder etwas Besonderes (z.B. Filmfest, Theater) eingetragen, zeigen die Kacheln „Aktuell“ und „Nächstes“ das direkt an (mit „statt …“). Im Stundenplan ist der Block markiert, und in der Laufschrift steht es auch.<br><br><strong style="color:var(--text);">📅 Laufschrift „Termine“:</strong> Unter der Info laufen deine nächsten Termine (14 Tage) durch – eigene Einträge, Lehrer-Termine und die nächsten Ferien/Feiertage. So siehst du sie auch, wenn der Kalender in der Schulzeit gesperrt ist. Hausaufgaben und Termine gehören trotzdem ins <strong style="color:var(--text);">Hausaufgabenheft</strong>!<br><br>
             Wenn eine <strong style="color:var(--text);">neue Info veröffentlicht</strong> wird, erscheint automatisch ein <strong style="color:orange;">oranger blinkender Rahmen</strong> um die News-Box. So ist auf einen Blick erkennbar: hier gibt es etwas Neues!<br><br>
             Der Rahmen verschwindet nach <strong style="color:var(--text);">60 Minuten</strong> automatisch. Wenn danach eine weitere neue Info kommt, erscheint er erneut.</div>
         </div>
@@ -1172,8 +1184,8 @@ body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; heigh
 var APP_DATA = {
     "className": "7c",
     "news": "Willkommen bei SchulHub, liebe 7c! 🎉 Hier stehen ab jetzt meine wichtigsten Infos für euch.",
-    "newsTime": "Aktualisiert: 06.10., 17:44",
-    "newsUpdatedAt": "2026-10-06T15:44:37.000Z",
+    "newsTime": "Aktualisiert: 06.10., 15:30",
+    "newsUpdatedAt": "2026-10-06T13:30:00.000Z",
     "kalenderSperrAktiv": true,
     "currentWeek": "A",
     "events": [],
@@ -1271,28 +1283,7 @@ var APP_DATA = {
             ""
         ]
     },
-    "vertretungen": [
-        {
-            "date": "2026-10-09",
-            "block": 0,
-            "fach": "Filmfest Effi",
-            "info": "",
-            "entfall": false
-        },
-        {
-            "date": "2026-10-09",
-            "block": 2,
-            "fach": "Filmfest Effi",
-            "info": "",
-            "entfall": false
-        }
-    ],
-    "weekAuto": true,
-    "weekRef": {
-        "monday": "2026-10-05",
-        "week": "A"
-    },
-    "saisonEffekt": "aus"
+    "vertretungen": []
 }; /*APP_DATA_END*/
 
 var ADMIN_PW_HASH = "ed16f1a0567fcd73254c37e4759caa0544aa8a3b6eb0526504c9bcf158135c4d";
@@ -1330,6 +1321,29 @@ function getWeekFor(date) {
 var activeWeek = getWeekFor(new Date());
 
 // Vertretung/Ausfall fuer ein Datum + Block (Block-Index wie BLOCKS: 0,2,4,6)
+var SONDER_TITEL = {}; // Titel von Sonderveranstaltungen -> eigenes Symbol, kein Raum-Split
+(APP_DATA.vertretungen || []).forEach(function(v){ if (v.sonder && v.fach) SONDER_TITEL[v.fach] = true; });
+function vtArtVon(v) { return v.entfall ? 'entfall' : v.sonder ? 'sonder' : 'vertretung'; }
+function vtGruppen(list) {
+    var g = {}, order = [];
+    (list || []).forEach(function(v, i) {
+        var k = v.date + '|' + vtArtVon(v) + '|' + (v.fach || '') + '|' + (v.info || '');
+        if (!g[k]) { g[k] = { date: v.date, art: vtArtVon(v), fach: v.fach || '', info: v.info || '', entfall: !!v.entfall, sonder: !!v.sonder, bl: [], idx: [] }; order.push(k); }
+        g[k].bl.push(v.block); g[k].idx.push(i);
+    });
+    return order.map(function(k){ g[k].bl.sort(function(a,b){return a-b;}); return g[k]; })
+        .sort(function(a,b){ return a.date.localeCompare(b.date) || a.bl[0] - b.bl[0]; });
+}
+function blockSpanne(bl) {
+    var n = bl.map(function(bi){ return BLOCKS[bi].label.split('.')[0]; });
+    return n.length > 1 ? n[0] + '.–' + n[n.length-1] + '. Block' : n[0] + '. Block';
+}
+// Spanne fuer einen Block an einem Datum (z.B. "1.–2. Block")
+function vtSpanneFuer(dateStr, block) {
+    var gr = vtGruppen(vtListFor(dateStr)).find(function(x){ return x.bl.indexOf(block) >= 0; });
+    return gr ? blockSpanne(gr.bl) : BLOCKS[block].label;
+}
+function vtKopf(v) { return v.entfall ? '❌ Fällt aus' : v.sonder ? '🎉 Besonderes' : '🔁 Vertretung'; }
 function vtListFor(dateStr) { return (APP_DATA.vertretungen || []).filter(function(v){ return v.date === dateStr; }); }
 function effDayPlan(date) {
     var key = DAYS_SHORT[date.getDay()];
@@ -1337,7 +1351,8 @@ function effDayPlan(date) {
     while (base.length < 7) base.push('');
     var map = {};
     vtListFor(fmt(date)).forEach(function(v) {
-        map[v.block] = { orig: base[v.block] || '', fach: v.fach || '', entfall: !!v.entfall, info: v.info || '' };
+        map[v.block] = { orig: base[v.block] || '', fach: v.fach || '', entfall: !!v.entfall, sonder: !!v.sonder, info: v.info || '' };
+        if (v.sonder && v.fach) SONDER_TITEL[v.fach] = true;
         base[v.block] = v.entfall ? '' : (v.fach || '');
     });
     return { plan: base, vt: map };
@@ -2008,6 +2023,7 @@ function deleteAdminEvent(idx) {
    ============================================================ */
 function splitSubjectAndRoom(rawSubject) {
     if (!rawSubject) return { name: '', room: '' };
+    if (SONDER_TITEL[rawSubject]) return { name: rawSubject, room: '' };
     // z.B. "Mathe 224" -> R224, "Sport Turnhalle 1" -> Turnhalle 1, "Mathe R204" -> R204
     var mm = String(rawSubject).trim().match(/^(.*?)\s+((?:Turnhalle|Sporthalle|Halle|Raum|R)\s*\d+[a-z]?|\d{2,4}[a-z]?)$/i);
     if (mm && mm[1]) { var rm = mm[2].trim(); if (/^\d/.test(rm)) rm = 'R' + rm; if (/^raum\s*/i.test(rm)) rm = 'R' + rm.replace(/^raum\s*/i,''); return { name: mm[1].trim(), room: rm }; }
@@ -2023,6 +2039,7 @@ function splitSubjectAndRoom(rawSubject) {
 }
 function getSubjectReminder(subject) {
     if (!subject) return '';
+    if (SONDER_TITEL[subject]) return '🎉 Besonderer Tag!\nInfos in der News-Box';
     var data = splitSubjectAndRoom(subject); var s = data.name.toLowerCase();
     if (s.includes('klassenl')) return "📒 Hausaufgabenheft\nInfo-Zettel\nUnterschriften";
     if (s === 'wp' || s.startsWith('wp ')) return "🧩 Material für dein WP-Fach";
@@ -2050,7 +2067,8 @@ function getSubjectClass(subject) {
     return 'm-other';
 }
 function getSubjectEmoji(subject) {
-    if (!subject) return ''; var data = splitSubjectAndRoom(subject); var s = data.name.toLowerCase();
+    if (!subject) return '';
+    if (SONDER_TITEL[subject]) return '🎉'; var data = splitSubjectAndRoom(subject); var s = data.name.toLowerCase();
     if (s.includes('klassenl')) return '👥'; if (s === 'wp' || s.startsWith('wp ')) return '🧩';
     if (s === 'ler' || s.includes('reli')) return '🕊️';
 
@@ -2328,7 +2346,7 @@ function updateStatus(now) {
         for (var li = 0; li < maxBlocksForToday; li++) { if (!BLOCKS[li].pause && dayPlan[li]) lessons.push(li); }
         if (lessons.length) {
             var f = lessons[0], fRaw = dayPlan[f], fC = splitSubjectAndRoom(fRaw);
-            document.getElementById('tile-current-label').innerText = vtMap[f] ? '🔁 Heute zuerst · Vertretung' : '🌅 Heute zuerst';
+            document.getElementById('tile-current-label').innerText = vtMap[f] ? '🌅 Heute zuerst · ' + vtKopf(vtMap[f]).replace(/^\S+\s/, '') : '🌅 Heute zuerst';
             document.getElementById('current-subject').innerText = getSubjectEmoji(fRaw) + ' ' + fC.name;
             document.getElementById('current-info').innerText = BLOCKS[f].label + (fC.room ? ' · ' + fC.room : '') + (vtMap[f] ? ' · statt ' + vtOrigName(vtMap[f]) : '');
             var toStart = toMin(BLOCKS[f].start) * 60 - (nowMin * 60 + nowSec);
@@ -2339,7 +2357,7 @@ function updateStatus(now) {
                 document.getElementById('next-subject').innerText = getSubjectEmoji(sRaw) + ' ' + sC.name;
                 document.getElementById('next-info').innerText = BLOCKS[sI].label + (sC.room ? ' · ' + sC.room : '') + (vtMap[sI] ? ' · statt ' + vtOrigName(vtMap[sI]) : '');
                 document.getElementById('next-time').innerText = 'Um ' + BLOCKS[sI].start + ' Uhr';
-                document.getElementById('tile-next-label').innerText = vtMap[sI] ? '🔁 Danach · Vertretung' : '⏭ Danach';
+                document.getElementById('tile-next-label').innerText = vtMap[sI] ? '⏭ Danach · ' + vtKopf(vtMap[sI]).replace(/^\S+\s/, '') : '⏭ Danach';
             } else {
                 document.getElementById('next-subject').innerText = '🏁 Danach Schluss'; document.getElementById('next-info').innerText = 'Nur ein Block heute'; document.getElementById('next-time').innerText = '';
             }
@@ -2355,9 +2373,10 @@ function updateStatus(now) {
     }
     if (current && !current.b.pause && vtMap[current.i]) {
         var cv = vtMap[current.i];
-        document.getElementById('tile-current-label').innerText = cv.entfall ? '❌ Fällt aus' : '🔁 Vertretung';
+        document.getElementById('tile-current-label').innerText = vtKopf(cv);
         if (cv.entfall) document.getElementById('current-subject').innerText = '❌ Entfällt';
-        document.getElementById('current-info').innerText = current.b.label + (cv.entfall ? '' : (splitSubjectAndRoom(cv.fach).room ? ' · ' + splitSubjectAndRoom(cv.fach).room : '')) + ' · statt ' + vtOrigName(cv) + (cv.info ? ' · ' + cv.info : '');
+        var spC = vtSpanneFuer(fmt(now), current.i);
+        document.getElementById('current-info').innerText = cv.sonder ? (cv.info ? cv.info + ' · ' : '') + spC : spC + (cv.entfall ? '' : (splitSubjectAndRoom(cv.fach).room ? ' · ' + splitSubjectAndRoom(cv.fach).room : '')) + ' · statt ' + vtOrigName(cv) + (cv.info ? ' · ' + cv.info : '');
     }
     if (current && next) {
         var nraw = dayPlan[next.i], cleanN = splitSubjectAndRoom(nraw);
@@ -2373,9 +2392,10 @@ function updateStatus(now) {
     }
     if (next && !next.b.pause && vtMap[next.i]) {
         var nv = vtMap[next.i];
-        document.getElementById('tile-next-label').innerText = nv.entfall ? '❌ Fällt aus' : '🔁 Vertretung';
+        document.getElementById('tile-next-label').innerText = vtKopf(nv);
         if (nv.entfall) document.getElementById('next-subject').innerText = '❌ Entfällt';
-        document.getElementById('next-info').innerText = next.b.label + ' · statt ' + vtOrigName(nv) + (nv.info ? ' · ' + nv.info : '');
+        var spN = vtSpanneFuer(fmt(now), next.i);
+        document.getElementById('next-info').innerText = nv.sonder ? (nv.info ? nv.info + ' · ' : '') + spN : spN + ' · statt ' + vtOrigName(nv) + (nv.info ? ' · ' + nv.info : '');
     }
 }
 
@@ -2390,11 +2410,11 @@ function showNextSchoolDayInTile(now) {
     var eff = effDayPlan(nsd), f = -1;
     for (var i = 0; i < BLOCKS.length; i++) { if (!BLOCKS[i].pause && eff.plan[i]) { f = i; break; } }
     var tag = istMorgen ? 'Morgen' : nsd.toLocaleDateString('de-DE', {weekday:'long'});
-    lbl.innerText = (istMorgen ? '🌅 Morgen früh' : '📅 ' + nsd.toLocaleDateString('de-DE', {weekday:'long', day:'2-digit', month:'2-digit'})) + (f >= 0 && eff.vt[f] ? ' · 🔁' : '');
+    lbl.innerText = (istMorgen ? '🌅 Morgen früh' : '📅 ' + nsd.toLocaleDateString('de-DE', {weekday:'long', day:'2-digit', month:'2-digit'})) + (f >= 0 && eff.vt[f] ? (eff.vt[f].sonder ? ' · 🎉' : ' · 🔁') : '');
     if (f < 0) { sub.innerText = '📋 Stundenplan'; inf.innerText = 'Noch kein Unterricht eingetragen'; tim.innerText = ''; return; }
     var c = splitSubjectAndRoom(eff.plan[f]);
     sub.innerText = getSubjectEmoji(eff.plan[f]) + ' ' + c.name;
-    inf.innerText = tag + ' · ' + BLOCKS[f].label + (c.room ? ' · ' + c.room : '') + (eff.vt[f] ? ' · Vertretung statt ' + vtOrigName(eff.vt[f]) : '');
+    inf.innerText = tag + ' · ' + BLOCKS[f].label + (c.room ? ' · ' + c.room : '') + (eff.vt[f] ? ' · ' + (eff.vt[f].sonder ? (eff.vt[f].info || 'Besonderes') : 'Vertretung') + ' statt ' + vtOrigName(eff.vt[f]) : '');
     tim.innerText = 'Start ' + BLOCKS[f].start + ' Uhr';
 }
 
@@ -2437,7 +2457,7 @@ function renderMatrixWeek(w) {
                     if (vtc) {
                         var vtName = vtc.entfall ? 'Entfällt' : splitSubjectAndRoom(vtc.fach).name, vtRoom = vtc.entfall ? '' : splitSubjectAndRoom(vtc.fach).room;
                         html += '<div class="matrix-cell vt-cell '+((dayIdx+1)===currentDayIdx?'today-col-border':'')+'" onclick="toggleCardFlip(this)"><div class="flip-card-inner"><div class="flip-front ' + (vtc.entfall ? 'm-empty' : getSubjectClass(vtc.fach)) + '">';
-                        html += '<span class="vt-badge">' + (vtc.entfall ? '❌ AUSFALL' : '🔁 VERTR.') + '</span><span class="cell-name">' + escHtml(vtName) + '</span>';
+                        html += '<span class="vt-badge' + (vtc.sonder ? ' vt-badge-sonder' : '') + '">' + (vtc.entfall ? '❌ AUSFALL' : vtc.sonder ? '🎉 EVENT' : '🔁 VERTR.') + '</span><span class="cell-name">' + escHtml(vtName) + '</span>';
                         if (vtRoom) html += '<span class="cell-room">' + escHtml(vtRoom) + '</span>';
                         html += '</div><div class="flip-back">statt ' + escHtml(vtOrigName(vtc)) + (vtc.info ? '<br>' + escHtml(vtc.info) : '') + '</div></div></div>';
                         return;
@@ -2852,42 +2872,66 @@ function showUpdateToast() {
 /* ============================================================
    VERTRETUNG (Lehrer-Zentrale)
    ============================================================ */
+var vtArt = 'vertretung';
+function setVtArt(art) {
+    vtArt = art;
+    document.querySelectorAll('.vt-art-btn').forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-art') === art); });
+    var f = document.getElementById('vt-fach'), inf = document.getElementById('vt-info');
+    f.style.display = art === 'entfall' ? 'none' : 'block';
+    f.placeholder = art === 'sonder' ? 'Was ist los? z.B. Filmfest, Englisches Theater' : 'Stattdessen: Fach + Raum, z.B. Mathe 224';
+    inf.placeholder = art === 'sonder' ? 'Hinweis (optional), z.B. ab 10:00 Uhr in der Aula' : (art === 'entfall' ? 'Hinweis (optional), z.B. Lehrer krank' : 'Hinweis (optional), z.B. bei Frau Koch');
+    vtAdminHint();
+}
+function vtGewaehlteBloecke() { return Array.prototype.slice.call(document.querySelectorAll('.vt-blk:checked')).map(function(c){ return parseInt(c.value); }); }
+function vtAlleBloecke() {
+    var ds = document.getElementById('vt-date').value, d = ds ? new Date(ds + 'T12:00:00') : null;
+    var plan = d ? ((APP_DATA['woche' + getWeekFor(d)] || {})[DAYS_SHORT[d.getDay()]] || []) : [];
+    document.querySelectorAll('.vt-blk').forEach(function(c){ var bi = parseInt(c.value); c.checked = bi !== 6 || !!plan[6]; });
+    vtAdminHint();
+}
 function vtAdminHint() {
-    var ds = document.getElementById('vt-date').value, bi = parseInt(document.getElementById('vt-block').value);
+    var ds = document.getElementById('vt-date').value, bl = vtGewaehlteBloecke();
     var el = document.getElementById('vt-plan-hint'); if (!el) return;
     if (!ds) { el.innerText = ''; return; }
     var d = new Date(ds + 'T12:00:00'), wd = d.getDay();
     if (wd === 0 || wd === 6) { el.innerText = '⚠️ Das ist ein Wochenende.'; return; }
-    var fr = getFreeDayInfo(ds);
-    var orig = ((APP_DATA['woche' + getWeekFor(d)] || {})[DAYS_SHORT[wd]] || [])[bi] || '';
-    el.innerText = (fr ? '⚠️ Schulfrei: ' + fr.title + ' · ' : '') + 'Laut Plan (Woche ' + getWeekFor(d) + '): ' + (orig || 'frei');
+    var fr = getFreeDayInfo(ds), plan = (APP_DATA['woche' + getWeekFor(d)] || {})[DAYS_SHORT[wd]] || [];
+    el.innerText = (fr ? '⚠️ Schulfrei: ' + fr.title + '\n' : '') + 'Laut Plan (Woche ' + getWeekFor(d) + '): ' +
+        (bl.length ? bl.map(function(bi){ return BLOCKS[bi].label.split(' ')[0] + ' ' + (plan[bi] || 'frei'); }).join(' · ') : 'bitte Block wählen');
 }
 function addVertretung() {
-    var ds = document.getElementById('vt-date').value, bi = parseInt(document.getElementById('vt-block').value);
+    var ds = document.getElementById('vt-date').value, bl = vtGewaehlteBloecke();
     var fach = document.getElementById('vt-fach').value.trim(), info = document.getElementById('vt-info').value.trim();
-    var entfall = document.getElementById('vt-entfall').checked;
     if (!ds) { alert('Bitte ein Datum wählen.'); return; }
-    if (!entfall && !fach) { alert('Bitte eintragen, was stattdessen ist – oder „Stunde fällt aus“ anhaken.'); return; }
+    if (!bl.length) { alert('Bitte mindestens einen Block anhaken.'); return; }
+    if (vtArt !== 'entfall' && !fach) { alert(vtArt === 'sonder' ? 'Bitte eintragen, was los ist (z.B. Filmfest).' : 'Bitte eintragen, was stattdessen ist.'); return; }
     if (!APP_DATA.vertretungen) APP_DATA.vertretungen = [];
-    APP_DATA.vertretungen = APP_DATA.vertretungen.filter(function(v){ return !(v.date === ds && v.block === bi); });
-    APP_DATA.vertretungen.push({ date: ds, block: bi, fach: entfall ? '' : fach, info: info, entfall: entfall });
+    APP_DATA.vertretungen = APP_DATA.vertretungen.filter(function(v){ return !(v.date === ds && bl.indexOf(v.block) >= 0); });
+    bl.forEach(function(bi) {
+        APP_DATA.vertretungen.push({ date: ds, block: bi, fach: vtArt === 'entfall' ? '' : fach, info: info, entfall: vtArt === 'entfall', sonder: vtArt === 'sonder' });
+    });
     APP_DATA.vertretungen.sort(function(a,b){ return a.date.localeCompare(b.date) || a.block - b.block; });
-    document.getElementById('vt-fach').value = ''; document.getElementById('vt-info').value = ''; document.getElementById('vt-entfall').checked = false;
-    renderVertretungAdmin(); renderMatrixWeek(activeWeek); renderTermineTicker();
+    document.getElementById('vt-fach').value = ''; document.getElementById('vt-info').value = '';
+    renderVertretungAdmin(); renderMatrixWeek(activeWeek); _tickerKey = ''; renderTermineTicker();
 }
 function deleteVertretung(i) { APP_DATA.vertretungen.splice(i, 1); renderVertretungAdmin(); renderMatrixWeek(activeWeek); _tickerKey=''; renderTermineTicker(); }
 function renderVertretungAdmin() {
     var el = document.getElementById('vt-admin-list'); if (!el) return;
     var list = APP_DATA.vertretungen || [];
-    if (!list.length) { el.innerHTML = '<div style="font-size:0.75rem;color:var(--sub);text-align:center;padding:8px;">Keine Vertretungen eingetragen.</div>'; return; }
-    el.innerHTML = list.map(function(v, i) {
-        var d = new Date(v.date + 'T12:00:00');
-        var orig = ((APP_DATA['woche' + getWeekFor(d)] || {})[DAYS_SHORT[d.getDay()]] || [])[v.block] || 'frei';
-        return '<div class="admin-event-item"><div class="event-type-dot" style="background:' + (v.entfall ? '#ef4444' : '#06b6d4') + '"></div>' +
-            '<div class="evt-info"><strong>' + d.toLocaleDateString('de-DE',{weekday:'short', day:'2-digit', month:'2-digit'}) + ' · ' + BLOCKS[v.block].label + ': ' + escHtml(v.entfall ? 'fällt aus' : v.fach) + '</strong>' +
-            '<span>statt ' + escHtml(orig) + (v.info ? ' · ' + escHtml(v.info) : '') + '</span></div>' +
-            '<button class="evt-del" onclick="deleteVertretung(' + i + ')">✕</button></div>';
+    if (!list.length) { el.innerHTML = '<div style="font-size:0.75rem;color:var(--sub);text-align:center;padding:8px;">Nichts eingetragen.</div>'; return; }
+    el.innerHTML = vtGruppen(list).map(function(g) {
+        var d = new Date(g.date + 'T12:00:00'), plan0 = (APP_DATA['woche' + getWeekFor(d)] || {})[DAYS_SHORT[d.getDay()]] || [];
+        var origs = g.bl.map(function(bi){ return plan0[bi] || 'frei'; }).join(' / ');
+        return '<div class="admin-event-item"><div class="event-type-dot" style="background:' + (g.entfall ? '#ef4444' : g.sonder ? '#a855f7' : '#06b6d4') + '"></div>' +
+            '<div class="evt-info"><strong>' + d.toLocaleDateString('de-DE',{weekday:'short', day:'2-digit', month:'2-digit'}) + ' · ' + blockSpanne(g.bl) + ': ' + (g.sonder ? '🎉 ' : '') + escHtml(g.entfall ? 'fällt aus' : g.fach) + '</strong>' +
+            '<span>statt ' + escHtml(origs) + (g.info ? ' · ' + escHtml(g.info) : '') + '</span></div>' +
+            '<button class="evt-del" onclick="deleteVertretungGruppe(\'' + g.idx.join(',') + '\')">✕</button></div>';
     }).join('');
+}
+function deleteVertretungGruppe(idxStr) {
+    var weg = idxStr.split(',').map(Number);
+    APP_DATA.vertretungen = (APP_DATA.vertretungen || []).filter(function(v, i){ return weg.indexOf(i) < 0; });
+    renderVertretungAdmin(); renderMatrixWeek(activeWeek); _tickerKey = ''; renderTermineTicker();
 }
 
 /* ============================================================
@@ -2970,17 +3014,19 @@ function renderTermineTicker() {
     var evts = getLocalEvents().map(function(e){ return {title:e.title, date:e.date, type:e.type||'sonstiges'}; })
         .concat((APP_DATA.events || []).map(function(e){ return {title:e.title, date:e.date, type:'lehrer'}; }))
         .filter(function(e){ return e.date >= todayStr && e.date <= bisStr; });
-    (APP_DATA.vertretungen || []).forEach(function(v) {
-        if (v.date < todayStr || v.date > bisStr) return;
-        var d0 = new Date(v.date + 'T12:00:00');
-        var orig = ((APP_DATA['woche' + getWeekFor(d0)] || {})[DAYS_SHORT[d0.getDay()]] || [])[v.block] || '';
-        var on = orig ? splitSubjectAndRoom(orig).name : '';
-        evts.push({ date: v.date, type: 'vertretung', title: BLOCKS[v.block].label + ': ' + (v.entfall ? (on || 'Stunde') + ' fällt aus' : splitSubjectAndRoom(v.fach).name + (on ? ' statt ' + on : '') + (splitSubjectAndRoom(v.fach).room ? ' (' + splitSubjectAndRoom(v.fach).room + ')' : '')) });
+    vtGruppen((APP_DATA.vertretungen || []).filter(function(v){ return v.date >= todayStr && v.date <= bisStr; })).forEach(function(g) {
+        var d0 = new Date(g.date + 'T12:00:00'), plan0 = (APP_DATA['woche' + getWeekFor(d0)] || {})[DAYS_SHORT[d0.getDay()]] || [];
+        var origs = []; g.bl.forEach(function(bi){ var o = plan0[bi] ? splitSubjectAndRoom(plan0[bi]).name : ''; if (o && origs.indexOf(o) < 0) origs.push(o); });
+        var span = blockSpanne(g.bl), titel;
+        if (g.sonder) titel = g.fach + (g.info ? ' (' + g.info + ')' : '') + ' – ' + span;
+        else if (g.entfall) titel = span + ': ' + (origs.join('/') || 'Unterricht') + ' fällt aus' + (g.info ? ' (' + g.info + ')' : '');
+        else { var sf = splitSubjectAndRoom(g.fach); titel = span + ': ' + sf.name + (origs.length ? ' statt ' + origs.join('/') : '') + (sf.room ? ' (' + sf.room + ')' : '') + (g.info ? ' · ' + g.info : ''); }
+        evts.push({ date: g.date, type: g.sonder ? 'sonder' : 'vertretung', title: titel });
     });
     var sys = getSystemEventsInRange(today, bis);
     if (sys.length) evts.push(sys.sort(function(a,b){ return a.date.localeCompare(b.date); })[0]);
     evts.sort(function(a,b){ return a.date.localeCompare(b.date); });
-    var emo = { vertretung:'🔁', lehrer:'📣', hausaufgabe:'📚', test:'📝', abgabe:'📎', sonstiges:'⭐', ferien:'🌴', feiertag:'🎉' };
+    var emo = { sonder:'🎉', vertretung:'🔁', lehrer:'📣', hausaufgabe:'📚', test:'📝', abgabe:'📎', sonstiges:'⭐', ferien:'🌴', feiertag:'🎉' };
     var items = evts.slice(0, 8).map(function(e) {
         var d = new Date(e.date + 'T12:00:00');
         var diff = Math.floor((d - today) / 86400000);
